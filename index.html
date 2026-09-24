@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nacho San Benito</title>
+<meta name="description" content="Proyectos de Nacho San Benito.">
+<style>
+:root{--bg:#FAFAF9;--fg:#1C1917;--mute:#78716C;--line:#E7E5E4;--card:#FFFFFF;--acc:#C2410C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0A09;--fg:#FAFAF9;--mute:#A8A29E;--line:#292524;--card:#1C1917;--acc:#FB923C}}
+:root[data-theme="dark"]{--bg:#0C0A09;--fg:#FAFAF9;--mute:#A8A29E;--line:#292524;--card:#1C1917;--acc:#FB923C}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 -apple-system,system-ui,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:64px 16px}
+h1{font-size:32px;line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin:0 0 40px}
+ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+a.p{display:block;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:inherit;text-decoration:none;transition:border-color .15s}
+a.p:hover{border-color:var(--acc)}
+a.p b{display:block;font-size:18px}
+a.p span{color:var(--mute);font-size:15px}
+footer{margin-top:48px;color:var(--mute);font-size:14px}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<main>
+  <h1>Nacho San Benito</h1>
+  <p class="sub">Estudiante de BBA + Computer Science &amp; AI en IE University, Madrid. Cosas que he construido:</p>
+  <ul>
+    <li><a class="p" href="/guardados/"><b>Guardados</b><span>Busca en tus reels guardados de Instagram por lo que necesitas. Sin servidor: todo en tu móvil.</span></a></li>
+    <li><a class="p" href="https://bote.nachosanbenito.com"><b>Bote</b><span>Lleva las fichas y las cuentas de una partida de póker entre amigos.</span></a></li>
+    <li><a class="p" href="/credit-scorecard/"><b>Credit Scorecard</b><span>Modelo de riesgo de crédito explicado paso a paso.</span></a></li>
+  </ul>
+  <footer><a href="https://github.com/nachoie123">GitHub</a></footer>
+</main>
+</body>
+</html>
