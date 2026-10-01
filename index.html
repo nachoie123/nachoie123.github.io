@@ -14,6 +14,8 @@ body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 -apple-system,s
 main{max-width:640px;margin:0 auto;padding:64px 16px}
 h1{font-size:32px;line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
 .sub{color:var(--mute);margin:0 0 40px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin:32px 0 12px;font-weight:600}
+h2:first-of-type{margin-top:0}
 ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
 a.p{display:block;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:inherit;text-decoration:none;transition:border-color .15s}
 a.p:hover{border-color:var(--acc)}
@@ -27,6 +29,12 @@ footer a{color:inherit}
 <main>
   <h1>Nacho San Benito</h1>
   <p class="sub">Estudiante de BBA + Computer Science &amp; AI en IE University, Madrid. Cosas que he construido:</p>
+  <h2>Apps para Mac</h2>
+  <ul>
+    <li><a class="p" href="/guardados-app/"><b>Guardados para Mac</b><span>Tus guardados de Instagram y favoritos de TikTok en un sitio, con buscador. Gratis y sin cuenta.</span></a></li>
+    <li><a class="p" href="/ig-cleaning/"><b>IG Cleaning</b><span>Deja de seguir en Instagram a quien no te sigue, a ritmo humano. Tu contraseña nunca pasa por la app.</span></a></li>
+  </ul>
+  <h2>Web</h2>
   <ul>
     <li><a class="p" href="/guardados/"><b>Guardados</b><span>Busca en tus reels guardados de Instagram por lo que necesitas. Sin servidor: todo en tu móvil.</span></a></li>
     <li><a class="p" href="https://bote.nachosanbenito.com"><b>Bote</b><span>Lleva las fichas y las cuentas de una partida de póker entre amigos.</span></a></li>
