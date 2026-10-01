@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bote</title>
+<meta name="description" content="Home poker, settled. How many chips to hand each player, every rebuy tracked, and who pays whom with the fewest payments. Free, no account, works offline.">
+<meta property="og:title" content="Bote — home poker, settled">
+<meta property="og:description" content="How many chips to give each player, every rebuy tracked, and who pays whom with the fewest payments. Free, offline, no account.">
+<meta property="og:image" content="https://nachosanbenito.com/bote-app/poster.jpg">
+<meta name="theme-color" content="#F6FAF7">
+<link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F6FAF7;--surface:#fff;--text:#0F1A14;--muted:#4B5B52;--border:#E1E9E4;--accent:#16A34A;--g:linear-gradient(100deg,#4ade80,#16a34a);--qr-bg:#fff}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B0F0D;--surface:#141B17;--text:#F1F5F3;--muted:#9AA9A1;--border:#1F2A24;--accent:#22C55E}}
+  :root[data-theme="dark"]{--bg:#0B0F0D;--surface:#141B17;--text:#F1F5F3;--muted:#9AA9A1;--border:#1F2A24;--accent:#22C55E}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 "Plus Jakarta Sans",-apple-system,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 16px 72px}
+  .video video{width:100%;max-width:380px;display:block;margin:0 auto;border-radius:28px;background:#000;box-shadow:0 30px 80px rgb(21 128 61 / .25)}
+  .intro{max-width:640px;margin:48px auto 0;text-align:center}
+  .brand{display:flex;gap:12px;align-items:center;justify-content:center;font-weight:700}
+  .brand img{width:44px;height:44px;border-radius:11px}
+  h1{font-size:clamp(40px,6vw,64px);line-height:1.02;letter-spacing:-.03em;margin:22px 0 16px;font-weight:800}
+  h1 span{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--muted);font-size:18px;margin:0 auto}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:28px 0 10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:700;text-decoration:none}
+  .btn.main{background:var(--g);color:#06210f;box-shadow:0 10px 30px rgb(22 163 74 / .3)}
+  .btn.ghost{border:1px solid var(--border);color:var(--text);background:var(--surface)}
+  .small{color:var(--muted);font-size:13px;margin:10px 0 0}
+  h2{font-size:28px;letter-spacing:-.02em;margin:72px 0 20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .grid b{display:block;margin-bottom:6px}
+  .grid p{margin:0;color:var(--muted);font-size:15px}
+  .phone{display:flex;gap:20px;align-items:center}
+  .phone .qr{flex:none;width:120px;height:120px;padding:8px;border-radius:14px;background:var(--qr-bg);border:1px solid var(--border)}
+  .phone .qr img{width:100%;height:100%;display:block}
+  .phone>div{min-width:0}
+  .phone a.url{overflow-wrap:anywhere;color:var(--text);font-weight:700;font-size:17px;text-decoration:none;border-bottom:2px solid var(--accent)}
+  @media (max-width:640px){.phone .qr{display:none}}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){.split{grid-template-columns:1fr}}
+  .row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--border)}
+  .row:first-of-type{border-top:0}
+  .dot{width:22px;height:22px;border-radius:50%;flex:none;border:3px dashed rgb(255 255 255 / .55);box-shadow:0 0 0 1px var(--border)}
+  .row .n{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+  .row small{color:var(--muted)}
+  .ok{color:var(--accent);font-weight:800}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:12px}
+  ol.steps li{counter-increment:s;padding:18px 20px 18px 64px;position:relative}
+  ol.steps li::before{content:counter(s);position:absolute;left:20px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--g);color:#06210f;font-weight:800;display:grid;place-items:center}
+  footer{margin-top:64px;color:var(--muted);font-size:14px;text-align:center}
+  footer a{color:inherit}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="video"><video src="bote-promo.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
+
+  <section class="intro">
+    <div class="brand"><img src="icon.png" alt="">Bote</div>
+    <h1>Home poker, <span>settled.</span></h1>
+    <p class="lead">How many chips to hand each player, every rebuy tracked, and at the end of the night who pays whom, with the fewest payments. Free, no account, works offline.</p>
+    <div class="cta">
+      <a class="btn main" href="https://bote.nachosanbenito.com">♠ Open Bote</a>
+      <a class="btn ghost" href="https://github.com/nachoie123/bote">GitHub</a>
+    </div>
+    <p class="small">Free &amp; open source · web app, nothing to download · iPhone and Android · app in Spanish</p>
+  </section>
+
+  <h2>Made for your phone</h2>
+  <div class="card phone">
+    <div class="qr"><img src="qr.svg" alt="QR code to bote.nachosanbenito.com"></div>
+    <div><a class="url" href="https://bote.nachosanbenito.com">bote.nachosanbenito.com</a>
+      <p class="small">Scan it, then <b>Share → Add to Home Screen</b>. It opens like an app and keeps working with no signal at the table.</p></div>
+  </div>
+
+  <h2>How many chips do I give everyone?</h2>
+  <div class="split">
+    <div class="card">
+      <p class="small" style="margin:0 0 10px">You type: 4 players and what's in the box</p>
+      <div class="row"><span class="dot" style="background:#e8e8ea"></span><div>White <small>· €0.10</small></div><span class="n">150</span></div>
+      <div class="row"><span class="dot" style="background:#dc2626"></span><div>Red <small>· €0.50</small></div><span class="n">100</span></div>
+      <div class="row"><span class="dot" style="background:#27272a"></span><div>Black <small>· €1.00</small></div><span class="n">100</span></div>
+    </div>
+    <div class="card">
+      <p class="small" style="margin:0 0 10px">Bote answers: <b>€40 each</b></p>
+      <div class="row"><span class="dot" style="background:#e8e8ea"></span><div>White</div><span class="n">× 35</span></div>
+      <div class="row"><span class="dot" style="background:#dc2626"></span><div>Red</div><span class="n">× 25</span></div>
+      <div class="row"><span class="dot" style="background:#27272a"></span><div>Black</div><span class="n">× 24</span></div>
+      <div class="row"><div>Exact sum</div><span class="n ok">€40.00</span></div>
+    </div>
+  </div>
+  <p class="small">It works like making change with coins: it tries every combination and finds the one that adds up exactly, with plenty of low chips for the blinds. Leave the buy-in empty and it picks the biggest round one your box allows.</p>
+
+  <h2>What it does</h2>
+  <div class="grid">
+    <div class="card"><b>Chips per player</b><p>Colours, values and what's in the box in; exactly how many of each to deal out.</p></div>
+    <div class="card"><b>Every rebuy, one tap</b><p>Buy-ins log themselves. Rebuys and cash paid mid-game are one tap each.</p></div>
+    <div class="card"><b>Bought chips off a friend?</b><p>Logged as a transfer, not a buy-in, so the totals always add up.</p></div>
+    <div class="card"><b>Count by colour</b><p>At the end, count each stack by colour and Bote does the maths.</p></div>
+    <div class="card"><b>Fewest payments</b><p>Who pays whom, in at most N−1 payments for N players. Share it to the group chat.</p></div>
+    <div class="card"><b>Yours, offline</b><p>No account, no server. Games and history stay on your phone.</p></div>
+  </div>
+
+  <h2>Start in a minute</h2>
+  <ol class="steps">
+    <li class="card">Open <b>bote.nachosanbenito.com</b> in Safari (or Chrome on Android).</li>
+    <li class="card">Tap <b>Share → Add to Home Screen</b>. From then on it opens like an app, even offline.</li>
+    <li class="card">Tap <b>¿Cuántas fichas doy a cada uno?</b> (how many chips each), then <b>Nueva partida</b> (new game). The app speaks Spanish for now.</li>
+  </ol>
+
+  <footer>Built by <a href="https://www.linkedin.com/in/nacho-san-benito/">Ignacio San Benito</a> · <a href="https://github.com/nachoie123/bote">GitHub</a></footer>
+</main>
+</body>
+</html>
