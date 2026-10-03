@@ -1,41 +1,462 @@
 <!doctype html>
-<html lang="es">
+<html lang="en" class="pre is-loading">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#160000">
 <title>Nacho San Benito</title>
-<meta name="description" content="Proyectos de Nacho San Benito.">
+<meta name="description" content="Nacho San Benito: BBA + Computer Science & AI at IE University. Web apps, automation and quant finance, built in Madrid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@300;400;700&family=Instrument+Serif&family=Sofia+Sans+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FAFAF9;--fg:#1C1917;--mute:#78716C;--line:#E7E5E4;--card:#FFFFFF;--acc:#C2410C}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0A09;--fg:#FAFAF9;--mute:#A8A29E;--line:#292524;--card:#1C1917;--acc:#FB923C}}
-:root[data-theme="dark"]{--bg:#0C0A09;--fg:#FAFAF9;--mute:#A8A29E;--line:#292524;--card:#1C1917;--acc:#FB923C}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 -apple-system,system-ui,"Segoe UI",sans-serif}
-main{max-width:640px;margin:0 auto;padding:64px 16px}
-h1{font-size:32px;line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
-.sub{color:var(--mute);margin:0 0 40px}
-ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
-a.p{display:flex;gap:16px;align-items:center;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:inherit;text-decoration:none;transition:border-color .15s}
-a.p:hover{border-color:var(--acc)}
-a.p b{display:block;font-size:18px}
-a.p img,a.p .ic{flex:none;width:56px;height:56px;border-radius:13px}
-a.p .ic{display:grid;place-items:center;background:linear-gradient(135deg,#1e3a8a,#0f766e);color:#fff}
-a.p span{color:var(--mute);font-size:15px}
-footer{margin-top:48px;color:var(--mute);font-size:14px}
-footer a{color:inherit}
+/* Portfolio de Nacho: cinco piezas hechas en chats distintos, cosidas en una página.
+   Orden: anillos (js/intro.js) → portada (js/hero.js) → letras + About (js/about.js) → Work (js/work.js) → contacto + pie (js/contact.js).
+   Extras: música (js/radio.js) y coche (js/car.js). Todo el color sale de --red y --ink: el botón del círculo cambia --red a crema. */
+:root{
+  --red:#f40c3f; --ink:#160000;
+  --dim:color-mix(in srgb,var(--ink) 55%,var(--red));
+  --mute:color-mix(in srgb,var(--ink) 38%,var(--red));
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --serif:"Instrument Serif",Georgia,serif;
+  --big:"Anton",Impact,sans-serif;
+  --cond:"Sofia Sans Condensed","Arial Narrow",sans-serif;
+  --frame:16px;
+  --line:1px solid var(--ink);
+  --expo-out:cubic-bezier(.16,1,.3,1);
+  --expo-io:cubic-bezier(.87,0,.13,1);
+  --ease-in-out-quint:cubic-bezier(.86,0,.07,1);
+  --ease-olha:cubic-bezier(.11,.82,.39,.92);
+}
+html.theme-light{--red:#fff2ed}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--ink);scrollbar-gutter:stable}
+html.is-loading{background:var(--red)}
+body{padding:var(--frame) var(--frame) var(--frame);color:var(--ink);font-family:var(--mono);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:var(--red)}
+.cond{font-family:var(--cond);font-weight:700;letter-spacing:-.015em}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:clip}
+@media (max-width:767px){:root{--frame:8px}}
+
+/* ===================== ENTRADA: anillos de texto (olhalazarieva.com) ===================== */
+/* olha:start — en estas piezas 0.05208vw = 1px de un diseño de 1920 px; un script lo pasa a vw */
+.intro{position:fixed;inset:0;z-index:100;background:var(--red)}
+.intro canvas{display:block;width:100%;height:100%}
+.intro__count{position:absolute;left:50%;bottom:13.02vw;transform:translateX(-50%);color:var(--ink);font:700 1.354vw/.77 var(--cond);letter-spacing:-0.1042vw;opacity:0}
+/* olha:end */
+@media (max-width:768px){.intro__count{font-size:14px;letter-spacing:-.5px;bottom:120px}}
+
+/* el marco oscuro de la página crece desde los bordes al salir de los anillos */
+.frame-in{position:fixed;inset:0;z-index:90;pointer-events:none}
+.bd{position:absolute;background:var(--ink)}
+.bd-t,.bd-b{left:0;width:100%;height:var(--frame);transform:scaleY(0)}
+.bd-l,.bd-r{top:0;width:var(--frame);height:100%;transform:scaleX(0)}
+.bd-t{top:0;transform-origin:50% 0}
+.bd-b{bottom:0;transform-origin:50% 100%}
+.bd-l{left:0;transform-origin:0 50%}
+.bd-r{right:0;transform-origin:100% 50%}
+
+/* cambio de color: una cortina roja barre la pantalla con un borde oscuro delante */
+.contrast-mask{position:fixed;inset:0;z-index:60;background:#f40c3f;border-right:var(--frame) solid #160000;mix-blend-mode:darken;transform:translateX(-100%);pointer-events:none;will-change:transform}
+
+/* ===================== PRIMERA PARTE: portada (wodniack.dev) ===================== */
+.hero{display:flex;flex-direction:column;height:calc(100svh - 2 * var(--frame));background:var(--red);overflow:hidden}
+.pre .head,.pre .waves,.pre .hero .stage{visibility:hidden}
+.head{display:flex;flex-shrink:0;border-bottom:var(--line)}
+.head>*{border-right:var(--line)}
+.head>:last-child{border-right:0}
+.logo{width:96px;height:96px;overflow:hidden;font:44px/1 var(--big)}
+.logo span{display:grid;place-items:center;height:100%}
+.console{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;font-size:8px;line-height:1.4;text-transform:uppercase}
+.console-in{display:flex;flex-direction:column;justify-content:flex-end;height:5.6em;overflow:hidden;white-space:pre-line}
+.menu{display:flex;overflow:hidden}
+.menu a{display:flex;align-items:center;height:100%;padding:0 clamp(16px,3vw,48px);font-size:14px;letter-spacing:.05em;text-transform:uppercase}
+.menu .t{position:relative}
+.menu .t::before{position:absolute;top:calc(50% - 3px);left:-13px;border-block:3px solid transparent;border-left:6px solid currentColor;opacity:0;content:""}
+.socials{width:48px;list-style:none}
+.socials li{height:50%;overflow:hidden}
+.socials li:first-child{border-bottom:var(--line)}
+.socials a,.contrast-in{position:relative;display:grid;place-items:center;width:100%;height:100%}
+.contrast{position:relative;width:48px;overflow:hidden;background:none;border:0;border-right:var(--line);color:inherit;cursor:pointer}
+.socials a::before,.contrast::before,.icon::before{position:absolute;inset:0;scale:0 1;transform-origin:0 50%;transition:scale .3s cubic-bezier(1,0,0,1);content:""}
+.socials a::before,.contrast::before{background:var(--ink)}
+.icon{position:relative;display:block;background:var(--ink);clip-path:var(--path)}
+.icon::before{background:var(--red)}
+.avail{display:flex;flex-direction:column;font:1.25rem/47px var(--serif)}
+.avail>*{overflow:hidden;padding:0 24px;white-space:nowrap}
+.avail>*>*{display:block}
+.avail>:first-child{border-bottom:var(--line)}
+.avail a{position:relative;display:inline-block}
+.avail a::before{position:absolute;bottom:calc(50% - .5em);left:0;width:100%;height:1px;background:currentColor;scale:0 1;transform-origin:100% 50%;transition:scale .3s cubic-bezier(1,0,0,1);content:""}
+@media (hover:hover) and (pointer:fine){
+  .menu a:hover{text-shadow:0 0 1px currentColor}
+  .menu a:hover .t::before{animation:blink-in .3s cubic-bezier(1,0,0,1) forwards}
+  .socials a:hover::before,.socials a:hover .icon::before,.contrast:hover::before,.contrast:hover .icon::before{scale:1 1}
+  .avail a:hover::before{scale:1 1;transform-origin:0 50%}
+}
+@keyframes blink-in{0%,30%,60%{opacity:0}15%,45%,75%,to{opacity:1}}
+
+.hero .stage{position:relative;flex-shrink:0}
+.slab{position:absolute;top:0;left:0;z-index:0;width:100%;height:40rem;background:var(--ink);transform-origin:50% 0}
+.content{position:relative;z-index:1;background:var(--red)}
+
+.waves{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:pan-y}
+.waves svg{display:block;width:100%;height:100%}
+.waves path{fill:none;stroke:var(--ink);stroke-width:1px}
+.waves.drawing path{stroke-dasharray:1 1}
+.dot{position:absolute;top:-4px;left:-4px;width:8px;height:8px;border-radius:50%;background:var(--ink);opacity:0;transition:opacity .3s ease;pointer-events:none;will-change:transform}
+.dot.on{opacity:1}
+
+.sep{flex-shrink:0;height:36px;padding:0 16px;border-top:var(--line);border-bottom:var(--line);overflow:hidden;font-size:8px}
+.sep-in{display:flex;align-items:center;gap:8px;height:100%}
+.sep b{font-weight:400}
+.sep .bits{flex-shrink:0;white-space:nowrap}
+.sep .stripes{flex:1;min-width:0;overflow:hidden;white-space:nowrap;letter-spacing:-.1em}
+.tri{flex-shrink:0;border-block:4px solid transparent}
+.tri:first-child{border-left:4px solid var(--ink)}
+.tri:last-child{border-right:4px solid var(--ink)}
+
+.title{flex-shrink:0;padding:4px 24px;text-align:center;cursor:default}
+.title-in{display:inline-flex;align-items:center;font:100px/1.1 var(--big);text-transform:uppercase;white-space:nowrap}
+.title .word{display:flex}
+.title .sp{width:.22em}
+.char{display:block;overflow:hidden}
+.ci{display:block;position:relative;color:transparent}
+.ci::before,.ci::after{position:absolute;color:var(--ink);content:attr(data-l) attr(data-l) attr(data-l)}
+.ci::before{top:0;left:50%;transform:translateX(-50%)}
+.ci::after{top:50%;left:0;width:100%;transform:translateY(-50%);white-space:normal;word-break:break-all}
+.to-top .ci{animation:to-top 1s var(--ease-in-out-quint) forwards}
+.to-bottom .ci{animation:to-bottom 1s var(--ease-in-out-quint) forwards}
+.to-left .ci{animation:to-left 1s var(--ease-in-out-quint) forwards}
+.to-right .ci{animation:to-right 1s var(--ease-in-out-quint) forwards}
+@keyframes to-top{to{transform:translateY(-100%)}}
+@keyframes to-bottom{to{transform:translateY(100%)}}
+@keyframes to-left{to{transform:translateX(-100%)}}
+@keyframes to-right{to{transform:translateX(100%)}}
+.star{width:.42em;height:.42em;margin:0 .14em;flex-shrink:0;fill:var(--ink)}
+
+@media (max-width:767px){
+  .hero{height:calc(100svh - 2 * var(--frame))}
+  .console,.menu{display:none}
+  .logo{width:72px;height:72px;font-size:32px}
+  .socials,.contrast{width:44px}
+  .avail{flex:1;min-width:0;font-size:1rem;line-height:35px}
+  .avail>*{padding:0 12px}
+  .avail .t{display:none}
+}
+
+/* ===================== SEGUNDA PARTE: letras que caen + About me (olhalazarieva.com) ===================== */
+#manifesto{--pad:3.5vw;position:relative;height:420vh;margin-top:var(--frame);background:var(--red);font:400 12px/1.6 var(--mono);text-transform:uppercase}
+#about{position:absolute;left:0;top:272vh}   /* punto del menú "About": el 85% del recorrido, cuando ya ha entrado About me */
+.mstage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.meta{position:absolute;inset:32px var(--pad) auto;transition:opacity .1s linear}
+.num,.code{position:absolute;top:0;font-size:clamp(22px,2.6vw,40px);line-height:1}
+.num{left:0}
+.code{right:0}
+.for{position:absolute;left:calc(30% - var(--pad));padding-top:.5em}
+.mtext{position:absolute;left:30%;bottom:3vh;line-height:.88;will-change:transform}
+.mtext .l{display:block;width:max-content;white-space:pre}
+.mtext .dim{color:var(--dim)}
+/* caja = altura de mayúscula, así el bloque de física coincide con la letra */
+.mtext .c{display:inline-block;text-box:trim-both cap alphabetic;will-change:transform}
+.cue{position:absolute;left:var(--pad);bottom:3vh;color:var(--mute);transition:opacity .4s}
+.cue.off{opacity:0}
+
+.about{position:absolute;inset:0;pointer-events:none}
+.about .label{position:absolute;left:var(--pad);top:32px}
+.about .col{position:absolute;left:30%;top:15vh;width:clamp(240px,26vw,420px);display:flex;flex-direction:column;align-items:center;text-align:center}
+.photo{position:relative;width:70%;aspect-ratio:4/5;background:var(--ink);overflow:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--expo-out)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1);transform:scale(1.2);transition:transform .5s var(--expo-out)}
+.photo span{position:absolute;inset:0;display:grid;place-items:end start;padding:8%;color:var(--red);font-size:clamp(64px,8vw,140px);line-height:.8;letter-spacing:-.04em}
+.in .photo{clip-path:inset(0);transition-duration:1.3s}
+.in .photo img{transform:none;transition-duration:1.8s}
+.hello{margin-top:5vh}
+.about .sub{margin-top:6vh;color:var(--dim)}
+.about .col p{margin-top:2.5vh}
+/* texto que sube línea a línea desde una ranura */
+.ln{display:block;overflow:hidden}
+.ln>span{display:block;transform:translateY(105%);transition:transform .35s var(--expo-out)}
+.in .ln>span{transform:none;transition:transform 1s var(--expo-out) calc(var(--d) * 70ms + 250ms)}
+
+@media (max-width:700px){
+  .mtext{left:16px;bottom:12vh}
+  .for{left:40%}
+  .about .col{left:50%;translate:-50% 0;width:78vw;top:17vh}
+}
+
+/* ===================== WORK (wodniack.dev): píldora que se abre en filas de W O R K ===================== */
+.work{position:relative;z-index:2;height:var(--height,100lvh);margin-top:var(--frame);background:var(--red)}
+.work::before{content:"";position:absolute;top:0;left:0;z-index:2;width:100%;height:1px;background:var(--ink)}
+.work__outer{position:relative;height:100%;clip-path:inset(0 calc(var(--frame) * -1))}   /* recorta la capa fija a la sección */
+.work__inner{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--ink);color:var(--red);clip-path:inset(0 var(--frame));transform:translate3d(0,calc(var(--sp,0) * -15%),0);will-change:clip-path,transform}
+.work__title,.work__scene{font:400 min(18.75rem,25lvh)/1 var(--big);text-align:center;text-transform:uppercase}
+.work__title{width:.7em;opacity:0;word-break:break-all}
+.work__col{display:flex;flex-direction:column;align-items:center;margin:.075em 0 -.125em;line-height:.85}
+.work__scene{--state:0;position:absolute;inset:0;z-index:2;perspective:40rem;will-change:transform}
+.work__ghost{--head:calc((var(--progress) - .5) * -2);--ahead:calc(var(--head) * var(--head));position:absolute;top:0;left:0;line-height:.85;pointer-events:none;will-change:transform;
+  transform:rotateY(calc(var(--head) * -10deg * var(--state))) translate3d(calc(var(--head) * 50vw * var(--state)),calc(var(--iy) * 50% * var(--ahead) * var(--state)),0)}
+.work__ghost::before{content:attr(data-letter);position:absolute;top:0;left:0;z-index:-1;color:color-mix(in srgb,var(--red) 30%,var(--ink));opacity:min(var(--state) * 2,1);transform:scale(1.05,1.02) translate3d(calc(var(--head) * .1rem * var(--state) * var(--state)),0,0);transform-origin:calc(50% - var(--head) * 50%) -50%}
+.work__card{--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);will-change:transform;
+  transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz)) scale(var(--size))}
+.work__card :is(video,img){display:block;width:min(50vw,85vh);aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
+.work__cap{display:flex;justify-content:space-between;align-items:center;padding:.5rem;font:700 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase}
+.work__canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;transform:translate3d(0,calc(var(--sp,0) * -5%),0)}
+.work__mask-outer{position:sticky;top:0;height:100lvh;overflow:hidden;pointer-events:none}
+.work__mask{position:absolute;inset:0;will-change:transform}
+.work__mask svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--red);fill-rule:evenodd;stroke:var(--ink);stroke-width:1px}
+.work__mask .p-in{transform:translate3d(0,calc(var(--sp,0) * 48px),0)}
+.work__mask .p-lines{fill:none}
+.work__ruler{--w:min(16.6667%,19.625rem);position:absolute;top:10lvh;left:calc(50% - var(--w) / 2);width:var(--w);height:80lvh;pointer-events:none}
+@media (max-width:987px){
+  .work__ruler{--w:33.3333%}
+  .work__card{transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz))}
+}
+@media (max-width:576px){
+  .work__ruler{--w:50%}
+  .work__inner,.work__canvas{transform:none}
+  .work__card{padding:.25rem;transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 100% - 50%),var(--tz))}
+  .work__card :is(video,img){width:min(80vw,136vh)}
+  .work__cap{display:none}
+}
+
+/* ===================== PARTE FINAL: contacto + pie (olhalazarieva.com) ===================== */
+/* olha:start */
+#contact{margin-top:var(--frame);background:var(--red);font-family:var(--cond);overflow:hidden}
+#contact .mono{font-family:var(--mono);font-weight:300;text-transform:uppercase}
+.form{padding:11.98vw 0 9.896vw}
+.form-title-top{font-size:1.875vw;font-weight:700;letter-spacing:-0.1042vw;line-height:.99;margin-bottom:1.823vw;text-align:center;text-transform:uppercase}
+.form-title-middle{font-size:1.042vw;font-weight:700;letter-spacing:1.562vw;line-height:.99;margin:2.083vw 0;text-align:center;text-transform:uppercase}
+/* overflow:hidden es la "ventana": cada letra entra cayendo desde arriba por ella */
+.animation-title{text-align:center;overflow:hidden;padding:0 0.5208vw 0 0}
+.animation-title .word{display:inline-block;margin:0 1.042vw}
+.animation-title .letter{display:inline-block;font-size:8.49vw;font-weight:700;letter-spacing:-0.625vw;line-height:.99;text-transform:uppercase}
+.form form{display:flex;flex-direction:column;align-items:center;margin-top:6.51vw;opacity:0}
+.form-fields{display:flex;flex-direction:column;gap:2.083vw;width:34.64vw}
+.form-fields input,.form-fields textarea{width:100%;padding:0.625vw 0;border:0;border-bottom:0.1042vw solid var(--ink);border-radius:0;background:none;color:var(--ink);font:300 1.042vw var(--mono);text-transform:uppercase;outline:none;resize:none}
+.form-fields ::placeholder{color:var(--ink);opacity:1}
+.form-fields :focus{border-bottom-color:currentColor;box-shadow:0 0.1042vw 0 var(--ink)}
+.send{margin-top:4.688vw;border:0;border-bottom:0.1042vw solid;background:none;color:var(--ink);font:400 1.25vw var(--mono);text-transform:uppercase;cursor:pointer}
+
+.footer{padding:10.42vw 3.646vw max(1.042vw,72px)}   /* abajo, hueco para el coche y el botón de música */
+.footer-line{display:block;width:max-content;margin-left:auto;position:relative;font-size:3.333vw;font-weight:700;letter-spacing:.02em;line-height:.99}
+.footer-line::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:0.1562vw;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .8s var(--ease-olha),transform-origin 0s}
+.footer-line:hover::after{transform:scaleX(1);transform-origin:left}
+.footer-social{display:flex;justify-content:flex-end;gap:5.469vw;margin-top:2.083vw}
+.link-line{display:flex;align-items:center;position:relative;padding-bottom:0.2604vw;font:400 1.354vw var(--mono);text-transform:uppercase}
+.link-line svg{width:0.9375vw;height:0.9375vw;margin-left:1.042vw;transition:transform .5s var(--ease-olha)}
+.link-line:hover svg{transform:rotate(45deg)}
+.link-line::before,.link-line::after{content:"";position:absolute;left:0;right:0;bottom:0;height:0.1042vw;background:var(--ink);transition:transform .8s var(--ease-olha)}
+.link-line::before{transform:scaleX(1);transform-origin:left}
+.link-line::after{transform:scaleX(0);transform-origin:right}
+.link-line:hover::before{transform:scaleX(0);transform-origin:right;transition-duration:.3s}
+.link-line:hover::after{transform:scaleX(1);transform-origin:left}
+.footer-pages-location{display:flex;justify-content:space-between;align-items:flex-end}
+.footer-pages a{display:block;width:max-content;margin-bottom:1.25vw;font:400 1.458vw var(--mono);letter-spacing:-0.05208vw;text-transform:uppercase}
+.footer-pages a:last-child{margin-bottom:0}
+.footer-location p{color:var(--dim);font:400 0.8333vw/1.2 var(--mono)}
+.footer-brackets{display:flex;justify-content:space-between;margin:3.281vw -0.7812vw 0;opacity:0}
+.link{position:relative;display:flex;overflow:hidden;padding:0 1.823vw;font:300 1.25vw/.99 var(--mono);letter-spacing:0.05208vw;text-transform:uppercase;white-space:nowrap}
+.link::before,.link::after{position:absolute;top:50%;transform:translateY(-50%);font-size:1.042vw;transition:.5s var(--ease-olha)}
+.link::before{content:"[";left:0.625vw}
+.link::after{content:"]";right:0.625vw}
+.link:hover::before{left:0}
+.link:hover::after{right:0}
+.link span span{display:inline-block}
+.link .clone{position:absolute;left:50%;top:0;display:flex;translate:-50% 100%}
+.footer-title{margin-top:1.042vw;overflow:hidden;white-space:nowrap}
+.footer-title span{display:inline-block;font-size:18.18vw;font-weight:700;letter-spacing:-1.38vw;line-height:.99;text-transform:uppercase}
+.footer-title span:first-child{margin-left:-0.7812vw}
+.footer-title .sp{margin:0 1.042vw}
+.footer-reserved{display:flex;justify-content:space-between;align-items:center;gap:2.083vw;opacity:0}
+.clock{display:flex;gap:0.5208vw;font:300 1.354vw/.99 var(--mono);text-transform:uppercase}
+.dev{position:relative;overflow:hidden;padding-right:4.427vw;font:400 1.094vw/.99 var(--mono);text-transform:uppercase}
+.dev span{display:inline-block;transition:transform .6s var(--ease-olha)}
+.dev::after{content:"Nacho";position:absolute;right:0;top:100%;transition:top .6s var(--ease-olha)}
+.dev:hover span{transform:translateY(-100%)}
+.dev:hover::after{top:0}
+.reserved{width:21.88vw;color:var(--dim);font:400 0.5208vw/1.3 var(--mono)}
+.reserved a{text-decoration:underline}
+.copy-tooltip{position:fixed;left:0;top:0;z-index:200;padding:0.2083vw 1.042vw;background:var(--ink);color:var(--red);font:0.625vw var(--mono);text-transform:uppercase;pointer-events:none;clip-path:inset(0 0 0 100%);translate:-50% -50%}
+/* olha:end */
+
+@media (max-width:700px){
+  .form{padding:110px 0 80px}
+  .form-title-top{font-size:18px;letter-spacing:-1px;margin-bottom:15px}
+  .form-title-middle{font-size:10px;letter-spacing:12px;margin:30px 0 10px}
+  .animation-title .word{margin:0 10px 0 0}
+  .animation-title .letter{font-size:47px;letter-spacing:-3px}
+  .form form{margin-top:50px;padding:0 16px}
+  .form-fields{width:100%}
+  .form-fields input,.form-fields textarea,.send{font-size:16px}
+  .footer{display:flex;flex-direction:column;padding:100px 16px 15px}
+  .footer-line{margin:0 auto 10px;font-size:28px}
+  .footer-social{order:1;gap:24px;justify-content:center;margin-top:20px}
+  .link-line{font-size:13px}
+  .link-line svg{width:10px;height:10px;margin-left:6px}
+  .footer-pages-location{order:2;margin-top:40px}
+  .footer-pages a{font-size:14px;margin-bottom:8px}
+  .footer-location p{font-size:11px;text-align:right}
+  .footer-brackets{order:3;margin:40px -8px 0;opacity:1}
+  .link{font-size:13px;padding:0 18px}
+  .link::before,.link::after{font-size:12px}
+  .footer-title{order:4}
+  .footer-reserved{order:5;opacity:1;flex-wrap:wrap;gap:8px;padding-bottom:84px}
+  .clock{font-size:11px;gap:5px}
+  .dev{font-size:11px;padding-right:45px}
+  .reserved{width:100%;font-size:9px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .char .ci{animation:none}
+  .dot{display:none}
+}
 </style>
 </head>
 <body>
-<main>
-  <h1>Nacho San Benito</h1>
-  <p class="sub">Estudiante de BBA + Computer Science &amp; AI en IE University, Madrid. Cosas que he construido:</p>
-  <ul>
-    <li><a class="p" href="/guardados-app/"><img src="/guardados-app/icon.png" alt="" width="56" height="56"><div><b>Guardados</b><span>Tus guardados de Instagram y favoritos de TikTok en un sitio, con buscador. Gratis y sin cuenta.</span></div></a></li>
-    <li><a class="p" href="/ig-cleaning/"><img src="/ig-cleaning/icon.png" alt="" width="56" height="56"><div><b>IG Cleaning</b><span>Deja de seguir en Instagram a quien no te sigue, a ritmo humano. Tu contraseña nunca pasa por la app.</span></div></a></li>
-    <li><a class="p" href="https://bote.nachosanbenito.com"><img src="https://bote.nachosanbenito.com/iconos/icono-192.png" alt="" width="56" height="56"><div><b>Bote</b><span>Lleva las fichas y las cuentas de una partida de póker entre amigos.</span></div></a></li>
-    <li><a class="p" href="/credit-scorecard/"><span class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 16a8 8 0 0 1 16 0"/><path d="M12 16l4-5"/><path d="M4 20h16"/></svg></span><div><b>Credit Scorecard</b><span>Modelo de riesgo de crédito explicado paso a paso.</span></div></a></li>
-  </ul>
-  <footer><a href="https://github.com/nachoie123">GitHub</a></footer>
+
+<div class="intro" aria-hidden="true"><canvas></canvas><div class="intro__count">0%</div></div>
+<div class="frame-in" aria-hidden="true"><i class="bd bd-t"></i><i class="bd bd-l"></i><i class="bd bd-r"></i><i class="bd bd-b"></i></div>
+<div class="contrast-mask" aria-hidden="true"></div>
+
+<!-- ===== PRIMERA PARTE ===== -->
+<main class="hero" id="top">
+  <header class="head">
+    <a class="logo" href="#top" aria-label="Back to top"><span>NSB</span></a>
+    <div class="console" aria-hidden="true"><div class="console-in"><p class="console-text"></p></div></div>
+    <nav class="menu"><a href="#about"><span class="t">About</span></a><a href="#work"><span class="t">Work</span></a><a href="#contact"><span class="t">Contact</span></a></nav>
+    <ul class="socials">
+      <li><a href="https://github.com/nachoie123" target="_blank" rel="noopener" aria-label="GitHub"><span class="icon" style="width:16px;height:16px;--path:path('M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z')"></span></a></li>
+      <li><a href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener" aria-label="LinkedIn"><span class="icon" style="width:16px;height:15px;--path:path('M1.13 14.98h2.81V4.6H1.13v10.38ZM2.53.02C1.6.02.85.76.85 1.7s.75 1.68 1.68 1.68 1.68-.75 1.68-1.68S3.47.02 2.53.02Zm6.18 6.17V4.6H5.9v10.38h2.81V9.65c0-2.99 3.83-3.18 3.83 0v5.33h2.81V8.62c0-5.05-5.33-4.86-6.64-2.43Z')"></span></a></li>
+    </ul>
+    <button class="contrast" type="button" aria-label="Switch colour"><span class="contrast-in"><span class="icon" style="width:20px;height:20px;--path:path('M10 20a9.7 9.7 0 0 1-3.9-.79 10.1 10.1 0 0 1-5.31-5.31A9.7 9.7 0 0 1 0 10c0-1.38.26-2.68.79-3.9A10.1 10.1 0 0 1 6.1.79 9.7 9.7 0 0 1 10 0c1.38 0 2.68.26 3.9.79a10.1 10.1 0 0 1 5.31 5.31c.53 1.22.79 2.52.79 3.9s-.26 2.68-.79 3.9a10.1 10.1 0 0 1-5.31 5.31A9.7 9.7 0 0 1 10 20Zm1-2.08a7.8 7.8 0 0 0 4.99-2.61A7.6 7.6 0 0 0 18 10a7.6 7.6 0 0 0-2.01-5.31A7.8 7.8 0 0 0 11 2.08v15.84Z')"></span></span></button>
+    <div class="avail"><div><span>Coding from Madrid.</span></div><div><a href="#contact"><span class="t">Available for freelance work → </span>Hire me</a></div></div>
+  </header>
+
+  <div class="waves"><svg aria-hidden="true"></svg><i class="dot"></i></div>
+
+  <div class="stage"><i class="slab"></i><div class="content">
+    <div class="sep" data-groups="7" data-bits="16"><div class="sep-in"></div></div>
+    <h1 class="title" aria-label="Nacho San Benito">
+      <span class="title-in" aria-hidden="true">
+        <span class="word">Nacho</span>
+        <svg class="star" viewBox="-50 -50 100 100"><path d="M0-50C3-12 12-3 50 0 12 3 3 12 0 50-3 12-12 3-50 0-12-3-3-12 0-50Z"/></svg>
+        <span class="word">San Benito</span>
+      </span>
+    </h1>
+    <div class="sep" data-groups="4" data-bits="28"><div class="sep-in"></div></div>
+  </div></div>
 </main>
+
+<!-- ===== SEGUNDA PARTE ===== -->
+<section id="manifesto">
+  <i id="about"></i>
+  <div class="mstage">
+    <div class="meta">
+      <div class="num cond">2/4</div>
+      <div class="for">For me</div>
+      <div class="code cond">DSGN/2</div>
+    </div>
+    <div class="mtext cond" aria-label="Design is not just decoration, but a tool for influence and growth."></div>
+    <div class="cue">Scroll ↓</div>
+
+    <div class="about">
+      <div class="label"><span class="ln"><span>About me</span></span></div>
+      <div class="col">
+        <!-- foto: deja foto.jpg en la carpeta y pon <img src="foto.jpg" alt="Nacho San Benito"> dentro de .photo -->
+        <div class="photo"><span class="cond">NSB</span></div>
+        <div class="hello"><span class="ln"><span>Hello!</span></span><span class="ln"><span>I'm Nacho San Benito</span></span></div>
+        <div class="sub"><span class="ln"><span>My story ↘</span></span></div>
+        <p><span class="ln"><span>BBA + Computer Science &amp; AI</span></span><span class="ln"><span>student at IE University, Madrid.</span></span><span class="ln"><span>I build web apps and automations</span></span><span class="ln"><span>that people actually use.</span></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORK ===== -->
+<section class="work" id="work">
+  <div class="work__outer">
+    <div class="work__inner">
+      <h2 class="work__title"><span class="work__col"><span>W</span><span>O</span><span>R</span><span>K</span></span></h2>
+      <div class="work__scene">
+      <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/12</span></span></a>
+      <a class="work__card" href="https://github.com/nachoie123/radar" target="_blank" rel="noopener"><img src="work/radar.jpg" alt="Radar" loading="lazy"><span class="work__cap"><span>Radar</span><span>#dbq8-0001/12</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/guardados/" target="_blank" rel="noopener"><video src="work/guardados.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Guardados</span><span>#ny2d-0002/12</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/bote-app/" target="_blank" rel="noopener"><video src="work/bote-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Bote</span><span>#87va-0003/12</span></span></a>
+      <a class="work__card" href="https://github.com/nachoie123/credit-scorecard" target="_blank" rel="noopener"><img src="work/scorecard.jpg" alt="Credit Scorecard" loading="lazy"><span class="work__cap"><span>Credit Scorecard</span><span>#t44q-0004/12</span></span></a>
+      <a class="work__card" href="https://shenxien.es/" target="_blank" rel="noopener"><video src="work/shenxien.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Shenxien</span><span>#3g5d-0005/12</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/ig-cleaning/" target="_blank" rel="noopener"><video src="work/ig-cleaning.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>IG Cleaning</span><span>#wksl-0006/12</span></span></a>
+      <div class="work__card"><img src="work/jarvis.jpg" alt="Jarvis" loading="lazy"><span class="work__cap"><span>Jarvis</span><span>#0qh5-0007/12</span></span></div>
+      <a class="work__card" href="https://nachosanbenito.com/guardados-app/" target="_blank" rel="noopener"><video src="work/guardados-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Guardados App</span><span>#m2rx-0008/12</span></span></a>
+      <a class="work__card" href="https://github.com/nachoie123/inflation-forecaster" target="_blank" rel="noopener"><img src="work/inflation.jpg" alt="Inflation Forecaster" loading="lazy"><span class="work__cap"><span>Inflation Forecaster</span><span>#k9fe-0009/12</span></span></a>
+      <a class="work__card" href="https://bote.nachosanbenito.com/" target="_blank" rel="noopener"><img src="work/bote.jpg" alt="Bote" loading="lazy"><span class="work__cap"><span>Bote</span><span>#b7tn-0010/12</span></span></a>
+      <a class="work__card" href="#top"><video src="work/portfolio.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Portfolio</span><span>#x1pd-0011/12</span></span></a>
+      </div>
+      <canvas class="work__canvas"></canvas>
+    </div>
+    <div class="work__mask-outer"><div class="work__mask"><svg><path class="p-in"/><path class="p-out"/><path class="p-lines"/></svg></div></div>
+    <div class="work__ruler"></div>
+  </div>
+</section>
+
+<!-- ===== PARTE FINAL ===== -->
+<div id="contact">
+  <section class="form">
+    <h3 class="form-title-top">Let’s start the conversation</h3>
+    <h2 class="animation-title">Great design</h2>
+    <h3 class="form-title-middle">starts with</h3>
+    <h2 class="animation-title">great collaboration</h2>
+
+    <form>
+      <div class="form-fields">
+        <input type="text" name="name" placeholder="your name*" required autocomplete="name">
+        <input type="tel" name="phone" placeholder="phone" autocomplete="tel">
+        <input type="email" name="email" placeholder="your email*" required autocomplete="email">
+        <textarea name="message" rows="3" placeholder="how can I help you"></textarea>
+      </div>
+      <button class="send" type="submit">Discuss the project ↗</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <a class="footer-line" href="tel:+34682020547">+34 682 020 547</a>
+    <a class="footer-line footer-email" href="mailto:ignaciosanbenitop@gmail.com">ignaciosanbenitop@gmail.com</a>
+    <div class="footer-social">
+      <a class="link-line" href="https://github.com/nachoie123" target="_blank" rel="noopener">GitHub<svg viewBox="0 0 21 21" fill="none"><path d="M1.8 19.1 19.4 1.4M5.8 1.2l13.9 0 0 13.9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="link-line" href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener">LinkedIn<svg viewBox="0 0 21 21" fill="none"><path d="M1.8 19.1 19.4 1.4M5.8 1.2l13.9 0 0 13.9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="footer-pages-location">
+      <nav class="footer-pages"><a href="#about">About me</a><a href="#work">Works</a><a href="#top">Back to top</a></nav>
+      <div class="footer-location"><p>Based in:</p><p>Madrid, Spain</p></div>
+    </div>
+    <div class="footer-brackets">
+      <a class="link" href="https://bote.nachosanbenito.com" target="_blank" rel="noopener">Bote</a>
+      <a class="link" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener">WhisperTool</a>
+      <a class="link" href="https://nachosanbenito.com/guardados/" target="_blank" rel="noopener">Guardados</a>
+    </div>
+    <h2 class="footer-title">Nacho San Benito</h2>
+    <div class="footer-reserved">
+      <div class="clock"><span>Madrid, Spain:</span><span id="clock"></span></div>
+      <a class="dev" href="#top">development - <span>N</span><span>S</span></a>
+      <p class="reserved">2026 Nacho San Benito. Motion studies after <a href="https://wodniack.dev" target="_blank" rel="noopener">wodniack.dev</a> and <a href="https://www.olhalazarieva.com" target="_blank" rel="noopener">olhalazarieva.com</a>. Car: Bruno Simon (MIT). Music: Kounine (CC0).</p>
+    </div>
+  </footer>
+</div>
+<div class="copy-tooltip" aria-hidden="true">Copied</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+<script src="js/radio.js"></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }</script>
+<script type="module" src="js/hero.js"></script>
+<script type="module" src="js/about.js"></script>
+<script type="module" src="js/work.js"></script>
+<script type="module" src="js/contact.js"></script>
+<script type="module" src="js/intro.js"></script>
+<script type="module" src="js/car.js"></script>
 </body>
 </html>
