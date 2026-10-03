@@ -212,6 +212,7 @@ html.lenis,html.lenis body{height:auto}
   transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz)) scale(var(--size))}
 .work__card :is(video,img){display:block;width:min(50vw,85vh);aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
 .work__cap{display:flex;justify-content:space-between;align-items:center;padding:.5rem;font:700 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase}
+.work__hint{position:absolute;top:calc(var(--frame) + 1.25rem);left:0;right:0;z-index:4;margin:0;text-align:center;font:400 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:var(--state,0);pointer-events:none}
 .work__canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;transform:translate3d(0,calc(var(--sp,0) * -5%),0)}
 .work__mask-outer{position:sticky;top:0;height:100lvh;overflow:hidden;pointer-events:none}
 .work__mask{position:absolute;inset:0;will-change:transform}
@@ -388,6 +389,7 @@ html.lenis,html.lenis body{height:auto}
 <section class="work" id="work">
   <div class="work__outer">
     <div class="work__inner">
+      <p class="work__hint" aria-hidden="true">← Swipe or scroll →</p>
       <h2 class="work__title"><span class="work__col"><span>W</span><span>O</span><span>R</span><span>K</span></span></h2>
       <div class="work__scene">
       <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/09</span></span></a>

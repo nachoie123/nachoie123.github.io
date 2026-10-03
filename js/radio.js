@@ -28,12 +28,14 @@
 .radio-toast{position:fixed;right:calc(var(--frame,1rem) + .75rem);bottom:calc(var(--frame,1rem) + 3.6rem);z-index:50;padding:.6rem .85rem;background:var(--ink,#160000);color:var(--red,#f40c3f);font:400 10px/1 var(--mono,monospace);letter-spacing:.18em;text-transform:uppercase;opacity:0;transform:translateY(.5rem);transition:opacity .4s,transform .6s var(--expo-out,ease-out);pointer-events:none}
 .radio-toast.is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.radio.is-playing .radio__bars i{animation:none;transform:scaleY(.6)}}
-@media (max-width:600px){.radio__label{display:none}}
+.radio__icon{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.radio__icon .on,.radio[aria-pressed=false] .radio__icon .off{display:inline}
+.radio__icon .off,.radio[aria-pressed=false] .radio__icon .on,.radio[aria-pressed=false] .radio__bars{display:none}
 </style>`);
   const btn = document.createElement('button');
   btn.className = 'radio';
   btn.setAttribute('aria-label', 'Background music');
-  btn.innerHTML = '<span class="radio__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="radio__label"></span>';
+  btn.innerHTML = '<svg class="radio__icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z"/><path class="on" d="M11.5 5.5a3.5 3.5 0 0 1 0 5M13.5 3.5a6.5 6.5 0 0 1 0 9"/><path class="off" d="M11 6l4 4M15 6l-4 4"/></svg><span class="radio__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="radio__label"></span>';
   const toast = document.createElement('p');
   toast.className = 'radio-toast';
   toast.setAttribute('aria-live', 'polite');
@@ -42,7 +44,8 @@
   const render = () => {
     const on = !!ctx && !muted;
     btn.setAttribute('aria-pressed', on);
-    btn.lastChild.textContent = on ? 'Sound on' : 'Sound off';
+    btn.lastChild.textContent = on ? 'Music on' : 'Music off';
+    btn.title = on ? 'Turn the music off' : 'Turn the music on';
   };
 
   const ramp = (to, s) => {

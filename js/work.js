@@ -1,7 +1,7 @@
 // WORK: una píldora roja que se abre en filas de W O R K mientras cruzan las fichas de los proyectos.
 // De ~/Projects/wodniack-imitacion (timeline de GSAP de wodniack.dev portado a mano). Cambios al coserla:
 // los vídeos no se descargan hasta que la sección se acerca, y el lienzo se repinta al cambiar de color.
-import { root, whileVisible } from './shared.js';
+import { root, lenis, whileVisible } from './shared.js';
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -35,7 +35,7 @@ function Work(el) {
     mask.style.transform = `scale(${close ? lerp(maxScale, 1, p4.io(b)) : lerp(1, maxScale, p4.in(a))})`;
     scene.style.transform = `scale(${close ? lerp(1, .75, p3.io(b)) : lerp(.75, 1, p3.in(a))})`;
     inner.style.clipPath = `inset(0 ${close ? p3.io(b) : 1 - p3.in(a)}rem)`;
-    scene.style.setProperty('--state', state);
+    scene.style.setProperty('--state', state); inner.style.setProperty('--state', state);
     cards.forEach((c, i) => {
       const p = lerp(1, -1, slowMo(seg(t, .75 + i * .25, .5))), on = p > -1 && p < 1;
       c.el.style.setProperty('--progress', p);
@@ -112,6 +112,34 @@ document.fonts.load('1em Anton').then(work.resize);   // las filas de letras se 
 addEventListener('resize', work.resize);
 addEventListener('themechange', work.resize);         // el lienzo pinta con --red: hay que repintarlo
 whileVisible(el, work.tick);
+
+// WORK también se recorre de lado: el desplazamiento horizontal (trackpad, dedo) se convierte en scroll de la
+// sección. La rueda vertical sigue valiendo porque un ratón normal no tiene eje X. Fuera de WORK, el lado no hace nada.
+function range() {   // tramo de scroll en el que WORK está fijado y avanzan las fichas (el mismo que usa tick)
+  const r = el.getBoundingClientRect(), vh = innerHeight, top = scrollY + r.top;
+  return r.top < vh * .25 && r.bottom > vh * .75 ? [top - vh * .25, top + r.height - vh * .75] : null;
+}
+let goal = 0, at = 0;   // a dónde va el scroll suave: lenis.targetScroll no acumula los empujones de scrollTo
+const slide = (dx, smooth) => {
+  const rg = range(); if (!rg) return false;
+  const from = smooth && performance.now() - at < 400 ? goal : scrollY, to = clamp(from + dx, rg[0], rg[1]);
+  if (to === from) return false;
+  lenis.scrollTo(goal = to, { immediate: !smooth }); at = performance.now();
+  return true;
+};
+addEventListener('wheel', e => {
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && slide(e.deltaX, true)) { e.preventDefault(); e.stopPropagation(); }
+}, { passive: false, capture: true });
+let touch = null;
+addEventListener('touchstart', e => { const p = e.touches[0]; touch = { x: p.clientX, y: p.clientY, side: null }; }, { passive: true });
+addEventListener('touchmove', e => {
+  if (!touch || e.touches.length > 1) return;
+  const p = e.touches[0], dx = touch.x - p.clientX, dy = touch.y - p.clientY;
+  touch.side ??= Math.hypot(dx, dy) > 8 ? Math.abs(dx) > Math.abs(dy) : null;   // decide una vez: de lado o de arriba abajo
+  if (!touch.side) return;
+  touch.x = p.clientX;
+  if (slide(dx * 1.5, false)) e.preventDefault();
+}, { passive: false });
 
 // los vídeos de las fichas se piden cuando Work está a una pantalla y media, no durante la entrada
 new IntersectionObserver(([e], io) => {
