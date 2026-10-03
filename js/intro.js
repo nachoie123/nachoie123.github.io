@@ -1,5 +1,5 @@
 // ENTRADA: dos anillos de texto en 3D (imitación del loader de olhalazarieva.com, de ~/Projects/text-ring-loader).
-// Solo los anillos: el revelado "Creative Developer" de la original se ha quitado. Rojo y tinta de la portada.
+// Solo los anillos: el revelado "Creative Developer" de la original se ha quitado. Fondo = color con el que arranca la web.
 // Al salir, los anillos caen y la portada (hero.js) arranca su propia entrada.
 import * as THREE from 'three';
 import { reduce, lenis } from './shared.js';
@@ -7,7 +7,8 @@ import { play } from './hero.js';
 
 const RING_BIG = 'CODE THAT CHANGES THE WORLD'.split(' ');
 const RING_SMALL = ['AUTOMATION', 'QUANT FINANCE', 'AI AGENTS', 'WEB DESIGN', 'DEVELOPMENT'];
-const RED = '#f40c3f', INK = '#160000';
+const INK = '#160000';
+const PAPER = getComputedStyle(document.documentElement).getPropertyValue('--red').trim();   // el fondo de la web al cargar (crema)
 
 const el = document.querySelector('.intro'), counter = el.querySelector('.intro__count');
 history.scrollRestoration = 'manual';   // la web siempre empieza arriba: la entrada no tiene sentido a mitad de página
@@ -25,7 +26,7 @@ async function start() {
   const renderer = new THREE.WebGLRenderer({ canvas: el.querySelector('canvas'), antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(RED);
+  scene.background = new THREE.Color(PAPER);
   const camera = new THREE.PerspectiveCamera(50, 1, .1, 100);
   camera.position.set(0, 0, 6);
   const resize = () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); };
