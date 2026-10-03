@@ -210,7 +210,7 @@ html.lenis,html.lenis body{height:auto}
 .work__ghost::before{content:attr(data-letter);position:absolute;top:0;left:0;z-index:-1;color:color-mix(in srgb,var(--red) 30%,var(--ink));opacity:min(var(--state) * 2,1);transform:scale(1.05,1.02) translate3d(calc(var(--head) * .1rem * var(--state) * var(--state)),0,0);transform-origin:calc(50% - var(--head) * 50%) -50%}
 .work__card{--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);will-change:transform;
   transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz)) scale(var(--size))}
-.work__card :is(video,img){display:block;width:min(50vw,85vh);aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
+.work__card :is(video,img){display:block;width:min(42vw,72vh);aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
 .work__cap{display:flex;justify-content:space-between;align-items:center;padding:.5rem;font:700 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase}
 .work__hint{position:absolute;top:calc(var(--frame) + 1.25rem);left:0;right:0;z-index:4;margin:0;text-align:center;font:400 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:var(--state,0);pointer-events:none}
 .work__canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;transform:translate3d(0,calc(var(--sp,0) * -5%),0)}
@@ -228,7 +228,7 @@ html.lenis,html.lenis body{height:auto}
   .work__ruler{--w:50%}
   .work__inner,.work__canvas{transform:none}
   .work__card{padding:.25rem;transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 100% - 50%),var(--tz))}
-  .work__card :is(video,img){width:min(80vw,136vh)}
+  .work__card :is(video,img){width:min(70vw,116vh)}
   .work__cap{display:none}
 }
 
@@ -392,16 +392,15 @@ html.lenis,html.lenis body{height:auto}
       <p class="work__hint" aria-hidden="true">← Swipe or scroll →</p>
       <h2 class="work__title"><span class="work__col"><span>W</span><span>O</span><span>R</span><span>K</span></span></h2>
       <div class="work__scene">
-      <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/radar/" target="_blank" rel="noopener"><video src="work/radar.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Radar</span><span>#dbq8-0001/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/bote-app/" target="_blank" rel="noopener"><video src="work/bote-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Bote</span><span>#87va-0002/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/credit-scorecard/" target="_blank" rel="noopener"><video src="work/scorecard.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Credit Scorecard</span><span>#t44q-0003/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/ig-cleaning/" target="_blank" rel="noopener"><video src="work/ig-cleaning.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>IG Cleaning</span><span>#wksl-0004/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/jarvis/" target="_blank" rel="noopener"><video src="work/jarvis.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Jarvis</span><span>#0qh5-0005/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/guardados-app/" target="_blank" rel="noopener"><video src="work/guardados-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Guardados</span><span>#m2rx-0006/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/inflation-forecaster/" target="_blank" rel="noopener"><video src="work/inflation.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Inflation Forecaster</span><span>#k9fe-0007/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/capm-explainer/" target="_blank" rel="noopener"><video src="work/capm.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>CAPM Explainer</span><span>#c4pm-0008/10</span></span></a>
-      <a class="work__card" href="#top"><video src="work/portfolio.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Portfolio</span><span>#x1pd-0009/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/radar/" target="_blank" rel="noopener"><video src="work/radar.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Radar</span><span>#dbq8-0001/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/bote-app/" target="_blank" rel="noopener"><video src="work/bote-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Bote</span><span>#87va-0002/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/credit-scorecard/" target="_blank" rel="noopener"><video src="work/scorecard.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Credit Scorecard</span><span>#t44q-0003/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/ig-cleaning/" target="_blank" rel="noopener"><video src="work/ig-cleaning.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>IG Cleaning</span><span>#wksl-0004/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/jarvis/" target="_blank" rel="noopener"><video src="work/jarvis.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Jarvis</span><span>#0qh5-0005/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/guardados-app/" target="_blank" rel="noopener"><video src="work/guardados-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Guardados</span><span>#m2rx-0006/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/inflation-forecaster/" target="_blank" rel="noopener"><video src="work/inflation.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Inflation Forecaster</span><span>#k9fe-0007/9</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/capm-explainer/" target="_blank" rel="noopener"><video src="work/capm.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>CAPM Explainer</span><span>#c4pm-0008/9</span></span></a>
       </div>
       <canvas class="work__canvas"></canvas>
     </div>
