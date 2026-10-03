@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jarvis</title>
+<meta name="description" content="A personal butler that lives on my Mac. One click plans the day, triages the inbox and runs thinking tools; its hands open apps, search and type for me. Private project.">
+<meta property="og:title" content="Jarvis — a butler that lives on my Mac">
+<meta property="og:description" content="Plans my day, triages the inbox, and uses my Mac for me. 43 buttons, voice, a notch island and hands that act outside the app.">
+<meta property="og:image" content="https://nachosanbenito.com/jarvis/poster.jpg">
+<meta name="theme-color" content="#05060d">
+<link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#05060d;--surface:#0d1224;--text:#e8ecff;--muted:#9aa3c7;--border:rgba(140,170,255,.22);--blue:#4FC2F7;--violet:#B387FF;--amber:#FFB84D;--green:#46e39a;--g:linear-gradient(100deg,#4FC2F7,#B387FF 55%,#FFB84D);--btn-ink:#04101a}
+  @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f6ff;--surface:#fff;--text:#0c1230;--muted:#4c5679;--border:#d9def2;--blue:#0a7fb8;--violet:#6b3fd1;--amber:#b86b00;--green:#0b8a52;--btn-ink:#fff}}
+  :root[data-theme="light"]{--bg:#f4f6ff;--surface:#fff;--text:#0c1230;--muted:#4c5679;--border:#d9def2;--blue:#0a7fb8;--violet:#6b3fd1;--amber:#b86b00;--green:#0b8a52;--btn-ink:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:17px/1.55 "Inter Tight",-apple-system,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 16px 72px}
+  .video video{width:100%;aspect-ratio:16/9;display:block;border-radius:20px;background:#000;box-shadow:0 30px 90px rgb(79 194 247 / .18);border:1px solid var(--border)}
+  .intro{max-width:700px;margin:48px auto 0;text-align:center}
+  .brand{display:flex;gap:12px;align-items:center;justify-content:center;font-weight:700}
+  .brand img{width:44px;height:44px;border-radius:11px}
+  h1{font-size:clamp(40px,6.4vw,68px);line-height:1.02;letter-spacing:-.035em;margin:22px 0 16px;font-weight:800}
+  h1 span{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--muted);font-size:19px;margin:0 auto}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:28px 0 10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:700;text-decoration:none}
+  .btn.main{background:var(--g);color:#04101a}
+  .btn.ghost{border:1px solid var(--border);color:var(--text);background:var(--surface)}
+  .small{color:var(--muted);font-size:14px;margin:10px 0 0}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:48px 0 0}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px}
+  .stat b{display:block;font-size:40px;line-height:1;letter-spacing:-.02em}
+  .stat span{color:var(--muted);font-size:14px}
+  h2{font-size:30px;letter-spacing:-.02em;margin:80px 0 6px}
+  .kicker{font:700 13px "JetBrains Mono",monospace;letter-spacing:.14em;margin:72px 0 0;text-transform:uppercase}
+  .kicker+h2{margin-top:6px}
+  .sub{color:var(--muted);margin:0 0 20px;max-width:640px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .grid b{display:block;margin-bottom:6px;font-size:18px}
+  .grid p{margin:0;color:var(--muted);font-size:15px}
+  .hands{border:1px solid var(--green);border-radius:26px;padding:28px 22px;margin-top:80px;background:linear-gradient(160deg,color-mix(in srgb,var(--green) 12%,transparent),transparent 60%)}
+  .hands .kicker,.hands h2{margin-top:0}
+  .hands h2{font-size:clamp(30px,5vw,46px)}
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:22px 0;counter-reset:s}
+  .flow div{counter-increment:s;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 14px 14px 52px;position:relative;font-size:15px}
+  .flow div::before{content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--green);color:var(--btn-ink);font-weight:800;display:grid;place-items:center}
+  .tiers{display:grid;gap:8px;margin-top:16px}
+  .tier{display:grid;grid-template-columns:90px 1fr 40px;gap:12px;align-items:center;font-size:15px}
+  .bar{height:12px;border-radius:6px;background:var(--border);overflow:hidden}.bar i{display:block;height:100%}
+  .fig{margin:30px 0 0}.fig img{width:100%;border-radius:18px;border:1px solid var(--border);display:block}
+  .fig figcaption{color:var(--muted);font-size:13px;margin-top:8px}
+  .private{margin-top:80px;text-align:center}
+  .private h2{margin-top:0}
+  footer{margin-top:64px;color:var(--muted);font-size:14px;text-align:center}footer a{color:inherit}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="video"><video src="jarvis-promo.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
+
+  <section class="intro">
+    <div class="brand"><img src="icon.png" alt="">Jarvis</div>
+    <h1>A butler that <span>lives on my Mac.</span></h1>
+    <p class="lead">I talk to it or click it. It plans my day, triages my inbox, runs thinking tools, and its hands open apps, search and type for me. It decides who should do each job: the Mac alone, Gemini, or Claude.</p>
+    <div class="cta">
+      <a class="btn main" href="#hands">See the hands</a>
+      <a class="btn ghost" href="https://github.com/nachoie123">GitHub</a>
+      <a class="btn ghost" href="https://nachosanbenito.com/#contact">Contact</a>
+    </div>
+    <p class="small">Private project · runs on my Mac · macOS app in Swift + a local Python bridge</p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><b>43</b><span>buttons, 8 groups</span></div>
+    <div class="stat"><b>61</b><span>orders handled in one day (1 Oct)</span></div>
+    <div class="stat"><b>36</b><span>Python modules, 9,306 lines</span></div>
+    <div class="stat"><b>2,137</b><span>lines of Swift in the app</span></div>
+  </div>
+
+  <div class="kicker" style="color:var(--blue)">01 · Your day</div>
+  <h2>One click plans it</h2>
+  <p class="sub">Classes, deadlines and three priorities land in today's Obsidian note. The same colours show what Jarvis is doing: <b style="color:var(--blue)">listening</b>, <b style="color:var(--violet)">thinking</b>, <b style="color:var(--amber)">speaking</b>.</p>
+  <div class="grid">
+    <div class="card"><b>Plan my day / tomorrow</b><p>Classes, deadlines, events and 3 priorities, written into the daily note.</p></div>
+    <div class="card"><b>Close day</b><p>What got done, what moves to tomorrow, one line of reflection.</p></div>
+    <div class="card"><b>Weekly review</b><p>Scores the week from 1 to 10 using the daily notes and Jarvis receipts.</p></div>
+    <div class="card"><b>Deadlines &amp; briefing</b><p>Upcoming exams and tasks, weather, classes and mail in one morning brief.</p></div>
+  </div>
+  <figure class="fig"><img src="hud.jpg" alt="The Jarvis HUD with its wireframe sphere, skill buttons and results" width="1600" height="900"><figcaption>The HUD, served locally by the bridge. Schedule and priorities shown here are example data.</figcaption></figure>
+
+  <div class="kicker" style="color:var(--amber)">02 · Inbox, classes, career</div>
+  <h2>Triage, not noise</h2>
+  <p class="sub">Each button is a skill: a written method Jarvis runs through Claude Code and files in Obsidian.</p>
+  <div class="grid">
+    <div class="card"><b>Inbox brief</b><p>Sorts recent mail into urgent / reply / ignore and leaves drafts. It never sends.</p></div>
+    <div class="card"><b>Today's classes</b><p>What each class covered, from the per-session notes.</p></div>
+    <div class="card"><b>Internship radar</b><p>New internships that fit, Europe first, from a local database.</p></div>
+    <div class="card"><b>Recruiter check</b><p>My CV against a posting, read as a recruiter and as an ATS: score and missing keywords.</p></div>
+    <div class="card"><b>Intel brief</b><p>Three AI headlines from the last 24 hours.</p></div>
+    <div class="card"><b>43 buttons</b><p>Planning, mail, research, writing, career, Obsidian, dev tools, system and design.</p></div>
+  </div>
+
+  <div class="kicker" style="color:var(--violet)">03 · Thinking tools</div>
+  <h2>A room full of second opinions</h2>
+  <div class="grid">
+    <div class="card"><b>Roast my idea</b><p>Four voices (believer, sceptic, investor, judge) and a verdict: BUILD, FIX FIRST or KILL.</p></div>
+    <div class="card"><b>Grill me</b><p>Interviews me one question at a time until the plan has no holes, then writes the spec.</p></div>
+    <div class="card"><b>Prompt builder</b><p>Turns a rough task into a reusable prompt.</p></div>
+    <div class="card"><b>LLM council</b><p>Five advisors debate a decision.</p></div>
+    <div class="card"><b>Deep research</b><p>A web report with sources, saved to Obsidian.</p></div>
+    <div class="card"><b>Content cascade</b><p>One note becomes a LinkedIn post, a thread and a newsletter paragraph.</p></div>
+  </div>
+
+  <section class="hands" id="hands">
+    <div class="kicker" style="color:var(--green)">04 · Hands · acts outside the app</div>
+    <h2>It uses my Mac for me</h2>
+    <p class="sub" style="max-width:720px">Say "open Spotify" and a pointer flies to the Dock and clicks. Jarvis reads any window through macOS Accessibility, so it is not limited to its own app.</p>
+    <div class="flow">
+      <div>I say or type an order</div>
+      <div>Rules check it first: no model, 0 ms</div>
+      <div>If unclear, JEV decides in about 0.4 s</div>
+      <div>A pointer flies to the control and clicks it</div>
+    </div>
+    <div class="grid">
+      <div class="card"><b>Open apps and sites</b><p>"Open Spotify", "open YouTube", with the cursor flying to the Dock icon first.</p></div>
+      <div class="card"><b>Search inside apps</b><p>Maps, YouTube, Spotify, Amazon: it types the query for me.</p></div>
+      <div class="card"><b>Type and message</b><p>Drafts the text, then asks before pressing Enter. Irreversible actions always ask.</p></div>
+      <div class="card"><b>Scroll, volume, media keys</b><p>Play, pause, next, volume, scrolling, all by voice.</p></div>
+      <div class="card"><b>"Where is X?"</b><p>Tutor mode: it points at the button instead of pressing it.</p></div>
+      <div class="card"><b>Learns recipes</b><p>When a plan works, it saves it and repeats it without calling a model next time.</p></div>
+    </div>
+    <p class="small" style="margin-top:18px">Who handled the 61 orders on 1 October:</p>
+    <div class="tiers">
+      <div class="tier"><span class="mono">Rules</span><div class="bar"><i style="width:73%;background:var(--blue)"></i></div><b>24</b></div>
+      <div class="tier"><span class="mono">Gemini</span><div class="bar"><i style="width:100%;background:var(--violet)"></i></div><b>33</b></div>
+      <div class="tier"><span class="mono">Claude</span><div class="bar"><i style="width:12%;background:var(--amber)"></i></div><b>4</b></div>
+    </div>
+    <p class="small">Code: manos.py (770 lines), ojos.py (527), cerebro.py (587). The desktop in the video is an illustration of this flow.</p>
+  </section>
+
+  <div class="kicker" style="color:var(--green)">05 · Always there</div>
+  <h2>Wherever I'm working</h2>
+  <div class="grid">
+    <div class="card"><b>Voice</b><p>Hold ⌘M to talk (walkie-talkie), double-tap for hands-free. Whisper runs locally; Jarvis answers in a British butler voice.</p></div>
+    <div class="card"><b>Notch island</b><p>Hover the notch to see what is next, the last answer and a music card.</p></div>
+    <div class="card"><b>The mirror</b><p>Reads 269 of my chats with Claude, finds what I correct most and proposes CLAUDE.md changes. Nothing applies until I approve.</p></div>
+    <div class="card"><b>Inside Obsidian</b><p>The HUD also runs as an Obsidian plugin; every order leaves a ticket in the vault.</p></div>
+  </div>
+
+  <section class="private">
+    <h2>Private project — runs on my Mac</h2>
+    <p class="lead">Jarvis holds my calendar, mail access and account keys, so there is no public repository. If you want to see how it is built, ask.</p>
+    <div class="cta">
+      <a class="btn main" href="https://github.com/nachoie123">GitHub</a>
+      <a class="btn ghost" href="https://nachosanbenito.com/#contact">Get in touch</a>
+    </div>
+  </section>
+
+  <footer>Built by <a href="https://www.linkedin.com/in/nacho-san-benito/">Ignacio San Benito</a> · <a href="https://github.com/nachoie123">GitHub</a></footer>
+</main>
+</body>
+</html>
