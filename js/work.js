@@ -133,22 +133,31 @@ const slide = (dx, smooth) => {
 // Dentro de WORK un gesto de lado se cancela SIEMPRE, quede recorrido o no: antes solo se cancelaba si movía las fichas,
 // y en la entrada, la salida o el final del recorrido el trackpad del Mac lo tomaba como "atrás/adelante" y sacaba de la web.
 // Lo vertical lo sigue llevando Lenis (que ya lo cancela él).
-addEventListener('wheel', e => {
+const onWheel = e => {
   if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-  const r = el.getBoundingClientRect(); if (r.top >= innerHeight || r.bottom <= 0) return;
   e.preventDefault();
   if (slide(e.deltaX, true)) e.stopPropagation();
-}, { passive: false, capture: true });
+};
 let touch = null;
-addEventListener('touchstart', e => { const p = e.touches[0]; touch = { x: p.clientX, y: p.clientY, side: null }; }, { passive: true });
-addEventListener('touchmove', e => {
+const onTouchStart = e => { const p = e.touches[0]; touch = { x: p.clientX, y: p.clientY, side: null }; };
+const onTouchMove = e => {
   if (!touch || e.touches.length > 1) return;
   const p = e.touches[0], dx = touch.x - p.clientX, dy = touch.y - p.clientY;
   touch.side ??= Math.hypot(dx, dy) > 8 ? Math.abs(dx) > Math.abs(dy) : null;   // decide una vez: de lado o de arriba abajo
   if (!touch.side) return;
   touch.x = p.clientX;
   if (slide(dx * 1.5, false)) e.preventDefault();
-}, { passive: false });
+};
+// Todo lo de WORK existe solo mientras WORK está en pantalla: fuera de ella los oyentes ni están puestos, y la capa fija
+// del escenario (fichas, letras, lienzo) se oculta. Antes seguía "en pantalla" aunque recortada, y la GPU la pintaba
+// y guardaba también en la portada y el About, quitándoles memoria (bloques sin pintar al volver arriba).
+const inner = el.querySelector('.work__inner'), opt = { passive: false, capture: true };
+new IntersectionObserver(([e]) => {
+  const on = e.isIntersecting, f = on ? addEventListener : removeEventListener;
+  inner.style.visibility = on ? 'visible' : 'hidden';   // en CSS arranca oculta
+  f('wheel', onWheel, opt); f('touchstart', onTouchStart, { passive: true }); f('touchmove', onTouchMove, { passive: false });
+  if (!on) touch = null;
+}, { rootMargin: '10% 0px' }).observe(el);
 
 // los vídeos de las fichas se piden cuando Work está a una pantalla y media, no durante la entrada
 new IntersectionObserver(([e], io) => {
