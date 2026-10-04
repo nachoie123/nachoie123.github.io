@@ -10,6 +10,13 @@ const t = stage.querySelector('.mtext'), meta = stage.querySelector('.meta'), cu
 
 // Cada línea que sube lleva su retraso (--d) para que entren escalonadas
 about.querySelectorAll('.ln > span').forEach((s, i) => s.style.setProperty('--d', i));
+
+// CV (sección de debajo): cada bloque entra una vez, al asomar en pantalla
+document.querySelectorAll('.cv .ln > span').forEach((s, i) => s.style.setProperty('--d', i));
+const seen = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); seen.unobserve(e.target); }
+}), { rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('.cv .rv').forEach(el => seen.observe(el));
 t.innerHTML = LINES.map(([s, dim]) =>
   `<span class="l${dim ? ' dim' : ''}" aria-hidden="true">` + [...s].map(ch => ch === ' ' ? ' ' : `<span class="c">${ch}</span>`).join('') + '</span>'
 ).join('');

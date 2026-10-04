@@ -88,6 +88,8 @@ html.lenis,html.lenis body{height:auto}
 .socials{width:48px;list-style:none}
 .socials li{height:calc(100% / 3);overflow:hidden}
 .socials li:not(:last-child){border-bottom:var(--line)}
+.cvtxt{position:relative;font:700 15px/1 var(--cond);letter-spacing:.02em;transition:color .3s}
+.socials a:hover .cvtxt{color:var(--red)}
 .socials a,.contrast-in{position:relative;display:grid;place-items:center;width:100%;height:100%}
 .contrast{position:relative;width:48px;overflow:hidden;background:none;border:0;border-right:var(--line);color:inherit;cursor:pointer}
 .socials a::before,.contrast::before,.icon::before{position:absolute;inset:0;scale:0 1;transform-origin:0 50%;transition:scale .3s cubic-bezier(1,0,0,1);content:""}
@@ -176,24 +178,108 @@ html.lenis,html.lenis body{height:auto}
 
 .about{position:absolute;inset:0;pointer-events:none}
 .about .label{position:absolute;left:var(--pad);top:32px}
-.about .col{position:absolute;left:30%;top:15vh;width:clamp(240px,26vw,420px);display:flex;flex-direction:column;align-items:center;text-align:center}
-.photo{position:relative;width:70%;aspect-ratio:4/5;background:var(--ink);overflow:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--expo-out)}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1);transform:scale(1.2);transition:transform .5s var(--expo-out)}
-.photo span{position:absolute;inset:0;display:grid;place-items:end start;padding:8%;color:var(--red);font-size:clamp(64px,8vw,140px);line-height:.8;letter-spacing:-.04em}
+/* foto a la izquierda en la línea del 30 %, texto a su lado; la foto manda el alto (cabe en 1280×720) */
+.about .col{position:absolute;left:30%;right:var(--pad);top:15vh;display:grid;grid-template-columns:min(44vh,24vw) minmax(0,1fr);gap:0 3vw;align-items:start}
+.photo{position:relative;aspect-ratio:2/3;background:var(--ink);overflow:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--expo-out)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(1) contrast(1.05);transform:scale(1.2);transition:transform .5s var(--expo-out)}
 .in .photo{clip-path:inset(0);transition-duration:1.3s}
 .in .photo img{transform:none;transition-duration:1.8s}
-.hello{margin-top:5vh}
-.about .sub{margin-top:6vh;color:var(--dim)}
-.about .col p{margin-top:2.5vh}
+.about .txt{max-width:34em}
+.hello{font-size:clamp(34px,3.75vw,72px);line-height:.92;letter-spacing:-.02em;text-transform:none;font-weight:700}
+.hello .ln{padding-bottom:.06em}   /* que no se corte la g */
+.facts{margin-top:3.2vh;display:flex;flex-direction:column;gap:2px}
+.sum{margin-top:3.2vh;font-size:clamp(13px,1vw,16px);line-height:1.55;text-transform:none}
+.acts{margin-top:4vh}
+.acts .ln>span,.cv-acts .ln>span{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+/* botón cuadrado de línea fina: se rellena al pasar, se hunde al pulsar */
+.btn{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:var(--line);font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:background-color .2s,color .2s,transform .1s ease-out}
+.btn:hover{background:var(--ink);color:var(--red)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible,.more:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.more{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;transition:opacity .15s}
+.more:active{opacity:.6}
+.about.in a{pointer-events:auto}
+.about:not(.in) a{visibility:hidden;transition:visibility 0s .35s}
 /* texto que sube línea a línea desde una ranura */
 .ln{display:block;overflow:hidden}
 .ln>span{display:block;transform:translateY(105%);transition:transform .35s var(--expo-out)}
 .in .ln>span{transform:none;transition:transform 1s var(--expo-out) calc(var(--d) * 70ms + 250ms)}
+.acts .ln,.cv-acts .ln{padding:4px;margin:-4px}   /* sitio para el anillo de foco */
 
 @media (max-width:700px){
   .mtext{left:16px;bottom:12vh}
   .for{left:40%}
-  .about .col{left:50%;translate:-50% 0;width:78vw;top:17vh}
+  .about .label{left:16px}
+  /* móvil: foto pequeña a la izquierda con el saludo al lado; el resumen y los botones debajo, a lo ancho */
+  .about .col{left:16px;right:16px;top:calc(32px + 7vh);grid-template-columns:38% minmax(0,1fr);grid-template-areas:"p h" "s s" "a a";gap:0 16px}
+  .about .txt{display:contents}
+  .photo{grid-area:p}
+  .hello,.facts{grid-column:2;grid-row:1}
+  .hello{align-self:start;font-size:clamp(28px,8.6vw,40px)}
+  .facts{align-self:end;margin:0;font-size:10px}
+  .sum{grid-area:s;margin-top:20px;font-size:13px}
+  .acts{grid-area:a;margin-top:18px}
+  .btn{padding:0 14px}
+}
+
+/* ===================== CV: el PDF y LinkedIn en filas (etiqueta a la izquierda, filas desde la línea del 30 %) ===================== */
+.cv{--pad:3.5vw;position:relative;margin-top:var(--frame);padding:clamp(72px,9vw,160px) var(--pad) clamp(64px,7vw,128px);background:var(--red);font:400 12px/1.6 var(--mono);text-transform:uppercase}
+.cv-head{display:grid;grid-template-columns:30% 1fr;align-items:end;gap:24px 0;padding-bottom:clamp(40px,5vw,88px)}
+.cv-title{grid-row:span 2;font-size:clamp(56px,8.5vw,164px);line-height:.85;letter-spacing:-.03em;text-transform:none}
+.cv-title .ln{padding-bottom:.04em}
+.cv-lede{font-size:clamp(13px,1vw,16px);text-transform:none}
+.cv-group{display:grid;grid-template-columns:30% 1fr;border-top:var(--line)}
+.cv-label{position:sticky;top:24px;align-self:start;padding:20px 0;font:700 12px/1.6 var(--mono);letter-spacing:.08em}
+.cv-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr) minmax(0,3fr);gap:0 2.5vw;padding:20px 0 28px}
+.cv-row+.cv-row{border-top:var(--line)}
+.cv-row .when{padding-top:.15em;letter-spacing:.04em}
+.what h4{font-size:clamp(26px,2.2vw,42px);line-height:.95;letter-spacing:-.015em;text-transform:none}
+.what p{margin-top:8px}
+.how{list-style:none;font-size:clamp(13px,.95vw,15px);line-height:1.55;text-transform:none}
+.how li+li{margin-top:6px}
+.how li{position:relative;padding-left:14px}
+.how li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:1px;background:var(--ink)}
+.how li:has(.more){padding-left:0;margin-top:2px}
+.how li:has(.more)::before{display:none}
+.how .more{padding:0;min-height:36px}
+.cv-skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 2.5vw}
+.cv-skills>div{padding:20px 0 24px;border-top:var(--line)}
+.cv-skills>div:nth-child(-n+3){border-top:0}
+.cv-skills dt{font-size:clamp(22px,1.7vw,32px);line-height:1;letter-spacing:-.01em;text-transform:none}
+.cv-skills dd{margin-top:10px;font-size:clamp(13px,.95vw,15px);line-height:1.55;text-transform:none}
+/* entrada: sube un poco y aparece al entrar en pantalla (la clase la pone about.js) */
+.cv .rv{opacity:0;transform:translateY(16px);transition:opacity .8s var(--expo-out),transform 1s var(--expo-out)}
+.cv .rv.in{opacity:1;transform:none}
+.cv .cv-head.rv{opacity:1;transform:none}
+
+@media (max-width:987px){
+  .cv-row{grid-template-columns:minmax(0,1fr) minmax(0,2fr);row-gap:12px}
+  .cv-row .how{grid-column:2}
+  .cv-skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cv-skills>div:nth-child(3){border-top:var(--line)}
+}
+@media (max-width:700px){
+  .cv{--pad:16px;padding:64px 16px 56px}
+  .cv-head,.cv-group{grid-template-columns:1fr}
+  .cv-title{grid-row:auto;font-size:64px}
+  .cv-label{position:static;padding:16px 0 4px}
+  /* fila compacta: fecha a la derecha del nombre, detalle debajo a lo ancho */
+  .cv-row{position:relative;grid-template-columns:1fr;gap:10px;padding:14px 0 20px}
+  .cv-row .when{position:absolute;top:20px;right:0;font-size:11px;white-space:nowrap}
+  .cv-row .how{grid-column:auto}
+  .what h4{padding-right:92px;font-size:26px}
+  .what p{margin-top:6px}
+  .cv-skills{grid-template-columns:1fr}
+  .cv-skills>div{padding:14px 0 18px}
+  .cv-skills>div:nth-child(n+2){border-top:var(--line)}
+}
+@media (prefers-reduced-motion:reduce){
+  .ln>span,.photo,.photo img,.cv .rv{transition:none!important}
+  .about{opacity:0;transition:opacity .3s}
+  .about.in{opacity:1}
+  .about .ln>span,.cv .ln>span,.cv .rv{transform:none;opacity:1}
+  .photo{clip-path:none}
+  .photo img{transform:none}
 }
 
 /* ===================== WORK (wodniack.dev): píldora que se abre en filas de W O R K ===================== */
@@ -340,7 +426,7 @@ html.lenis,html.lenis body{height:auto}
     <ul class="socials">
       <li><a href="https://github.com/nachoie123" target="_blank" rel="noopener" aria-label="GitHub"><span class="icon" style="width:16px;height:16px;--path:path('M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z')"></span></a></li>
       <li><a href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener" aria-label="LinkedIn"><span class="icon" style="width:16px;height:15px;--path:path('M1.13 14.98h2.81V4.6H1.13v10.38ZM2.53.02C1.6.02.85.76.85 1.7s.75 1.68 1.68 1.68 1.68-.75 1.68-1.68S3.47.02 2.53.02Zm6.18 6.17V4.6H5.9v10.38h2.81V9.65c0-2.99 3.83-3.18 3.83 0v5.33h2.81V8.62c0-5.05-5.33-4.86-6.64-2.43Z')"></span></a></li>
-      <li><a href="/cv/" aria-label="CV"><span class="icon" style="width:12px;height:16px;--path:path(evenodd,'M0 0h8l4 4v12H0ZM1.5 1.5H7V5h3.5v9.5h-9ZM3 8h6v1.4H3ZM3 11h6v1.4H3Z')"></span></a></li>
+      <li><a href="/cv/" aria-label="Download my CV" title="My CV"><span class="cvtxt">CV</span></a></li>
     </ul>
     <button class="contrast" type="button" aria-label="Switch colour"><span class="contrast-in"><span class="icon" style="width:20px;height:20px;--path:path('M10 20a9.7 9.7 0 0 1-3.9-.79 10.1 10.1 0 0 1-5.31-5.31A9.7 9.7 0 0 1 0 10c0-1.38.26-2.68.79-3.9A10.1 10.1 0 0 1 6.1.79 9.7 9.7 0 0 1 10 0c1.38 0 2.68.26 3.9.79a10.1 10.1 0 0 1 5.31 5.31c.53 1.22.79 2.52.79 3.9s-.26 2.68-.79 3.9a10.1 10.1 0 0 1-5.31 5.31A9.7 9.7 0 0 1 10 20Zm1-2.08a7.8 7.8 0 0 0 4.99-2.61A7.6 7.6 0 0 0 18 10a7.6 7.6 0 0 0-2.01-5.31A7.8 7.8 0 0 0 11 2.08v15.84Z')"></span></span></button>
     <div class="avail"><div><span>Coding from Madrid.</span></div><div><a href="#contact"><span class="t">Available for freelance work → </span>Hire me</a></div></div>
@@ -376,13 +462,70 @@ html.lenis,html.lenis body{height:auto}
     <div class="about">
       <div class="label"><span class="ln"><span>About me</span></span></div>
       <div class="col">
-        <!-- sin foto a propósito (decisión de Nacho): el bloque NSB va en su lugar -->
-        <div class="photo"><span class="cond">NSB</span></div>
-        <div class="hello"><span class="ln"><span>Hello!</span></span><span class="ln"><span>I'm Nacho San Benito</span></span></div>
-        <div class="sub"><span class="ln"><span>My story ↘</span></span></div>
-        <p><span class="ln"><span>BBA + Computer Science &amp; AI</span></span><span class="ln"><span>student at IE University, Madrid.</span></span><span class="ln"><span>I build web apps and automations</span></span><span class="ln"><span>that people actually use.</span></span></p>
+        <!-- foto de Nacho (04/10/2026 la quiere: antes iba el bloque NSB) -->
+        <div class="photo"><img src="img/ignacio.jpg" width="933" height="1400" loading="lazy" decoding="async" alt="Nacho San Benito smiling, arms crossed, in a light blue shirt against a concrete wall"></div>
+        <div class="txt">
+          <h2 class="hello cond"><span class="ln"><span>Hello! I'm</span></span><span class="ln"><span>Nacho San Benito</span></span></h2>
+          <p class="facts"><span class="ln"><span>Madrid, Spain</span></span><span class="ln"><span>IE University, class of 2030</span></span><span class="ln"><span>Spanish native · English bilingual</span></span></p>
+          <p class="sum"><span class="ln"><span>Dual-degree student at IE University: Business Administration plus Computer Science &amp; AI. I take an idea from zero to a launched product: framing, code, quant models, delivery. 10 projects shipped. Data Science &amp; AI intern at NFQ. Looking for finance or tech internships from June 2027.</span></span></p>
+          <div class="acts"><span class="ln"><span><a class="btn" href="/cv/">Download CV ↗</a><a class="btn" href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener">LinkedIn ↗</a><a class="more" href="#cv">Full CV ↓</a></span></span></div>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ===== CV: lo mismo que el PDF y LinkedIn, en filas que se leen en 20 s (datos de cv-adapter/master-cv.json) ===== -->
+<section class="cv" id="cv" aria-labelledby="cv-title">
+  <header class="cv-head rv">
+    <h2 class="cv-title cond" id="cv-title"><span class="ln"><span>On paper</span></span></h2>
+    <p class="cv-lede"><span class="ln"><span>Open to finance and tech internships from June 2027.</span></span></p>
+    <div class="cv-acts"><span class="ln"><span><a class="btn" href="/cv/">Download CV ↗</a><a class="btn" href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener">LinkedIn ↗</a></span></span></div>
+  </header>
+
+  <div class="cv-group">
+    <h3 class="cv-label">Experience</h3>
+    <div class="cv-rows">
+      <article class="cv-row rv"><p class="when">Jun 2026</p><div class="what"><h4 class="cond">NFQ</h4><p>Data Science &amp; AI Intern · Madrid</p></div>
+        <ul class="how"><li>Segmented NFQ's corporate supplier base with clustering.</li><li>Built a supplier value score from KPIs plus LLM reasoning.</li><li>Shipped an NLP module that writes an executive summary per supplier, live in the NFQ 360 Supplier View platform.</li></ul></article>
+      <article class="cv-row rv"><p class="when">Feb 2026 – now</p><div class="what"><h4 class="cond">Freelance</h4><p>Web designer · Madrid</p></div>
+        <ul class="how"><li>Websites and digital tools for businesses, from first brief to final delivery.</li></ul></article>
+    </div>
+  </div>
+
+  <div class="cv-group">
+    <h3 class="cv-label">Education</h3>
+    <div class="cv-rows">
+      <article class="cv-row rv"><p class="when">2025 – 2030</p><div class="what"><h4 class="cond">IE University</h4><p>Dual Bachelor: Business Administration + Computer Science &amp; AI</p></div>
+        <ul class="how"><li>Expected July 2030.</li><li>Computer Programming, Calculus, Probability, Matrices &amp; Linear Transformations, Cloud Computing, Corporate Finance, Capital Markets, Macroeconomics, Entrepreneurship.</li></ul></article>
+      <article class="cv-row rv"><p class="when">2023 – 2025</p><div class="what"><h4 class="cond">Colegio San Patricio</h4><p>International Baccalaureate Diploma</p></div>
+        <ul class="how"><li>Mathematics: Analysis &amp; Approaches, Higher Level.</li></ul></article>
+    </div>
+  </div>
+
+  <div class="cv-group">
+    <h3 class="cv-label">Building</h3>
+    <div class="cv-rows">
+      <article class="cv-row rv"><p class="when">2026</p><div class="what"><h4 class="cond">Apps</h4><p>Personal software products</p></div>
+        <ul class="how"><li>WhisperTool (macOS dictation), Bote (poker ledger), Radar (internship search), Guardados (saved-posts search) and Jarvis (AI assistant).</li><li><a class="more" href="#work">See them in Work ↓</a></li></ul></article>
+      <article class="cv-row rv"><p class="when">2026</p><div class="what"><h4 class="cond">Quantum</h4><p>Quant finance portfolio</p></div>
+        <ul class="how"><li>4 of 12 projects shipped: CAPM Explainer, Inflation Forecaster (SARIMA), Credit Scorecard and a Monte Carlo Simulator backtested on 16 stocks.</li></ul></article>
+      <article class="cv-row rv"><p class="when">2026 – now</p><div class="what"><h4 class="cond">Madrid Banking &amp; Finance Society</h4><p>Member</p></div>
+        <ul class="how"><li>Industry events and stock pitch competitions.</li></ul></article>
+      <article class="cv-row rv"><p class="when">Jun 2026</p><div class="what"><h4 class="cond">IE Startup Lab</h4><p>Participant</p></div>
+        <ul class="how"><li>IE University's innovation and venture creation programme.</li></ul></article>
+    </div>
+  </div>
+
+  <div class="cv-group">
+    <h3 class="cv-label">Skills</h3>
+    <dl class="cv-skills rv">
+      <div><dt class="cond">Code</dt><dd>Python, HTML, front-end, Git &amp; GitHub, UI/UX, workflow automation, MS Office, macOS</dd></div>
+      <div><dt class="cond">Data &amp; AI</dt><dd>Unsupervised learning, NLP, prompt engineering, LLM and AI-agent tooling</dd></div>
+      <div><dt class="cond">Finance</dt><dd>Corporate finance, capital markets, CAPM &amp; cost of capital, VaR &amp; Expected Shortfall, Monte Carlo, SARIMA forecasting, credit scoring, backtesting</dd></div>
+      <div><dt class="cond">Languages</dt><dd>Spanish (native), English (bilingual)</dd></div>
+      <div><dt class="cond">Interests</dt><dd>Football, fintech, startups, digital products, AI in business</dd></div>
+    </dl>
   </div>
 </section>
 
