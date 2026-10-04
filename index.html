@@ -39,6 +39,7 @@
 }
 html.theme-light{--red:#fff2ed}
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{overscroll-behavior-x:none}   /* sin gesto de atrás/adelante del trackpad en Chrome */
 html{background:var(--ink);scrollbar-gutter:stable}
 html.is-loading{background:var(--red)}
 body{padding:var(--frame) var(--frame) var(--frame);color:var(--ink);font-family:var(--mono);-webkit-font-smoothing:antialiased}
@@ -294,10 +295,11 @@ html.lenis,html.lenis body{height:auto}
 .work__ghost{--head:calc((var(--progress) - .5) * -2);--ahead:calc(var(--head) * var(--head));position:absolute;top:0;left:0;line-height:.85;pointer-events:none;will-change:transform;
   transform:rotateY(calc(var(--head) * -10deg * var(--state))) translate3d(calc(var(--head) * 50vw * var(--state)),calc(var(--iy) * 50% * var(--ahead) * var(--state)),0)}
 .work__ghost::before{content:attr(data-letter);position:absolute;top:0;left:0;z-index:-1;color:color-mix(in srgb,var(--red) 30%,var(--ink));opacity:min(var(--state) * 2,1);transform:scale(1.05,1.02) translate3d(calc(var(--head) * .1rem * var(--state) * var(--state)),0,0);transform-origin:calc(50% - var(--head) * 50%) -50%}
-/* ficha = pantalla + rectángulo con el nombre; --w es el ancho de la pantalla (--s por ficha si alguna debe cambiar) */
-.work__card{--w:calc(min(40vw,66vh) * var(--s,1));--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;display:grid;grid-template-columns:var(--w) calc(var(--w) * .54);grid-template-areas:"v i" "c c";column-gap:.5rem;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);text-align:left;text-transform:none;will-change:transform;
+/* ficha = pantalla + rectángulo con el nombre; --w es la medida base (letra y márgenes salen de ella): en escritorio la pantalla
+   ocupa .82 y el rectángulo .513 (04/10: un 18 % y un 5 % más estrechos que antes, sin tocar la letra). --s por ficha si alguna debe cambiar */
+.work__card{--w:calc(min(40vw,66vh) * var(--s,1));--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;display:grid;grid-template-columns:calc(var(--w) * .82) calc(var(--w) * .513);grid-template-areas:"v i" "c c";column-gap:.5rem;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);text-align:left;text-transform:none;will-change:transform;
   transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz))}
-.work__card:nth-of-type(even){grid-template-columns:calc(var(--w) * .54) var(--w);grid-template-areas:"i v" "c c"}
+.work__card:nth-of-type(even){grid-template-columns:calc(var(--w) * .513) calc(var(--w) * .82);grid-template-areas:"i v" "c c"}
 .work__card :is(video,img){grid-area:v;display:block;width:100%;aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
 .work__info{grid-area:i;display:flex;flex-direction:column;min-width:0;padding:calc(var(--w) * .038);background:var(--red);color:var(--ink)}
 .work__tag{display:flex;justify-content:space-between;align-items:baseline;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
@@ -310,9 +312,9 @@ html.lenis,html.lenis body{height:auto}
 .work__hint{position:absolute;top:calc(var(--frame) + 1.25rem);left:0;right:0;z-index:4;margin:0;text-align:center;font:400 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:var(--state,0);pointer-events:none}
 .work__canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;transform:translate3d(0,calc(var(--sp,0) * -5%),0)}
 .work__mask-outer{position:sticky;top:0;height:100lvh;overflow:hidden;pointer-events:none}
-.work__mask{position:absolute;inset:0;will-change:transform}
+.work__mask{position:absolute;inset:0}
 .work__mask svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--red);fill-rule:evenodd;stroke:var(--ink);stroke-width:1px}
-.work__mask .p-in{transform:translate3d(0,calc(var(--sp,0) * 48px),0)}
+.work__mask .p-in{transform:translate(0,calc(var(--sp,0) * 48px))}   /* 2D a propósito: translate3d la subía a capa de GPU y heredaba el zoom de 12x */
 .work__mask .p-lines{fill:none}
 .work__ruler{--w:min(16.6667%,19.625rem);position:absolute;top:10lvh;left:calc(50% - var(--w) / 2);width:var(--w);height:80lvh;pointer-events:none}
 @media (max-width:987px){
@@ -570,7 +572,7 @@ html.lenis,html.lenis body{height:auto}
       </div>
       <canvas class="work__canvas"></canvas>
     </div>
-    <div class="work__mask-outer"><div class="work__mask"><svg><path class="p-in"/><path class="p-out"/><path class="p-lines"/></svg></div></div>
+    <div class="work__mask-outer"><div class="work__mask"><svg><g><path class="p-in"/><path class="p-out"/><path class="p-lines"/></g></svg></div></div>
     <div class="work__ruler"></div>
   </div>
 </section>

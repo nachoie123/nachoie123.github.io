@@ -14,7 +14,7 @@ const slowMo = t => {                                     // gsap slow(0.15, 0.6
 
 function Work(el) {
   const inner = el.querySelector('.work__inner'), scene = el.querySelector('.work__scene'), canvas = el.querySelector('.work__canvas');
-  const mask = el.querySelector('.work__mask'), ruler = el.querySelector('.work__ruler'), ctx = canvas.getContext('2d');
+  const mask = el.querySelector('.work__mask'), zoom = mask.querySelector('g'), ruler = el.querySelector('.work__ruler'), ctx = canvas.getContext('2d');
   const [pIn, pOut, pLines] = ['in', 'out', 'lines'].map(k => mask.querySelector('.p-' + k));
   const rows = [...el.querySelectorAll('.work__col>span')].map(e => ({ el: e, ghosts: [] }));
   // todas las fichas al mismo tamaño (antes --size era aleatorio .5–1), una abajo y otra arriba para que no se pisen
@@ -26,13 +26,16 @@ function Work(el) {
   // línea de tiempo, en segundos de gsap: abre 0–.75, una ficha cada .25 desde .75, cierra en el último segundo
   const cardsEnd = .75 + (cards.length - 1) * .25 + .5, D = .75 + cardsEnd, closeAt = D - 1;
   const seg = (t, a, d) => clamp((t - a) / d);
-  let W, H, maxScale, speed, points = [], t = null, sp = null, last = 0, drawn = '';
+  let W, H, cx, cy, maxScale, speed, points = [], t = null, sp = null, last = 0, drawn = '';
 
   function pill(x, y, w, h) { const r = w / 2; return `M ${x} ${y + r} A ${r} ${r} 0 0 1 ${x + w} ${y + r} L ${x + w} ${y + h - r} A ${r} ${r} 0 0 1 ${x} ${y + h - r} Z`; }
   function render() {
     const close = t >= closeAt, a = seg(t, 0, .75), b = seg(t, closeAt, .75);
     const state = close ? 1 - p4.io(b) : p4.in(a);
-    mask.style.transform = `scale(${close ? lerp(maxScale, 1, p4.io(b)) : lerp(1, maxScale, p4.in(a))})`;
+    // la píldora crece hasta ~12x: se escala DENTRO del SVG (atributo transform), no la capa con CSS. Una capa de pantalla
+    // entera a 12x no cabe en la GPU de un Mac retina y Chrome la pintaba a trozos: bloques claros/oscuros que parpadeaban al salir
+    const k = close ? lerp(maxScale, 1, p4.io(b)) : lerp(1, maxScale, p4.in(a));
+    zoom.setAttribute('transform', `matrix(${k} 0 0 ${k} ${cx * (1 - k)} ${cy * (1 - k)})`);
     scene.style.transform = `scale(${close ? lerp(1, .75, p3.io(b)) : lerp(.75, 1, p3.in(a))})`;
     inner.style.clipPath = `inset(0 ${close ? p3.io(b) : 1 - p3.in(a)}rem)`;
     scene.style.setProperty('--state', state); inner.style.setProperty('--state', state);
@@ -63,7 +66,7 @@ function Work(el) {
       const mw = mask.clientWidth, mh = mask.clientHeight, s = el.getBoundingClientRect(), r = ruler.getBoundingClientRect();
       const x = r.left - s.left, y = r.top - s.top, d = W > 767 ? 16 : 8, sheet = `M -1 0 L ${mw + 2} 0 L ${mw + 2} ${mh} L -1 ${mh} Z`;
       const outer = `${sheet} ${pill(x, y, r.width, r.height)}`;
-      maxScale = W / (r.width / 2);
+      maxScale = W / (r.width / 2); cx = mw / 2; cy = mh / 2;   // se escala desde el centro, como el transform-origin de antes
       pOut.setAttribute('d', outer);
       pIn.setAttribute('d', `${sheet} ${pill(x + d, y + d, r.width - 2 * d, r.height - 2 * d)}`);
       const cols = W > 767 ? 12 : 8, rowH = mh * .1; let lines = '';
@@ -127,8 +130,14 @@ const slide = (dx, smooth) => {
   lenis.scrollTo(goal = to, { immediate: !smooth }); at = performance.now();
   return true;
 };
+// Dentro de WORK un gesto de lado se cancela SIEMPRE, quede recorrido o no: antes solo se cancelaba si movía las fichas,
+// y en la entrada, la salida o el final del recorrido el trackpad del Mac lo tomaba como "atrás/adelante" y sacaba de la web.
+// Lo vertical lo sigue llevando Lenis (que ya lo cancela él).
 addEventListener('wheel', e => {
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && slide(e.deltaX, true)) { e.preventDefault(); e.stopPropagation(); }
+  if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+  const r = el.getBoundingClientRect(); if (r.top >= innerHeight || r.bottom <= 0) return;
+  e.preventDefault();
+  if (slide(e.deltaX, true)) e.stopPropagation();
 }, { passive: false, capture: true });
 let touch = null;
 addEventListener('touchstart', e => { const p = e.touches[0]; touch = { x: p.clientX, y: p.clientY, side: null }; }, { passive: true });
