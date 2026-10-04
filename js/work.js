@@ -17,9 +17,9 @@ function Work(el) {
   const mask = el.querySelector('.work__mask'), ruler = el.querySelector('.work__ruler'), ctx = canvas.getContext('2d');
   const [pIn, pOut, pLines] = ['in', 'out', 'lines'].map(k => mask.querySelector('.p-' + k));
   const rows = [...el.querySelectorAll('.work__col>span')].map(e => ({ el: e, ghosts: [] }));
+  // todas las fichas al mismo tamaño (antes --size era aleatorio .5–1), una abajo y otra arriba para que no se pisen
   const cards = [...el.querySelectorAll('.work__card')].map((c, i) => {
-    c.style.setProperty('--size', .5 + Math.random() * .5);
-    c.style.setProperty('--y', (.5 + Math.random() * .5) * (i % 2 ? -1 : 1));
+    c.style.setProperty('--y', i % 2 ? -1 : 1);
     return { el: c, video: c.querySelector('video'), on: false };
   });
   el.style.setProperty('--height', cards.length * 50 + 'lvh');
@@ -81,7 +81,7 @@ function Work(el) {
           const g = document.createElement('span');
           g.className = 'work__ghost'; g.textContent = g.dataset.letter = row.el.textContent; g.setAttribute('aria-hidden', 'true');
           g.style.cssText = `top:${lr.top - box.top}px;left:${lr.left - box.left}px;--iy:${((ri + 1) / (rows.length + 1) - .5) * 2}`;
-          g.style.zIndex = ri !== 1 && ri !== 2 && (ri + rows.length + i) % 5 === 0 ? 3 : 1;   // algunas W/K pasan por delante de las fichas
+          g.style.zIndex = 1;   // siempre detrás: delante tapaban el título de los paneles
           scene.append(g); return g;
         });
       });

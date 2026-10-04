@@ -294,10 +294,19 @@ html.lenis,html.lenis body{height:auto}
 .work__ghost{--head:calc((var(--progress) - .5) * -2);--ahead:calc(var(--head) * var(--head));position:absolute;top:0;left:0;line-height:.85;pointer-events:none;will-change:transform;
   transform:rotateY(calc(var(--head) * -10deg * var(--state))) translate3d(calc(var(--head) * 50vw * var(--state)),calc(var(--iy) * 50% * var(--ahead) * var(--state)),0)}
 .work__ghost::before{content:attr(data-letter);position:absolute;top:0;left:0;z-index:-1;color:color-mix(in srgb,var(--red) 30%,var(--ink));opacity:min(var(--state) * 2,1);transform:scale(1.05,1.02) translate3d(calc(var(--head) * .1rem * var(--state) * var(--state)),0,0);transform-origin:calc(50% - var(--head) * 50%) -50%}
-.work__card{--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);will-change:transform;
-  transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz)) scale(var(--size))}
-.work__card :is(video,img){display:block;width:calc(min(42vw,72vh) * var(--s,1));aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
-.work__cap{display:flex;justify-content:space-between;align-items:center;padding:.5rem;font:700 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase}
+/* ficha = pantalla + rectángulo con el nombre; --w es el ancho de la pantalla (--s por ficha si alguna debe cambiar) */
+.work__card{--w:calc(min(40vw,66vh) * var(--s,1));--tx:calc(var(--progress) * (50vw + 100%) - 50%);--tz:calc(var(--progress) * var(--progress) * -5rem);position:absolute;top:50%;left:50%;z-index:2;display:grid;grid-template-columns:var(--w) calc(var(--w) * .54);grid-template-areas:"v i" "c c";column-gap:.5rem;padding:.5rem .5rem 0;background:var(--ink);color:var(--red);text-align:left;text-transform:none;will-change:transform;
+  transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz))}
+.work__card:nth-of-type(even){grid-template-columns:calc(var(--w) * .54) var(--w);grid-template-areas:"i v" "c c"}
+.work__card :is(video,img){grid-area:v;display:block;width:100%;aspect-ratio:1082/636;object-fit:cover;object-position:top;background:var(--ink)}
+.work__info{grid-area:i;display:flex;flex-direction:column;min-width:0;padding:calc(var(--w) * .038);background:var(--red);color:var(--ink)}
+.work__tag{display:flex;justify-content:space-between;align-items:baseline;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.work__go{font:400 calc(var(--w) * .03)/1 var(--mono);letter-spacing:0;transition:transform .35s var(--expo-out)}
+.work__name{margin-top:auto;font:700 calc(var(--w) * .094)/.88 var(--cond);letter-spacing:-.02em;text-transform:uppercase}
+.work__txt{margin-top:calc(var(--w) * .024);font:400 calc(max(12px,var(--w) * .023))/1.45 var(--mono);text-wrap:pretty}
+.work__card:hover .work__go,.work__card:focus-visible .work__go{transform:translate(3px,-3px)}
+.work__card:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.work__cap{grid-area:c;display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;font:700 11px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase}
 .work__hint{position:absolute;top:calc(var(--frame) + 1.25rem);left:0;right:0;z-index:4;margin:0;text-align:center;font:400 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;opacity:var(--state,0);pointer-events:none}
 .work__canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;transform:translate3d(0,calc(var(--sp,0) * -5%),0)}
 .work__mask-outer{position:sticky;top:0;height:100lvh;overflow:hidden;pointer-events:none}
@@ -313,10 +322,22 @@ html.lenis,html.lenis body{height:auto}
 @media (max-width:576px){
   .work__ruler{--w:50%}
   .work__inner,.work__canvas{transform:none}
-  .work__card{padding:.25rem;transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 100% - 50%),var(--tz))}
-  .work__card :is(video,img){width:calc(min(70vw,116vh) * var(--s,1))}
+  .work__card{padding:.25rem}
+  .work__card,.work__card:nth-of-type(even){--w:calc(min(100vw - 3rem,44vh) * var(--s,1));grid-template-columns:var(--w);grid-template-areas:"v" "i";row-gap:.25rem;transform:rotateY(calc(var(--progress) * -20deg)) translate3d(var(--tx),calc(var(--y) * 50% - 50%),var(--tz))}
+  .work__info{padding:12px 12px 14px}
+  .work__tag{font-size:9px}
+  .work__go{font-size:14px}
+  .work__name{margin-top:10px;font-size:30px}
+  .work__txt{margin-top:6px;font-size:12px;line-height:1.4}
   .work__cap{display:none}
 }
+@media (max-width:987px) and (min-width:577px){
+  .work__card,.work__card:nth-of-type(even){--w:calc(min(80vw,42vh) * var(--s,1));grid-template-columns:var(--w);grid-template-areas:"v" "i" "c";row-gap:.5rem}
+  .work__info{padding:16px}
+  .work__name{margin-top:12px;font-size:40px}
+  .work__txt{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){.work__go{transition:none}}
 
 /* ===================== PARTE FINAL: contacto + pie (olhalazarieva.com) ===================== */
 /* olha:start */
@@ -536,16 +557,16 @@ html.lenis,html.lenis body{height:auto}
       <p class="work__hint" aria-hidden="true">← Swipe or scroll →</p>
       <h2 class="work__title"><span class="work__col"><span>W</span><span>O</span><span>R</span><span>K</span></span></h2>
       <div class="work__scene">
-      <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video style="--s:1.03" src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/radar/" target="_blank" rel="noopener"><video style="--s:.96" src="work/radar.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Radar</span><span>#dbq8-0001/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/bote-app/" target="_blank" rel="noopener"><video style="--s:1.04" src="work/bote-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Bote</span><span>#87va-0002/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/credit-scorecard/" target="_blank" rel="noopener"><video style="--s:.98" src="work/scorecard.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Credit Scorecard</span><span>#t44q-0003/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/ig-cleaning/" target="_blank" rel="noopener"><video style="--s:1.05" src="work/ig-cleaning.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>IG Cleaning</span><span>#wksl-0004/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/jarvis/" target="_blank" rel="noopener"><video style="--s:.95" src="work/jarvis.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Jarvis</span><span>#0qh5-0005/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/guardados-app/" target="_blank" rel="noopener"><video style="--s:1.02" src="work/guardados-app.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Guardados</span><span>#m2rx-0006/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/inflation-forecaster/" target="_blank" rel="noopener"><video style="--s:.97" src="work/inflation.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Inflation Forecaster</span><span>#k9fe-0007/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/capm-explainer/" target="_blank" rel="noopener"><video style="--s:1.01" src="work/capm.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>CAPM Explainer</span><span>#c4pm-0008/10</span></span></a>
-      <a class="work__card" href="https://nachosanbenito.com/monte-carlo-simulator/" target="_blank" rel="noopener"><video style="--s:.99" src="work/montecarlo.mp4" muted loop playsinline preload="none"></video><span class="work__cap"><span>Monte Carlo</span><span>#m0c5-0009/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/whispertool/" target="_blank" rel="noopener"><video src="work/whispertool.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">macOS · Open source<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">WhisperTool</span><span class="work__txt">Open-source voice-to-text for macOS. Whisper runs on-device: push a hotkey, talk, text pastes itself.</span></span><span class="work__cap"><span>WhisperTool</span><span>#3vva-0000/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/radar/" target="_blank" rel="noopener"><video src="work/radar.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Web app · Python<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Radar</span><span class="work__txt">Internship search engine: scrapes job boards nightly and ranks offers against my CV.</span></span><span class="work__cap"><span>Radar</span><span>#dbq8-0001/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/bote-app/" target="_blank" rel="noopener"><video src="work/bote-app.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Web app<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Bote</span><span class="work__txt">Poker night ledger: tracks buy-ins and settles who owes whom at the end of the game.</span></span><span class="work__cap"><span>Bote</span><span>#87va-0002/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/credit-scorecard/" target="_blank" rel="noopener"><video src="work/scorecard.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Quant · Python<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Credit Scorecard</span><span class="work__txt">Logistic credit-risk model with stability selection and a fairness/bias audit.</span></span><span class="work__cap"><span>Credit Scorecard</span><span>#t44q-0003/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/ig-cleaning/" target="_blank" rel="noopener"><video src="work/ig-cleaning.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">macOS app<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">IG Cleaning</span><span class="work__txt">Instagram unfollow cleaner: finds who doesn’t follow you back and clears them safely.</span></span><span class="work__cap"><span>IG Cleaning</span><span>#wksl-0004/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/jarvis/" target="_blank" rel="noopener"><video src="work/jarvis.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">macOS · AI<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Jarvis</span><span class="work__txt">Personal AI assistant for macOS: voice dictation, a notch panel and one-tap automations.</span></span><span class="work__cap"><span>Jarvis</span><span>#0qh5-0005/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/guardados-app/" target="_blank" rel="noopener"><video src="work/guardados-app.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">macOS · Web<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Guardados</span><span class="work__txt">Makes your saved Instagram and TikTok posts searchable, with a map of saved places.</span></span><span class="work__cap"><span>Guardados</span><span>#m2rx-0006/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/inflation-forecaster/" target="_blank" rel="noopener"><video src="work/inflation.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Quant · Python<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Inflation Forecaster</span><span class="work__txt">Forecasts US CPI inflation with a SARIMA model, backtested against reality.</span></span><span class="work__cap"><span>Inflation Forecaster</span><span>#k9fe-0007/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/capm-explainer/" target="_blank" rel="noopener"><video src="work/capm.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Quant · Web app<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">CAPM Explainer</span><span class="work__txt">Live expected-return calculator from Yahoo Finance data, animated step by step.</span></span><span class="work__cap"><span>CAPM Explainer</span><span>#c4pm-0008/10</span></span></a>
+      <a class="work__card" href="https://nachosanbenito.com/monte-carlo-simulator/" target="_blank" rel="noopener"><video src="work/montecarlo.mp4" muted loop playsinline preload="none"></video><span class="work__info"><span class="work__tag">Quant · Web app<span class="work__go" aria-hidden="true">↗</span></span><span class="work__name cond">Monte Carlo</span><span class="work__txt">10,000 simulated futures for a stock, plus an exam that checks if the simulator keeps its promises.</span></span><span class="work__cap"><span>Monte Carlo</span><span>#m0c5-0009/10</span></span></a>
       </div>
       <canvas class="work__canvas"></canvas>
     </div>
