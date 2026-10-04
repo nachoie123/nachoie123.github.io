@@ -4,7 +4,7 @@
 import { whileVisible } from './shared.js';
 
 const { Engine, Bodies, Body, Composite } = Matter;
-const LINES = [['Design', 0], ['Is not just', 1], ['Decoration, but', 1], ['A tool for influence', 0], ['And growth.', 0]];
+const LINES = [['Half finance,', 0], ['half code.', 0], ['I build tools', 1], ['people actually', 1], ['use.', 0]];
 const sec = document.getElementById('manifesto'), stage = sec.querySelector('.mstage');
 const t = stage.querySelector('.mtext'), meta = stage.querySelector('.meta'), cue = stage.querySelector('.cue'), about = stage.querySelector('.about');
 
@@ -22,6 +22,8 @@ const ease = x => x * x * (3 - 2 * x);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 let engine = null, letters = [], H = 0, assembling = null;
+// Todas caen de golpe al llegar aquí (justo antes de que el montón se hunda); al volver por debajo se rehacen despacio
+const DROP = .45, REBUILD_MS = 1800;
 
 // Mide las letras en su sitio y monta un bloque de física por letra (quietas hasta que les toca caer)
 function build() {
@@ -47,9 +49,6 @@ function build() {
     Body.setStatic(body, true);
     return { el, body, home, down: false };
   });
-  // Orden de caída: de arriba abajo con algo de azar; cada letra cae al pasar su punto de scroll
-  letters.map(l => [l, l.home.y / S.height + Math.random() * .35]).sort((a, b) => a[1] - b[1])
-    .forEach(([l], i, all) => l.at = .02 + .3 * i / all.length);
 
   const W = S.width, T = 200;
   H = S.height;
@@ -96,7 +95,7 @@ function poke() {
   }
 }
 
-// Volver arriba del todo = las letras regresan a su sitio
+// Volver por encima del punto de caída = las letras regresan a su sitio
 function rearm() {
   for (const l of letters) {
     l.down = false;
@@ -113,10 +112,11 @@ function frame(now) {
   vx = (mx - pmx) * STEP / dt; vy = (my - pmy) * STEP / dt; pmx = mx; pmy = my;
   const p = progress();
 
+  if (assembling !== null && p >= DROP) { assembling = null; letters.forEach(drop); }   // se puede cortar a medias
   if (assembling !== null) {
     let done = true;
     letters.forEach((l, i) => {
-      const k = Math.min(Math.max((now - assembling - i * 12) / 900, 0), 1);
+      const k = Math.min(Math.max((now - assembling - i * 4) / REBUILD_MS, 0), 1);
       const e = k < .5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2;
       if (k < 1) done = false;
       Body.setPosition(l.body, { x: l.from.x + (l.home.x - l.from.x) * e, y: l.from.y + (l.home.y - l.from.y) * e });
@@ -124,8 +124,8 @@ function frame(now) {
     });
     if (done) assembling = null;
   } else {
-    for (const l of letters) if (!l.down && p >= l.at) drop(l);
-    if (p <= 0 && letters.some(l => l.down)) rearm();
+    if (p >= DROP && !letters.some(l => l.down)) letters.forEach(drop);
+    if (p < DROP - .05 && letters.some(l => l.down)) rearm();
     poke();
   }
 

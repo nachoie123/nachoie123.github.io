@@ -86,8 +86,8 @@ html.lenis,html.lenis body{height:auto}
 .menu .t{position:relative}
 .menu .t::before{position:absolute;top:calc(50% - 3px);left:-13px;border-block:3px solid transparent;border-left:6px solid currentColor;opacity:0;content:""}
 .socials{width:48px;list-style:none}
-.socials li{height:50%;overflow:hidden}
-.socials li:first-child{border-bottom:var(--line)}
+.socials li{height:calc(100% / 3);overflow:hidden}
+.socials li:not(:last-child){border-bottom:var(--line)}
 .socials a,.contrast-in{position:relative;display:grid;place-items:center;width:100%;height:100%}
 .contrast{position:relative;width:48px;overflow:hidden;background:none;border:0;border-right:var(--line);color:inherit;cursor:pointer}
 .socials a::before,.contrast::before,.icon::before{position:absolute;inset:0;scale:0 1;transform-origin:0 50%;transition:scale .3s cubic-bezier(1,0,0,1);content:""}
@@ -340,6 +340,7 @@ html.lenis,html.lenis body{height:auto}
     <ul class="socials">
       <li><a href="https://github.com/nachoie123" target="_blank" rel="noopener" aria-label="GitHub"><span class="icon" style="width:16px;height:16px;--path:path('M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z')"></span></a></li>
       <li><a href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener" aria-label="LinkedIn"><span class="icon" style="width:16px;height:15px;--path:path('M1.13 14.98h2.81V4.6H1.13v10.38ZM2.53.02C1.6.02.85.76.85 1.7s.75 1.68 1.68 1.68 1.68-.75 1.68-1.68S3.47.02 2.53.02Zm6.18 6.17V4.6H5.9v10.38h2.81V9.65c0-2.99 3.83-3.18 3.83 0v5.33h2.81V8.62c0-5.05-5.33-4.86-6.64-2.43Z')"></span></a></li>
+      <li><a href="/cv/" aria-label="CV"><span class="icon" style="width:12px;height:16px;--path:path(evenodd,'M0 0h8l4 4v12H0ZM1.5 1.5H7V5h3.5v9.5h-9ZM3 8h6v1.4H3ZM3 11h6v1.4H3Z')"></span></a></li>
     </ul>
     <button class="contrast" type="button" aria-label="Switch colour"><span class="contrast-in"><span class="icon" style="width:20px;height:20px;--path:path('M10 20a9.7 9.7 0 0 1-3.9-.79 10.1 10.1 0 0 1-5.31-5.31A9.7 9.7 0 0 1 0 10c0-1.38.26-2.68.79-3.9A10.1 10.1 0 0 1 6.1.79 9.7 9.7 0 0 1 10 0c1.38 0 2.68.26 3.9.79a10.1 10.1 0 0 1 5.31 5.31c.53 1.22.79 2.52.79 3.9s-.26 2.68-.79 3.9a10.1 10.1 0 0 1-5.31 5.31A9.7 9.7 0 0 1 10 20Zm1-2.08a7.8 7.8 0 0 0 4.99-2.61A7.6 7.6 0 0 0 18 10a7.6 7.6 0 0 0-2.01-5.31A7.8 7.8 0 0 0 11 2.08v15.84Z')"></span></span></button>
     <div class="avail"><div><span>Coding from Madrid.</span></div><div><a href="#contact"><span class="t">Available for freelance work → </span>Hire me</a></div></div>
@@ -367,9 +368,9 @@ html.lenis,html.lenis body{height:auto}
     <div class="meta">
       <div class="num cond">2/4</div>
       <div class="for">For me</div>
-      <div class="code cond">DSGN/2</div>
+      <div class="code cond">NSB/2</div>
     </div>
-    <div class="mtext cond" aria-label="Design is not just decoration, but a tool for influence and growth."></div>
+    <div class="mtext cond" aria-label="Half finance, half code. I build tools people actually use."></div>
     <div class="cue">Scroll ↓</div>
 
     <div class="about">
