@@ -142,8 +142,8 @@ function frame(now) {
   meta.style.opacity = 1 - clamp01((p - .42) / .08);
   cue.classList.toggle('off', p > .005);
   // About entra cuando el montón ya se ha ido (antes salía encima de las letras que aún bajaban)
-  if (p > .76) about.classList.add('in');
-  else if (p < .72) about.classList.remove('in');
+  if (p > .67) about.classList.add('in');
+  else if (p < .63) about.classList.remove('in');
 
   // ponytail: paso fijo de 60 Hz para que en pantallas de 120 Hz no vaya al doble de rápido
   while (acc >= STEP) { if (sink < H) Engine.update(engine, STEP); acc -= STEP; }
