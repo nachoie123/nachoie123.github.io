@@ -96,14 +96,14 @@ async function start() {
 
   // 1. los anillos suben desde abajo
   gsap.timeline()
-    .to(big.position, { y: .18, duration: 2.5, delay: 1, ease: 'power4.out' })
-    .to(small.position, { y: -.18, duration: 2, ease: 'power4.out' }, '-=2');
+    .to(big.position, { y: .18, duration: 2, delay: .6, ease: 'power4.out' })
+    .to(small.position, { y: -.18, duration: 1.6, ease: 'power4.out' }, '-=1.6');
 
   // 2. contador 0 → 100 %, y 3. salida
   const progress = { v: 0 };
   gsap.timeline()
-    .to(counter, { opacity: 1, duration: .6, delay: 2.3 })
-    .to(progress, { v: 100, duration: 4, delay: .5, ease: 'power3.out', onUpdate: () => { counter.textContent = Math.round(progress.v) + '%'; } }, '-=0.3')
+    .to(counter, { opacity: 1, duration: .5, delay: 1.5 })
+    .to(progress, { v: 100, duration: 2.4, delay: .3, ease: 'power3.out', onUpdate: () => { counter.textContent = Math.round(progress.v) + '%'; } }, '-=0.3')
     .to(counter, { opacity: 0, duration: .3, onComplete: exit });
 
   function exit() {
