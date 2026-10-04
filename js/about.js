@@ -30,7 +30,7 @@ const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 let engine = null, letters = [], H = 0, assembling = null;
 // Todas caen de golpe al llegar aquí (justo antes de que el montón se hunda); al volver por debajo se rehacen despacio
-const DROP = .45, REBUILD_MS = 1800;
+const DROP = .22, REBUILD_MS = 1800;
 
 // Mide las letras en su sitio y monta un bloque de física por letra (quietas hasta que les toca caer)
 function build() {
@@ -137,12 +137,13 @@ function frame(now) {
   }
 
   // Salida: el montón se hunde por abajo, la cabecera se apaga y entra About me
-  sink = H * 1.1 * ease(clamp01((p - .6) / .35));
+  sink = H * 1.1 * ease(clamp01((p - .45) / .3));
   t.style.transform = `translateY(${sink}px)`;
-  meta.style.opacity = 1 - clamp01((p - .56) / .08);
+  meta.style.opacity = 1 - clamp01((p - .42) / .08);
   cue.classList.toggle('off', p > .005);
-  if (p > .66) about.classList.add('in');
-  else if (p < .62) about.classList.remove('in');
+  // About entra cuando el montón ya se ha ido (antes salía encima de las letras que aún bajaban)
+  if (p > .76) about.classList.add('in');
+  else if (p < .72) about.classList.remove('in');
 
   // ponytail: paso fijo de 60 Hz para que en pantallas de 120 Hz no vaya al doble de rápido
   while (acc >= STEP) { if (sink < H) Engine.update(engine, STEP); acc -= STEP; }
