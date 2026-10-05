@@ -5,195 +5,484 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jarvis</title>
 <meta name="description" content="A personal butler that lives on my Mac. One click plans the day, triages the inbox and runs thinking tools; its hands open apps, search and type for me. Private project.">
-<meta property="og:title" content="Jarvis — a butler that lives on my Mac">
+<meta property="og:title" content="Jarvis, a butler that lives on my Mac">
 <meta property="og:description" content="Plans my day, triages the inbox, and uses my Mac for me. 43 buttons, voice, a notch island and hands that act outside the app.">
 <meta property="og:image" content="https://nachosanbenito.com/jarvis/poster.jpg">
 <meta name="theme-color" content="#05060d">
+<meta name="color-scheme" content="dark">
 <link rel="icon" href="icon.png">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#05060d;--surface:#0d1224;--text:#e8ecff;--muted:#9aa3c7;--border:rgba(140,170,255,.22);--blue:#4FC2F7;--violet:#B387FF;--amber:#FFB84D;--green:#46e39a;--g:linear-gradient(100deg,#4FC2F7,#B387FF 55%,#FFB84D);--g-text:var(--g);--btn-ink:#04101a;--ease-out:cubic-bezier(.23,1,.32,1);--r:16px}
-  @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f6ff;--surface:#fff;--text:#0c1230;--muted:#4c5679;--border:#d9def2;--blue:#06679a;--violet:#6b3fd1;--amber:#8f5300;--green:#08703f;--btn-ink:#fff;--g-text:linear-gradient(100deg,#06679a,#6b3fd1 55%,#8f5300)}}
-  :root[data-theme="light"]{--bg:#f4f6ff;--surface:#fff;--text:#0c1230;--muted:#4c5679;--border:#d9def2;--blue:#06679a;--violet:#6b3fd1;--amber:#8f5300;--green:#08703f;--btn-ink:#fff;--g-text:linear-gradient(100deg,#06679a,#6b3fd1 55%,#8f5300)}
+  /* Product palette (Jarvis app + HUD): one colour per state */
+  :root{
+    --bg:#05060d;--ink:#e8ecff;--dim:#a3abcc;--faint:#7a83a8;--line:rgba(160,180,255,.13);
+    --idle:#6B85B8;--listen:#4FC2F7;--think:#B387FF;--speak:#FFB84D;
+    --state:var(--idle);--ease:cubic-bezier(.16,1,.3,1);--gut:40px;--r:12px;
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:17px/1.55 "Inter Tight",-apple-system,sans-serif}
-  .wrap{max-width:1040px;margin:0 auto;padding:40px 16px 72px}
-  .video video{width:100%;aspect-ratio:16/9;display:block;border-radius:20px;background:#000;box-shadow:0 30px 90px rgb(79 194 247 / .18);border:1px solid var(--border)}
-  .intro{max-width:700px;margin:48px auto 0;text-align:center}
-  .brand{display:flex;gap:12px;align-items:center;justify-content:center;font-weight:700}
-  .brand img{width:44px;height:44px;border-radius:11px}
-  h1{font-size:clamp(40px,6.4vw,68px);line-height:1.02;letter-spacing:-.035em;margin:22px 0 16px;font-weight:800}
-  h1 span{background:var(--g-text);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lead{color:var(--muted);font-size:19px;margin:0 auto}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:28px 0 10px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:12px;font-weight:700;text-decoration:none}
-  .btn.main{background:var(--g);color:#04101a}
-  .btn.ghost{border:1px solid var(--border);color:var(--text);background:var(--surface)}
-  .small{color:var(--muted);font-size:14px;margin:10px 0 0}
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:48px 0 0}
-  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px}
-  .stat b{display:block;font-size:40px;line-height:1;letter-spacing:-.02em}
-  .stat span{color:var(--muted);font-size:14px}
-  h2{font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.025em;margin:80px 0 10px}
-  .kicker{font-weight:700;font-size:15px;letter-spacing:.01em;margin:clamp(72px,9vw,112px) 0 0}
-  .kicker+h2{margin-top:8px}
-  .sub{color:var(--muted);margin:0 0 24px;max-width:640px}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-  .grid b{display:block;margin-bottom:6px;font-size:18px}
-  .grid p{margin:0;color:var(--muted);font-size:15px}
-  .hands{border:1px solid var(--green);border-radius:20px;padding:clamp(22px,4vw,40px);margin-top:clamp(72px,9vw,112px);background:linear-gradient(160deg,color-mix(in srgb,var(--green) 12%,transparent),transparent 60%)}
-  .hands .kicker,.hands h2{margin-top:0}
-  .hands h2{font-size:clamp(30px,5vw,46px)}
-  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:22px 0;counter-reset:s}
-  .flow div{counter-increment:s;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px 14px 52px;position:relative;font-size:15px}
-  .flow div::before{content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--green);color:var(--btn-ink);font-weight:800;display:grid;place-items:center}
-  .tiers{display:grid;gap:8px;margin-top:16px}
-  .tier{display:grid;grid-template-columns:72px 1fr 32px;gap:12px;align-items:center;font-size:15px}.tier span{font-weight:600}.tier b{text-align:right;font-variant-numeric:tabular-nums}
-  .bar{height:10px}.bar i{display:block;height:100%;border-radius:5px;transform-origin:left}
-  .js .bar i{transform:scaleX(0);transition:transform 700ms var(--ease-out)}
-  .js .tiers.in .bar i{transform:none}
-  .js .tiers.in .tier:nth-child(2) i{transition-delay:80ms}.js .tiers.in .tier:nth-child(3) i{transition-delay:160ms}
-  @media (prefers-reduced-motion:reduce){.js .bar i{transform:none;transition:none}}
-  .fig{margin:30px 0 0}.fig img{width:100%;border-radius:20px;border:1px solid var(--border);display:block}
-  .fig figcaption{color:var(--muted);font-size:13px;margin-top:8px}
-  .private{margin-top:clamp(80px,10vw,128px);text-align:center}
-  .private h2{margin-top:0}
-  footer{margin-top:64px;color:var(--muted);font-size:14px;text-align:center}footer a{color:inherit}
-
-  /* design pass (ui-ux-pro-max + apple-design): wayfinding bar, press feedback, wrapping */
-  html{scroll-padding-top:84px}
+  html{background:var(--bg);scroll-padding-top:80px}
   @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
-  .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px max(16px,calc((100% - 1008px)/2));background:color-mix(in srgb,var(--bg) 74%,transparent);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--border)}
-  @supports (animation-timeline:scroll()){.top{border-bottom-color:transparent;animation:edge linear both;animation-timeline:scroll();animation-range:0 48px}}
-  @keyframes edge{to{border-bottom-color:var(--border)}}
-  @media (prefers-reduced-transparency:reduce){.top{background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none}}
-  .top a{min-height:44px;display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:15px;font-weight:500;text-decoration:none;transition:color .2s}
-  .top a:hover{color:var(--text)}
-  .top .btn{padding:0 18px;font-size:15px}
-  .btn{transition:transform 160ms var(--ease-out),filter .2s,border-color .2s;-webkit-tap-highlight-color:transparent}
-  .btn:hover{filter:brightness(1.07)}
-  .btn:not(.main):hover{border-color:var(--blue)}
-  .btn:active{transform:scale(.97);transition-duration:100ms}
-  a:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}
-  h1,h2{text-wrap:balance}
-  p,li,figcaption{text-wrap:pretty}
-  .grid.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
-  .stats4{grid-template-columns:repeat(4,1fr)}
-  @media (max-width:640px){.stats4{grid-template-columns:repeat(2,1fr)}.card{padding:16px}.grid{gap:10px}.stat b{font-size:34px}.intro{margin-top:36px}}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Geist,-apple-system,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  a{color:inherit}
+  a:focus-visible{outline:2px solid var(--listen);outline-offset:4px;border-radius:4px}
+  h1,h2{font-weight:600;letter-spacing:-.035em;line-height:1.02;text-wrap:balance;margin:0}
+  p,dd,figcaption{text-wrap:pretty}
+
+  /* the orb lives on one fixed canvas */
+  #orb{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
+  body.hands #orb{z-index:3}
+
+  /* corners, like a status bar on the glass */
+  .corner{position:fixed;z-index:5;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+  a.corner,.corner a{text-decoration:none;min-height:44px;display:inline-flex;align-items:center;transition:color .3s}
+  .corner a:hover{color:var(--ink)}
+  .tl{top:8px;left:var(--gut)}.tr{top:8px;right:var(--gut)}
+  .tc{top:8px;left:50%;transform:translateX(-50%)}.tc img{width:30px;height:30px;border-radius:8px;display:block;opacity:.9}
+  .bl{bottom:22px;left:var(--gut)}.br{bottom:22px;right:var(--gut)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--state);box-shadow:0 0 0 4px color-mix(in srgb,var(--state) 18%,transparent);transition:background .6s,box-shadow .6s}
+  #status{color:var(--state);transition:color .6s}
+  /* soft dark bands so the corners stay readable over clips */
+  body::before,body::after{content:"";position:fixed;left:0;right:0;height:64px;z-index:4;pointer-events:none}
+  body::before{top:0;background:linear-gradient(var(--bg),rgb(5 6 13 / 0))}
+  body::after{bottom:0;height:56px;background:linear-gradient(rgb(5 6 13 / 0),var(--bg) 85%)}
+  .colon{display:inline-block}
+  @media (prefers-reduced-motion:no-preference){.colon{animation:blink 1s step-start infinite}}
+  @keyframes blink{50%{opacity:0}}
+
+  main{position:relative;z-index:2}
+  .scene{position:relative;min-height:100vh;padding:120px var(--gut)}
+
+  /* hero: the orb is the headline */
+  .hero{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding-bottom:100px}
+  .hero h1{font-size:clamp(96px,13vw,190px);line-height:.85;letter-spacing:-.06em;margin-left:-.04em}
+  .hero p{max-width:32ch;color:var(--dim);font-size:16px;margin:22px 0 14px}
+  .cue{font-size:15px;font-weight:500;text-decoration:none;display:inline-flex;gap:8px;align-items:center;min-height:44px;border-bottom:1px solid var(--line);transition:border-color .3s}
+  .cue:hover{border-color:var(--ink)}
+
+  /* state scenes: orb on the left, the proof on the right */
+  .split .col{margin-left:50%;max-width:560px}
+  .split h2{font-size:clamp(38px,4.2vw,56px)}
+  .lead{color:var(--dim);font-size:19px;margin:18px 0 36px;max-width:46ch}
+  .clip{margin:0}
+  .clip video{width:100%;height:auto;display:block;border-radius:var(--r);background:#0a0d1c;border:1px solid var(--line)}
+  .clip figcaption{font-size:14px;color:var(--faint);margin-top:10px}
+  .clip figcaption b{color:var(--ink);font-weight:500}
+  .facts{margin:44px 0 0;padding:0}
+  .facts div{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line)}
+  .facts dt{font-weight:500}
+  .facts dd{margin:0;color:var(--dim);font-size:16px}
+
+  /* who did the work */
+  .split61{margin:4px 0 48px}
+  .split61 .t{font-size:14px;color:var(--faint);margin:0 0 14px}
+  .bar{display:flex;gap:3px;height:8px}
+  .bar i{display:block;border-radius:2px;background:var(--c);transform-origin:left}
+  .js .bar i{transform:scaleX(0);transition:transform .9s var(--ease)}
+  .js .in .bar i{transform:none}
+  .js .in .bar i:nth-child(2){transition-delay:.12s}.js .in .bar i:nth-child(3){transition-delay:.24s}
+  .nums{display:grid;grid-template-columns:24fr 33fr 7fr;gap:3px;margin-top:16px}
+  .nums b{display:block;font-size:clamp(44px,5vw,64px);font-weight:500;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+  .nums span{display:block;font-size:14px;color:var(--dim);margin-top:6px;white-space:nowrap}
+  .tools{display:grid;grid-template-columns:1fr 1fr;gap:4px 28px;margin:0 0 40px;padding:0}
+  .tools div{padding:14px 0;border-top:1px solid var(--line)}
+  .tools dt{font-weight:500}.tools dd{margin:2px 0 0;color:var(--dim);font-size:15px}
+  .note{color:var(--dim);font-size:16px;margin:28px 0 0;max-width:52ch}
+
+  /* hands: full width, the strongest proof */
+  .handsScene{padding-top:96px}
+  .handsScene header{max-width:600px;margin-left:50%}
+  .handsScene h2{font-size:clamp(44px,5vw,68px)}
+  .grid3{display:grid;grid-template-columns:1.62fr 1fr;grid-template-rows:auto auto;gap:28px 28px;margin-top:32px}
+  .grid3 .big{grid-row:1/3}
+  .grid3 .clip q{quotes:"\201C" "\201D";color:var(--ink);font-weight:500}
+  .more{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:56px 0 0;padding:0}
+  .more div{border-top:1px solid var(--line);padding-top:14px}
+  .more dt{font-weight:500}.more dd{margin:4px 0 0;color:var(--dim);font-size:15px}
+  .code{font-size:14px;color:var(--faint);margin-top:28px}
+
+  /* end: back to rest */
+  .end{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-bottom:150px}
+  .end h2{font-size:clamp(36px,4.4vw,58px);max-width:16ch}
+  .end .lead{margin:18px auto 30px}
+  .figs{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 40px;margin:0 0 36px;padding:0;list-style:none;color:var(--dim);font-size:15px}
+  .figs b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+  .actions{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;align-items:center}
+  .btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-weight:600;text-decoration:none;transition:transform .16s var(--ease),background .3s}
+  .btn:hover{background:#fff}.btn:active{transform:scale(.97)}
+  footer{margin-top:56px;font-size:14px;color:var(--faint)}
+
+  /* reveal on arrival */
+  .js .rv{opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+  .js .rv.in{opacity:1;transform:none}
+  .js .split .col.rv{transition-delay:.15s}
+  @media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}.js .bar i{transform:none;transition:none}}
+
+  @media (max-width:899px){
+    :root{--gut:16px}
+    body{font-size:16px}
+    .corner{font-size:11px;letter-spacing:.04em}
+    .tc{display:none}
+    .bl{bottom:12px}.br{bottom:12px}
+    .corner{letter-spacing:.12em}
+    body::after{height:72px;background:linear-gradient(rgb(5 6 13 / 0),var(--bg) 60%)}
+    .end{padding-bottom:120px}
+    .scene{padding:96px var(--gut) 88px}
+    .hero{padding-bottom:84px}
+    .hero p{font-size:16px}
+    .split .col{margin:0;max-width:none}
+    .lead{font-size:17px}
+    .facts div{grid-template-columns:1fr;gap:2px}
+    .tools{grid-template-columns:1fr}
+    .handsScene header{margin-left:0}
+    .grid3{grid-template-columns:1fr;gap:28px}.grid3 .big{grid-row:auto}
+    .more{grid-template-columns:1fr;gap:0}.more div{padding:14px 0}
+  }
 </style>
 </head>
 <body>
-<header class="top"><a href="https://nachosanbenito.com/#work"><span aria-hidden="true">←</span> nachosanbenito.com</a><a class="btn main" href="https://nachosanbenito.com/#contact">Get in touch</a></header>
-<main class="wrap">
-  <div class="video"><video src="jarvis-promo.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
+<canvas id="orb" aria-hidden="true"></canvas>
 
-  <section class="intro">
-    <div class="brand"><img src="icon.png" alt="">Jarvis</div>
-    <h1>A butler that <span>lives on my Mac.</span></h1>
-    <p class="lead">I talk to it or click it. It plans my day, triages my inbox, runs thinking tools, and its hands open apps, search and type for me. It decides who should do each job: the Mac alone, Gemini, or Claude.</p>
-    <div class="cta">
-      <a class="btn main" href="#hands">See the hands</a>
-      <a class="btn ghost" href="https://github.com/nachoie123">GitHub</a>
-      <a class="btn ghost" href="https://nachosanbenito.com/#contact">Contact</a>
-    </div>
-    <p class="small">Private project · runs on my Mac · macOS app in Swift + a local Python bridge</p>
+<a class="corner tl" href="https://nachosanbenito.com/#work"><span aria-hidden="true">←</span>&nbsp;nachosanbenito.com</a>
+<div class="corner tc"><img src="icon.png" alt="Jarvis"></div>
+<a class="corner tr" href="https://nachosanbenito.com/#contact">Get in touch</a>
+<div class="corner bl" aria-live="polite"><span class="dot"></span><span id="status">Jarvis is idle</span></div>
+<div class="corner br"><span>Madrid</span><span id="clock">--<span class="colon">:</span>--</span></div>
+
+<main>
+  <section class="scene hero" data-state="listening" id="top">
+    <h1>Jarvis</h1>
+    <p>A butler that lives on my Mac. It listens, decides who should do each job, and uses the Mac for me.</p>
+    <a class="cue" href="#hands">See its hands work <span aria-hidden="true">↓</span></a>
   </section>
 
-  <div class="stats">
-    <div class="stat"><b>43</b><span>buttons, 8 groups</span></div>
-    <div class="stat"><b>61</b><span>orders handled in one day (1 Oct)</span></div>
-    <div class="stat"><b>36</b><span>Python modules, 9,306 lines</span></div>
-    <div class="stat"><b>2,137</b><span>lines of Swift in the app</span></div>
-  </div>
-
-  <div class="kicker" style="color:var(--blue)">Your day</div>
-  <h2>One click plans it</h2>
-  <p class="sub">Classes, deadlines and three priorities land in today's Obsidian note. The same colours show what Jarvis is doing: <b style="color:var(--blue)">listening</b>, <b style="color:var(--violet)">thinking</b>, <b style="color:var(--amber)">speaking</b>.</p>
-  <div class="grid">
-    <div class="card"><b>Plan my day / tomorrow</b><p>Classes, deadlines, events and 3 priorities, written into the daily note.</p></div>
-    <div class="card"><b>Close day</b><p>What got done, what moves to tomorrow, one line of reflection.</p></div>
-    <div class="card"><b>Weekly review</b><p>Scores the week from 1 to 10 using the daily notes and Jarvis receipts.</p></div>
-    <div class="card"><b>Deadlines &amp; briefing</b><p>Upcoming exams and tasks, weather, classes and mail in one morning brief.</p></div>
-  </div>
-  <figure class="fig"><img src="hud.jpg" alt="The Jarvis HUD with its wireframe sphere, skill buttons and results" width="1600" height="900"><figcaption>The HUD, served locally by the bridge. Schedule and priorities shown here are example data.</figcaption></figure>
-
-  <div class="kicker" style="color:var(--amber)">Inbox, classes, career</div>
-  <h2>Triage, not noise</h2>
-  <p class="sub">Each button is a skill: a written method Jarvis runs through Claude Code and files in Obsidian.</p>
-  <div class="grid g3">
-    <div class="card"><b>Inbox brief</b><p>Sorts recent mail into urgent / reply / ignore and leaves drafts. It never sends.</p></div>
-    <div class="card"><b>Today's classes</b><p>What each class covered, from the per-session notes.</p></div>
-    <div class="card"><b>Internship radar</b><p>New internships that fit, Europe first, from a local database.</p></div>
-    <div class="card"><b>Recruiter check</b><p>My CV against a posting, read as a recruiter and as an ATS: score and missing keywords.</p></div>
-    <div class="card"><b>Intel brief</b><p>Three AI headlines from the last 24 hours.</p></div>
-    <div class="card"><b>43 buttons</b><p>Planning, mail, research, writing, career, Obsidian, dev tools, system and design.</p></div>
-  </div>
-
-  <div class="kicker" style="color:var(--violet)">Thinking tools</div>
-  <h2>A room full of second opinions</h2>
-  <div class="grid g3">
-    <div class="card"><b>Roast my idea</b><p>Four voices (believer, sceptic, investor, judge) and a verdict: BUILD, FIX FIRST or KILL.</p></div>
-    <div class="card"><b>Grill me</b><p>Interviews me one question at a time until the plan has no holes, then writes the spec.</p></div>
-    <div class="card"><b>Prompt builder</b><p>Turns a rough task into a reusable prompt.</p></div>
-    <div class="card"><b>LLM council</b><p>Five advisors debate a decision.</p></div>
-    <div class="card"><b>Deep research</b><p>A web report with sources, saved to Obsidian.</p></div>
-    <div class="card"><b>Content cascade</b><p>One note becomes a LinkedIn post, a thread and a newsletter paragraph.</p></div>
-  </div>
-
-  <section class="hands" id="hands">
-    <div class="kicker" style="color:var(--green)">Hands: it acts outside the app</div>
-    <h2>It uses my Mac for me</h2>
-    <p class="sub" style="max-width:720px">Say "open Spotify" and a pointer flies to the Dock and clicks. Jarvis reads any window through macOS Accessibility, so it is not limited to its own app.</p>
-    <div class="flow">
-      <div>I say or type an order</div>
-      <div>Rules check it first: no model, 0 ms</div>
-      <div>If unclear, JEV decides in about 0.4 s</div>
-      <div>A pointer flies to the control and clicks it</div>
-    </div>
-    <div class="grid g3">
-      <div class="card"><b>Open apps and sites</b><p>"Open Spotify", "open YouTube", with the cursor flying to the Dock icon first.</p></div>
-      <div class="card"><b>Search inside apps</b><p>Maps, YouTube, Spotify, Amazon: it types the query for me.</p></div>
-      <div class="card"><b>Type and message</b><p>Drafts the text, then asks before pressing Enter. Irreversible actions always ask.</p></div>
-      <div class="card"><b>Scroll, volume, media keys</b><p>Play, pause, next, volume, scrolling, all by voice.</p></div>
-      <div class="card"><b>"Where is X?"</b><p>Tutor mode: it points at the button instead of pressing it.</p></div>
-      <div class="card"><b>Learns recipes</b><p>When a plan works, it saves it and repeats it without calling a model next time.</p></div>
-    </div>
-    <p class="small" style="margin-top:18px">Who handled the 61 orders on 1 October:</p>
-    <div class="tiers" id="tiers">
-      <div class="tier"><span>Rules</span><div class="bar"><i style="width:73%;background:var(--blue)"></i></div><b>24</b></div>
-      <div class="tier"><span>Gemini</span><div class="bar"><i style="width:100%;background:var(--violet)"></i></div><b>33</b></div>
-      <div class="tier"><span>Claude</span><div class="bar"><i style="width:12%;background:var(--amber)"></i></div><b>4</b></div>
-    </div>
-    <p class="small">Code: manos.py (770 lines), ojos.py (527), cerebro.py (587). The Mac scenes in the video are real screen recordings of Jarvis at work.</p>
-  </section>
-
-  <div class="kicker" style="color:var(--green)">Always there</div>
-  <h2>Wherever I'm working</h2>
-  <div class="grid">
-    <div class="card"><b>Voice</b><p>Hold ⌘M to talk (walkie-talkie), double-tap for hands-free. Whisper runs locally; Jarvis answers in a British butler voice.</p></div>
-    <div class="card"><b>Notch island</b><p>Hover the notch to see what is next, the last answer and a music card.</p></div>
-    <div class="card"><b>The mirror</b><p>Reads 269 of my chats with Claude, finds what I correct most and proposes CLAUDE.md changes. Nothing applies until I approve.</p></div>
-    <div class="card"><b>Inside Obsidian</b><p>The HUD also runs as an Obsidian plugin; every order leaves a ticket in the vault.</p></div>
-  </div>
-
-  <section class="private">
-    <h2>Private project, runs on my Mac</h2>
-    <p class="lead">Jarvis holds my calendar, mail access and account keys, so there is no public repository. If you want to see how it is built, ask.</p>
-    <div class="cta">
-      <a class="btn main" href="https://github.com/nachoie123">GitHub</a>
-      <a class="btn ghost" href="https://nachosanbenito.com/#contact">Get in touch</a>
+  <section class="scene split" data-state="listening" id="listen">
+    <div class="col rv">
+      <h2>Hold ⌘M and talk.</h2>
+      <p class="lead">Hold ⌘M like a walkie-talkie, or double-tap it for hands-free. Whisper turns my voice into text locally, on the Mac.</p>
+      <figure class="clip">
+        <video data-src="media/ask.mp4" poster="media/ask.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: a question asked in the Jarvis HUD"></video>
+        <figcaption><b>Real recording.</b> A question goes into the HUD and the sphere changes colour while it thinks and answers.</figcaption>
+      </figure>
+      <dl class="facts">
+        <div><dt>Notch island</dt><dd>Hover the notch to see what is next, the last answer and a music card.</dd></div>
+        <div><dt>Inside Obsidian</dt><dd>The HUD also runs as an Obsidian plugin, and every order leaves a ticket in the vault.</dd></div>
+        <div><dt>The mirror</dt><dd>Reads 269 of my chats with Claude, finds what I correct most and proposes CLAUDE.md changes. Nothing applies until I approve.</dd></div>
+      </dl>
     </div>
   </section>
 
-  <footer>Built by <a href="https://www.linkedin.com/in/nacho-san-benito/">Ignacio San Benito</a> · <a href="https://github.com/nachoie123">GitHub</a></footer>
+  <section class="scene split" data-state="thinking" id="think">
+    <div class="col rv">
+      <h2>Then it decides who does the job.</h2>
+      <p class="lead">Plain rules check every order first: no model, 0 ms. If they are unsure, JEV picks a route in about 0.4 s and the job goes to Gemini or Claude.</p>
+      <div class="split61" id="split61">
+        <p class="t">Who handled the 61 orders on 1 October</p>
+        <div class="bar" role="img" aria-label="Rules 24, Gemini 33, Claude 4"><i style="flex:24;--c:var(--listen)"></i><i style="flex:33;--c:var(--think)"></i><i style="flex:4;--c:var(--speak)"></i></div>
+        <div class="nums"><div><b>24</b><span>Rules</span></div><div><b>33</b><span>Gemini</span></div><div><b>4</b><span>Claude</span></div></div>
+      </div>
+      <dl class="tools">
+        <div><dt>Roast my idea</dt><dd>Believer, sceptic, investor and judge give a verdict: build, fix first or kill.</dd></div>
+        <div><dt>Grill me</dt><dd>One question at a time until the plan has no holes, then it writes the spec.</dd></div>
+        <div><dt>LLM council</dt><dd>Five advisors debate a decision.</dd></div>
+        <div><dt>Deep research</dt><dd>A web report with sources, saved to Obsidian.</dd></div>
+        <div><dt>Prompt builder</dt><dd>Turns a rough task into a reusable prompt.</dd></div>
+        <div><dt>Content cascade</dt><dd>One note becomes a LinkedIn post, a thread and a newsletter paragraph.</dd></div>
+      </dl>
+      <figure class="clip">
+        <video data-src="media/skills.mp4" poster="media/skills.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: the skills catalog in the Jarvis HUD"></video>
+        <figcaption><b>43 buttons in 8 groups.</b> Each one is a skill: a written method Jarvis runs through Claude Code.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="scene split" data-state="speaking" id="speak">
+    <div class="col rv">
+      <h2>It answers out loud.</h2>
+      <p class="lead">Replies come back in a British butler voice. One click plans the day: classes, deadlines, events and three priorities, written into today's Obsidian note.</p>
+      <figure class="clip">
+        <video data-src="media/day.mp4" poster="media/day.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Plan my day in the Jarvis HUD"></video>
+        <figcaption><b>Real recording.</b> Plan my day, pressed in the HUD. Schedule and priorities on screen are example data.</figcaption>
+      </figure>
+      <p class="note">Also one click: close the day, score the week from 1 to 10, sort the inbox into urgent, reply and ignore with drafts (it never sends), find internships that fit, and check my CV against a posting.</p>
+    </div>
+  </section>
+
+  <section class="scene handsScene" data-state="hands" id="hands">
+    <header class="rv">
+      <h2>Then its hands use my Mac.</h2>
+      <p class="lead">Say "open Spotify" and a pointer flies to the Dock and clicks. Jarvis reads any window through macOS Accessibility, so it is not limited to its own app.</p>
+    </header>
+    <div class="grid3">
+      <figure class="clip big rv">
+        <video data-src="media/hands-open.mp4" poster="media/hands-open.jpg" width="1600" height="1040" muted loop playsinline preload="none" aria-label="Screen recording: Jarvis opens Spotify from the Dock"></video>
+        <figcaption><q>Open Spotify.</q> The pointer flies to the Dock icon and clicks it.</figcaption>
+      </figure>
+      <figure class="clip rv">
+        <video data-src="media/hands-search.mp4" poster="media/hands-search.jpg" width="1600" height="1040" muted loop playsinline preload="none" aria-label="Screen recording: Jarvis searches lofi beats inside Spotify"></video>
+        <figcaption><q>Search lofi beats on Spotify.</q> It types the query inside the app.</figcaption>
+      </figure>
+      <figure class="clip rv">
+        <video data-src="media/hands-message.mp4" poster="media/hands-message.jpg" width="1600" height="1040" muted loop playsinline preload="none" aria-label="Screen recording: Jarvis writes a message to Paco"></video>
+        <figcaption><q>Message Paco: running late.</q> It writes the text, then asks before pressing Enter.</figcaption>
+      </figure>
+    </div>
+    <dl class="more rv">
+      <div><dt>Where is X?</dt><dd>Tutor mode: it points at the button instead of pressing it.</dd></div>
+      <div><dt>Learns recipes</dt><dd>When a plan works, it saves it and repeats it next time without calling a model.</dd></div>
+      <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Irreversible actions always ask first.</dd></div>
+    </dl>
+    <p class="code">Code: manos.py (770 lines), ojos.py (527), cerebro.py (587). Every clip on this page is a real screen recording of Jarvis at work.</p>
+  </section>
+
+  <section class="scene end" data-state="idle" id="end">
+    <div class="rv">
+      <h2>Private project, runs on my Mac.</h2>
+      <p class="lead">It holds my calendar, mail access and account keys, so there is no public repository. If you want to see how it is built, ask.</p>
+      <ul class="figs">
+        <li><b>43</b> buttons</li><li><b>61</b> orders in one day</li><li><b>9,306</b> lines of Python</li><li><b>2,137</b> lines of Swift</li>
+      </ul>
+      <div class="actions">
+        <a class="btn" href="https://nachosanbenito.com/#contact">Get in touch</a>
+        <a class="cue" href="jarvis-promo.mp4">Watch the 82 s film</a>
+        <a class="cue" href="https://github.com/nachoie123">GitHub</a>
+      </div>
+      <footer>Built by <a href="https://www.linkedin.com/in/nacho-san-benito/">Ignacio San Benito</a></footer>
+    </div>
+  </section>
 </main>
+
 <script>
-  // Bars fill once when the chart scrolls into view; without JS/IO they are simply full.
-  (function(){var t=document.getElementById('tiers');if(!('IntersectionObserver' in window)){t.classList.add('in');return}
-  var o=new IntersectionObserver(function(e){if(e[0].isIntersecting){t.classList.add('in');o.disconnect()}},{rootMargin:'0px 0px -15% 0px'});o.observe(t)})();
+(() => {
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const fine = matchMedia('(pointer: fine)').matches;
+  const $ = s => document.querySelector(s);
+
+  /* ---- Madrid clock (bottom right) ---- */
+  const fmt = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hour12: false});
+  const clock = () => { const [h, m] = fmt.format(new Date()).split(':'); $('#clock').innerHTML = h + '<span class="colon">:</span>' + m };
+  clock(); setInterval(clock, 15000);
+
+  /* ---- states: same colours and names as the app ---- */
+  const S = {
+    idle:      {c: [107,133,184], spin: .10, label: 'Jarvis is idle'},
+    listening: {c: [ 79,194,247], spin: .22, label: 'Jarvis is listening'},
+    thinking:  {c: [179,135,255], spin: .55, label: 'Jarvis is thinking'},
+    speaking:  {c: [255,184, 77], spin: .30, label: 'Jarvis is speaking'},
+    hands:     {c: [ 79,194,247], spin: .60, label: 'Jarvis is using the Mac'},
+  };
+  const NAMES = Object.keys(S);
+  let scene = 'top', state = 'idle', awake = false;
+  const w = {idle: 1, listening: 0, thinking: 0, speaking: 0, hands: 0};
+
+  function setState(s){
+    if (!awake && s === 'listening' && scene === 'top') s = 'idle';
+    if (s === state) return;
+    state = s;
+    $('#status').textContent = S[s].label;
+    document.documentElement.style.setProperty('--state', 'rgb(' + S[s].c + ')');
+    document.body.classList.toggle('hands', s === 'hands');
+    if (still.matches) draw(performance.now(), true);
+  }
+
+  /* ---- the orb: a Fibonacci sphere of dots (same geometry as the HUD) ---- */
+  const cv = $('#orb'), cx = cv.getContext('2d');
+  let W = 0, H = 0, dpr = 1, pts = [], N = 0;
+  function build(n){
+    N = n; pts = [];
+    for (let i = 0; i < n; i++){
+      const y = 1 - 2 * (i + .5) / n, r = Math.sqrt(1 - y * y), a = i * 2.39996323;
+      const x = Math.cos(a) * r, z = Math.sin(a) * r;
+      const u = Math.random() * 6.283, v = Math.acos(2 * Math.random() - 1), d = 2.2 + Math.random() * 2.5;
+      pts.push({x, y, z, lon: Math.atan2(z, x), sx: Math.sin(v) * Math.cos(u) * d, sy: Math.cos(v) * d, sz: Math.sin(v) * Math.sin(u) * d * .3, k: Math.random()});
+    }
+  }
+  function size(){
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const want = W < 900 ? 2000 : 3600;
+    if (want !== N) build(want);
+    if (still.matches) draw(performance.now(), true);
+  }
+
+  /* where the orb sits in each scene */
+  let active = null;                       // hands: the clip the pointer flies to (hovered, else the most centred)
+  const hv = [...document.querySelectorAll('#hands video')], h1 = document.querySelector('.hero h1');
+  function target(){
+    const m = W < 900, mn = Math.min(W, H);
+    if (scene === 'top'){                 // glide toward the section pose as you leave the hero, so text never runs under it
+      const q = Math.min(1, scrollY / (H * .55)), p = q * q * (3 - 2 * q), a = m ? [W/2, H*.33, W*.37, 1] : [Math.min(W - mn*.42 - 40, Math.max(W*.6, h1.offsetLeft + h1.offsetWidth + 48 + mn*.42)), H*.47, mn*.38, 1], b = split(m);
+      return a.map((v, i) => v + (b[i] - v) * p);
+    }
+    if (scene === 'end')  return m ? [W/2, H*.2, W*.18, 1] : [W/2, H*.22, mn*.13, 1];
+    if (scene === 'hands'){
+      let el = active;
+      if (!el){ let best = 1e9; for (const v of hv){ const q = v.getBoundingClientRect(), d = Math.abs(q.top + q.height / 2 - H / 2); if (d < best){ best = d; el = v } } }
+      const r = el.getBoundingClientRect();
+      return [r.left + (m ? 22 : 30), Math.max(40, Math.min(H - 40, r.top + (m ? 22 : 30))), m ? 13 : 17, 1];
+    }
+    return split(m);
+  }
+  const split = m => m ? [W - 52, 104, 30, 1] : [W*.25, H*.5, Math.min(W*.17, H*.27), 1];
+
+  const L = {x: 0, y: 0, r: 0, a: 0};      // live layout, eased toward target()
+  const col = S.idle.c.slice();
+  const mouse = {x: -1e4, y: -1e4, tx: 0, ty: 0, ix: 0, iy: 0};
+  let t0 = performance.now(), last = t0, spin = 0, twist = 0, intro = 0, first = true;
+
+  // one soft dot sprite, recoloured only when the colour moves
+  const spr = document.createElement('canvas'); spr.width = spr.height = 32;
+  const sx = spr.getContext('2d'); let sprKey = '';
+  function sprite(r, g, b){
+    const k = r + ',' + g + ',' + b; if (k === sprKey) return; sprKey = k;
+    sx.clearRect(0, 0, 32, 32);
+    const gr = sx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    const lr = Math.round(r + (255 - r) * .8), lg = Math.round(g + (255 - g) * .8), lb = Math.round(b + (255 - b) * .8);
+    gr.addColorStop(0, `rgb(${lr},${lg},${lb})`); gr.addColorStop(.4, `rgba(${lr},${lg},${lb},.9)`); gr.addColorStop(.6, `rgba(${r},${g},${b},.7)`); gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    sx.fillStyle = gr; sx.fillRect(0, 0, 32, 32);
+  }
+
+  /* inside the dotted shell: the wire sphere of the real app (nodes + links to neighbours, from the HUD) */
+  const ESF = (() => {
+    const n = 180, p = [], l = [];
+    for (let i = 0; i < n; i++){ const y = 1 - 2 * (i + .5) / n, rr = Math.sqrt(1 - y * y), a = i * 2.39996323; p.push([Math.cos(a) * rr, y, Math.sin(a) * rr]) }
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++){ const dx = p[i][0] - p[j][0], dy = p[i][1] - p[j][1], dz = p[i][2] - p[j][2]; if (dx * dx + dy * dy + dz * dz < .1) l.push(i, j) }
+    return {p, l, q: p.map(() => [0, 0, 0])};
+  })();
+  function wire(ox, oy, R, rot, tilt, r, g, b, a){
+    const c = Math.cos(rot), s = Math.sin(rot), ct = Math.cos(tilt), st = Math.sin(tilt), q = ESF.q;
+    ESF.p.forEach(([x, y, z], i) => { const x1 = x * c + z * s, z1 = -x * s + z * c, y1 = y * ct - z1 * st, z2 = y * st + z1 * ct, k = 4 / (4 - z2); q[i][0] = ox + x1 * R * k; q[i][1] = oy - y1 * R * k; q[i][2] = z2 });
+    cx.lineWidth = dpr * .8;
+    for (const [lo, hi, al] of [[-2, 0, .1], [0, 2, .3]]){
+      cx.strokeStyle = `rgba(${r},${g},${b},${al * a})`; cx.beginPath();
+      for (let i = 0; i < ESF.l.length; i += 2){ const A = q[ESF.l[i]], B = q[ESF.l[i + 1]], z = A[2] + B[2]; if (z >= lo && z < hi){ cx.moveTo(A[0], A[1]); cx.lineTo(B[0], B[1]) } }
+      cx.stroke();
+    }
+  }
+
+  const back = [], front = [];
+  function draw(now, snap){
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const t = (now - t0) / 1000;
+    const k = snap ? 1 : 1 - Math.exp(-dt * 4);
+    for (const n of NAMES) w[n] = snap ? (n === state ? 1 : 0) : w[n] + ((n === state ? 1 : 0) - w[n]) * (1 - Math.exp(-dt * 2.4));
+    const goal = S[state].c; for (let i = 0; i < 3; i++) col[i] = snap ? goal[i] : col[i] + (goal[i] - col[i]) * (1 - Math.exp(-dt * 2.4));
+    const [tx, ty, tr, ta] = target();
+    const kk = scene === 'hands' && !snap ? 1 - Math.exp(-dt * 5) : k;      // the pointer flies faster
+    if (first){ L.x = tx; L.y = ty; L.r = tr; L.a = ta; first = false }
+    const kr = scene === 'hands' && !snap ? 1 - Math.exp(-dt * 10) : k;    // into hands: shrink first, then fly
+    L.x += (tx - L.x) * kk; L.y += (ty - L.y) * kk; L.r += (tr - L.r) * kr; L.a += (ta - L.a) * k;
+    const alpha = scene === 'hands' && L.r > 40 ? Math.min(L.a, .35) : L.a;
+
+    let sp = 0; for (const n of NAMES) sp += w[n] * S[n].spin;
+    if (!snap){ spin += dt * sp; twist += dt * w.thinking * 1.4; intro = Math.min(1, intro + dt / 1.6) }
+    else intro = 1;
+    const ie = 1 - Math.pow(1 - intro, 3);
+    mouse.ix += (mouse.tx - mouse.ix) * (snap ? 1 : 1 - Math.exp(-dt * 3)); mouse.iy += (mouse.ty - mouse.iy) * (snap ? 1 : 1 - Math.exp(-dt * 3));
+
+    const tt = snap ? 0 : t;
+    const env = .55 + .45 * Math.sin(tt * 7.3) * Math.sin(tt * 2.1 + 1);          // speech envelope
+    const breath = .018 * Math.sin(tt * 1.3);
+    const ry = spin + mouse.ix * .55, rx = .32 + mouse.iy * .4;
+    const cyR = Math.cos(ry), syR = Math.sin(ry), cxR = Math.cos(rx), sxR = Math.sin(rx);
+    const R = L.r * dpr, ox = (L.x + mouse.ix * 14 * (scene !== 'hands')) * dpr, oy = (L.y + mouse.iy * 10 * (scene !== 'hands')) * dpr;
+    const mx = mouse.x * dpr, my = mouse.y * dpr, rep = 90 * dpr, rep2 = rep * rep;
+    const dot = Math.max(1.2 * dpr, R * (W < 900 ? .03 : .026));
+
+    back.length = 0; front.length = 0;
+    for (const p of pts){
+      let {x, y, z} = p;
+      if (w.thinking > .002){                       // bands turn at different speeds
+        const a = w.thinking * Math.sin(y * 3.2 + twist) * .9, c = Math.cos(a), s = Math.sin(a);
+        const nx = x * c - z * s; z = x * s + z * c; x = nx;
+      }
+      let rr = 1 + breath * (w.idle + w.hands);
+      if (w.speaking > .002) rr += w.speaking * (env * .07 + env * .09 * (1 - y * y) * Math.sin(p.lon * 6 + tt * 6));
+      // rotate
+      const x1 = x * cyR + z * syR, z1 = -x * syR + z * cyR;
+      const y2 = y * cxR - z1 * sxR, z2 = y * sxR + z1 * cxR;
+      if (w.listening > .002) rr += w.listening * .065 * Math.sin((1 - z2) * 7 - tt * 4.2);   // rings arriving from the front
+      let X = x1 * rr, Y = y2 * rr, Z = z2 * rr;
+      if (ie < 1){ X = p.sx + (X - p.sx) * ie; Y = p.sy + (Y - p.sy) * ie; Z = p.sz + (Z - p.sz) * ie }
+      const per = 4 / (4 - Z);
+      let px = ox + X * R * per, py = oy - Y * R * per;
+      if (fine && scene !== 'hands'){
+        const dx = px - mx, dy = py - my, d2 = dx * dx + dy * dy;
+        if (d2 < rep2){ const f = (1 - d2 / rep2) * 22 * dpr / Math.sqrt(d2 + 1); px += dx * f; py += dy * f }
+      }
+      const light = .55 * (Z + 1) / 2 + .45 * Math.max(0, (-.45 * X + .55 * Y + .7 * Z) / rr);   // lit from the upper left, like a halftone print
+      const s = dot * per * (.25 + 1.05 * light * light) * (.85 + .3 * p.k);
+      (Z < 0 ? back : front).push(px, py, s, light);
+    }
+
+    cx.clearRect(0, 0, cv.width, cv.height);
+    const [r, g, b] = col.map(Math.round);
+    sprite(r, g, b);
+    cx.globalAlpha = .16 * alpha;
+    for (let i = 0; i < back.length; i += 4) cx.drawImage(spr, back[i] - back[i+2]/2, back[i+1] - back[i+2]/2, back[i+2], back[i+2]);
+    // core glow
+    const pulse = w.speaking * env * .25, gR = R * (1.05 + pulse);
+    const gr = cx.createRadialGradient(ox, oy, 0, ox, oy, gR);
+    const wr = (r + 510) / 3 | 0, wg = (g + 510) / 3 | 0, wb = (b + 510) / 3 | 0;
+    gr.addColorStop(0, `rgba(${wr},${wg},${wb},${(.7 + pulse) * alpha})`); gr.addColorStop(.18, `rgba(${r},${g},${b},${.42 * alpha})`); gr.addColorStop(.55, `rgba(${r},${g},${b},${.08 * alpha})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.globalAlpha = 1; cx.globalCompositeOperation = 'lighter';
+    cx.fillStyle = gr; cx.beginPath(); cx.arc(ox, oy, gR, 0, 6.2832); cx.fill();
+    if (R > 60 * dpr) wire(ox, oy, R * .58, -spin * 1.6 + mouse.ix * .4, rx, r, g, b, alpha);
+    cx.globalCompositeOperation = 'source-over';
+    for (let i = 0; i < front.length; i += 4){
+      cx.globalAlpha = (.3 + .7 * front[i+3]) * alpha;
+      cx.drawImage(spr, front[i] - front[i+2]/2, front[i+1] - front[i+2]/2, front[i+2], front[i+2]);
+    }
+    cx.globalAlpha = 1;
+  }
+
+  /* run only while visible; reduced motion = one still frame per change */
+  let running = false;
+  function tick(now){ if (document.hidden || still.matches){ running = false; return } draw(now); requestAnimationFrame(tick) }
+  function start(){ if (running || document.hidden || still.matches) return; running = true; last = performance.now(); requestAnimationFrame(tick) }
+  document.addEventListener('visibilitychange', start);
+  still.addEventListener('change', () => { still.matches ? draw(performance.now(), true) : start() });
+  addEventListener('resize', size);
+  size(); still.matches ? draw(performance.now(), true) : start();
+
+  // wake up: idle grey, then it starts listening (the first state change you see)
+  setTimeout(() => { awake = true; if (scene === 'top') setState('listening') }, still.matches ? 0 : 1700);
+
+  if (fine) addEventListener('pointermove', e => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    mouse.tx = e.clientX / W - .5; mouse.ty = e.clientY / H - .5;
+  }, {passive: true});
+
+  /* which scene is under the middle of the screen */
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    scene = e.target.id; setState(e.target.dataset.state);
+    if (still.matches) draw(performance.now(), true);
+  }), {rootMargin: '-30% 0px -70% 0px'});
+  document.querySelectorAll('.scene').forEach(s => io.observe(s));
+
+  /* reveal once */
+  const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); rv.unobserve(e.target) } }), {rootMargin: '0px 0px -12% 0px'});
+  document.querySelectorAll('.rv,#split61').forEach(el => rv.observe(el));
+
+  /* clips: load when near, play only while on screen; reduced motion = poster + controls */
+  const vids = [...document.querySelectorAll('video[data-src]')];
+  const load = new IntersectionObserver(es => es.forEach(e => {        // fetch a screen and a half early, so decoding starts before you arrive
+    if (e.isIntersecting){ e.target.src = e.target.dataset.src; e.target.preload = 'auto'; load.unobserve(e.target) }
+  }), {rootMargin: '150% 0px'});
+  const vo = new IntersectionObserver(es => es.forEach(e => {
+    if (still.matches) return;
+    e.intersectionRatio > .35 ? e.target.play().catch(() => {}) : e.target.pause();
+  }), {threshold: [0, .35]});
+  vids.forEach(v => { if (still.matches) v.controls = true; load.observe(v); vo.observe(v) });
+  document.querySelectorAll('#hands video').forEach(v => {
+    v.addEventListener('pointerenter', () => active = v);
+    v.addEventListener('pointerleave', () => active = null);
+  });
+})();
 </script>
 </body>
 </html>
