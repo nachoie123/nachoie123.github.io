@@ -50,15 +50,17 @@ ul{margin:2px 0 0;padding-left:22px}
 li{margin:1px 0}
 li::marker{color:var(--ink)}
 
-/* Tarjeta del QR: solo en escritorio, que es donde tiene sentido escanear con el móvil */
-.card{display:none}
+/* Tarjeta del QR: al lado del CV en escritorio; en móvil debajo, para enseñarlo y que lo escaneen */
+.card{display:block;justify-self:center;width:min(100%,260px);text-align:center;color:#fff;scroll-margin-top:84px}
+.card__qr{background:#fff;border-radius:10px;padding:0;overflow:hidden}
+.card__qr svg{display:block;width:100%;height:auto}
+.card h3{margin:16px 0 4px;font-size:16px;letter-spacing:-.01em}
+.card p{margin:0;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.66)}
+.btn--qr{padding:0 11px}
 @media (min-width:1200px){
   .desk{grid-template-columns:minmax(0,816px) 220px;padding-top:40px}
-  .card{display:block;align-self:start;position:sticky;top:96px;color:#fff}
-  .card__qr{background:#fff;border-radius:10px;padding:0;overflow:hidden}
-  .card__qr svg{display:block;width:100%;height:auto}
-  .card h3{margin:16px 0 4px;font-size:16px;letter-spacing:-.01em}
-  .card p{margin:0;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.66)}
+  .card{width:auto;text-align:left;align-self:start;position:sticky;top:96px}
+  .btn--qr{display:none}
 }
 .foot{text-align:center;color:rgba(255,255,255,.6);font-size:13px;padding:0 16px 40px}
 .foot a{color:#fff}
@@ -77,7 +79,7 @@ li::marker{color:var(--ink)}
   .row span{text-align:left;font-weight:400;color:var(--muted)}
   ul{padding-left:18px}
 }
-@media (max-width:440px){.bar__home{display:none}.btn{flex:1;justify-content:center}}
+@media (max-width:440px){.bar__home{display:none}.btn{flex:1;justify-content:center}.btn--qr{flex:none}}
 @media (prefers-reduced-motion:reduce){.btn{transition:none}.btn:active{transform:none}}
 @media (prefers-reduced-transparency:reduce){.bar{background:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}}
 @media print{.bar,.card,.foot{display:none}html{background:#fff}.desk{padding:0}.sheet{box-shadow:none;padding:0}}
@@ -89,6 +91,8 @@ li::marker{color:var(--ink)}
   <a class="btn btn--ghost" href="ignacio.vcf" download aria-label="Save contact card">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>
     <span>Save <span class="long">contact</span></span></a>
+  <a class="btn btn--qr" href="#qr" aria-label="Show contact QR code">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4"/></svg></a>
   <a class="btn btn--main" href="Ignacio-San-Benito-CV.pdf" download>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
     <span>Download <span class="long">PDF</span></span></a>
@@ -126,7 +130,7 @@ li::marker{color:var(--ink)}
 <ul><li><b>Computer Skills:</b> Python, HTML, front-end development, Git and GitHub, UI/UX; unsupervised learning, NLP, prompt engineering, LLM and AI-agent tooling, workflow automation; advanced user of MS Office and macOS.</li><li><b>Financial Skills:</b> Corporate finance, capital markets, CAPM and cost of capital, risk metrics (VaR, Expected Shortfall), Monte Carlo simulation, time-series forecasting (SARIMA), credit scoring and model backtesting.</li><li><b>Languages:</b> Spanish (Native). English (Bilingual, daily use since childhood).</li><li><b>Interests:</b> Football; fintech, startups and digital products; technology entrepreneurship and AI in business.</li></ul>
 </section>
   </article>
-  <aside class="card" aria-label="Contact QR code">
+  <aside class="card" id="qr" aria-label="Contact QR code">
     <div class="card__qr"><svg viewBox="0 0 296 296" class="segno"><path transform="scale(8)" class="qrline" stroke="#160000" d="M4 4.5h7m2 0h1m2 0h1m1 0h1m3 0h1m1 0h1m1 0h7m-29 1h1m5 0h1m1 0h3m1 0h3m1 0h2m2 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m3 0h2m2 0h3m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h5m1 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h5m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m2 0h3m1 0h3m3 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h1m1 0h2m3 0h1m4 0h1m-21 1h1m5 0h1m1 0h1m3 0h4m1 0h1m2 0h3m2 0h3m-28 1h3m1 0h2m1 0h1m1 0h4m2 0h1m1 0h3m3 0h2m1 0h2m-27 1h1m3 0h4m1 0h8m2 0h1m1 0h1m1 0h1m-25 1h1m4 0h1m1 0h4m10 0h2m2 0h1m-24 1h2m2 0h7m2 0h2m3 0h1m1 0h2m4 0h1m-29 1h1m1 0h1m1 0h2m5 0h1m3 0h10m2 0h2m-27 1h1m2 0h3m3 0h3m1 0h1m5 0h1m1 0h1m1 0h2m-26 1h1m3 0h1m2 0h3m1 0h1m2 0h1m3 0h1m1 0h1m2 0h1m1 0h1m1 0h1m-27 1h2m1 0h2m3 0h2m1 0h2m2 0h3m5 0h2m-27 1h2m1 0h2m2 0h2m2 0h1m3 0h6m1 0h3m1 0h3m-29 1h2m4 0h1m1 0h2m1 0h1m3 0h1m3 0h1m1 0h2m1 0h2m2 0h1m-29 1h1m1 0h2m4 0h1m1 0h3m2 0h2m3 0h2m2 0h1m-25 1h1m2 0h4m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h5m1 0h3m-21 1h2m1 0h1m2 0h2m2 0h1m1 0h1m3 0h2m-26 1h7m2 0h2m1 0h1m2 0h6m1 0h1m1 0h3m-27 1h1m5 0h1m4 0h2m6 0h2m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m4 0h1m1 0h2m1 0h1m2 0h7m1 0h1m-28 1h1m1 0h3m1 0h1m4 0h1m3 0h2m3 0h2m3 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h2m4 0h3m3 0h7m-28 1h1m5 0h1m2 0h2m3 0h2m2 0h1m2 0h1m3 0h2m1 0h1m-29 1h7m1 0h1m3 0h1m4 0h3m1 0h3m2 0h1"/></svg></div>
     <h3>Scan to save my contact</h3>
     <p>Point your phone camera here and tap the link: name, phone, email, website and LinkedIn go straight into your contacts.</p>
