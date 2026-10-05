@@ -5,116 +5,636 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bote</title>
 <meta name="description" content="Home poker, settled. How many chips to hand each player, every rebuy tracked, and who pays whom with the fewest payments. Free, no account, works offline.">
-<meta property="og:title" content="Bote — home poker, settled">
+<meta property="og:title" content="Bote, home poker settled">
 <meta property="og:description" content="How many chips to give each player, every rebuy tracked, and who pays whom with the fewest payments. Free, offline, no account.">
 <meta property="og:image" content="https://nachosanbenito.com/bote-app/poster.jpg">
-<meta name="theme-color" content="#F6FAF7">
+<meta name="theme-color" content="#eef1ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f0d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="icon.png">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#F6FAF7;--surface:#fff;--text:#0F1A14;--muted:#4B5B52;--border:#E1E9E4;--accent:#16A34A;--g:linear-gradient(100deg,#4ade80,#16a34a);--qr-bg:#fff}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B0F0D;--surface:#141B17;--text:#F1F5F3;--muted:#9AA9A1;--border:#1F2A24;--accent:#22C55E}}
-  :root[data-theme="dark"]{--bg:#0B0F0D;--surface:#141B17;--text:#F1F5F3;--muted:#9AA9A1;--border:#1F2A24;--accent:#22C55E}
+  /* Bote's own colours (app + chips) on Lusion's cold, near-white stage */
+  :root{
+    --bg:#eef1ef;--ink:#0b0f0d;--dim:#47534c;--faint:#5f6b64;--line:rgb(11 15 13 / .14);
+    --green:#22c55e;--greenInk:#157a3c;--red:#c81e1e;--card:rgb(238 241 239 / .9);
+    --ease:cubic-bezier(.16,1,.3,1);--gut:40px;--r:12px;
+  }
+  /* dark: the end screen always, the whole page when the system asks for it */
+  html.dark{--bg:#0b0f0d;--ink:#f1f5f3;--dim:#a3b1a9;--faint:#8b9891;--line:rgb(241 245 243 / .14);--greenInk:#4ade80;--red:#f87171;--card:rgb(11 15 13 / .88)}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0f0d;--ink:#f1f5f3;--dim:#a3b1a9;--faint:#8b9891;--line:rgb(241 245 243 / .14);--greenInk:#4ade80;--red:#f87171;--card:rgb(11 15 13 / .88)}.btn:hover{background:#fff}}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 "Plus Jakarta Sans",-apple-system,sans-serif}
-  .wrap{max-width:1040px;margin:0 auto;padding:40px 16px 72px}
-  .video video{width:100%;max-width:380px;display:block;margin:0 auto;border-radius:28px;background:#000;box-shadow:0 30px 80px rgb(21 128 61 / .25)}
-  .intro{max-width:640px;margin:48px auto 0;text-align:center}
-  .brand{display:flex;gap:12px;align-items:center;justify-content:center;font-weight:700}
-  .brand img{width:44px;height:44px;border-radius:11px}
-  h1{font-size:clamp(40px,6vw,64px);line-height:1.02;letter-spacing:-.03em;margin:22px 0 16px;font-weight:800}
-  h1 span{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lead{color:var(--muted);font-size:18px;margin:0 auto}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:28px 0 10px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:700;text-decoration:none}
-  .btn.main{background:var(--g);color:#06210f;box-shadow:0 10px 30px rgb(22 163 74 / .3)}
-  .btn.ghost{border:1px solid var(--border);color:var(--text);background:var(--surface)}
-  .small{color:var(--muted);font-size:13px;margin:10px 0 0}
-  h2{font-size:28px;letter-spacing:-.02em;margin:72px 0 20px}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-  .grid b{display:block;margin-bottom:6px}
-  .grid p{margin:0;color:var(--muted);font-size:15px}
-  .phone{display:flex;gap:20px;align-items:center}
-  .phone .qr{flex:none;width:120px;height:120px;padding:8px;border-radius:14px;background:var(--qr-bg);border:1px solid var(--border)}
-  .phone .qr img{width:100%;height:100%;display:block}
-  .phone>div{min-width:0}
-  .phone a.url{overflow-wrap:anywhere;color:var(--text);font-weight:700;font-size:17px;text-decoration:none;border-bottom:2px solid var(--accent)}
-  @media (max-width:640px){.phone .qr{display:none}}
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media (max-width:640px){.split{grid-template-columns:1fr}}
-  .row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--border)}
-  .row:first-of-type{border-top:0}
-  .dot{width:22px;height:22px;border-radius:50%;flex:none;border:3px dashed rgb(255 255 255 / .55);box-shadow:0 0 0 1px var(--border)}
-  .row .n{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
-  .row small{color:var(--muted)}
-  .ok{color:var(--accent);font-weight:800}
-  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:12px}
-  ol.steps li{counter-increment:s;padding:18px 20px 18px 64px;position:relative}
-  ol.steps li::before{content:counter(s);position:absolute;left:20px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--g);color:#06210f;font-weight:800;display:grid;place-items:center}
-  footer{margin-top:64px;color:var(--muted);font-size:14px;text-align:center}
-  footer a{color:inherit}
+  html{background:var(--bg);transition:background-color .7s var(--ease)}
+  body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 "Hanken Grotesk",-apple-system,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background-color .7s var(--ease),color .7s var(--ease)}
+  a{color:inherit}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--green);outline-offset:4px;border-radius:6px}
+  h1,h2,h3{font-weight:400;letter-spacing:-.025em;line-height:1;text-wrap:balance;margin:0}
+  p,dd,li,figcaption{text-wrap:pretty}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* the chips live on one fixed canvas; labels and arrows ride on top of it */
+  #stage{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
+  #ink,#tags{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .no3d #stage,.no3d #ink,.no3d #tags{display:none}
+  .tag{position:absolute;left:0;top:0;white-space:nowrap;font-size:16px;line-height:1.25;text-align:center;opacity:0;will-change:transform,opacity}
+  .tag b{display:block;font-weight:500}
+  .tag span{display:block;color:var(--dim);font-size:15px}
+  .tag .up{color:var(--greenInk)}.tag .down{color:var(--red)}
+  .tag.big{font-size:20px}
+  @media (min-width:900px){.tag.big{margin-top:28px}}.tag.big b{font-size:clamp(40px,4.2vw,60px);letter-spacing:-.035em}
+  .tag.pay{padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-weight:500;font-size:14px}
+  #ink path{fill:none;stroke:var(--greenInk);stroke-width:3;stroke-linecap:round}
+  #ink .head{fill:var(--greenInk);stroke:none}
+
+  /* top bar */
+  .bar{position:fixed;z-index:5;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px var(--gut)}
+  .bar::before{content:"";position:absolute;inset:0 0 -28px;background:linear-gradient(var(--bg) 40%,transparent);z-index:-1;transition:background .7s var(--ease)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:20px;text-decoration:none;letter-spacing:-.01em;min-height:44px}
+  .brand img{width:30px;height:30px;border-radius:8px}
+  .bar nav{display:flex;align-items:center;gap:24px;font-size:15px}
+  .bar nav a.link{text-decoration:none;min-height:44px;display:inline-flex;align-items:center;color:var(--dim);transition:color .2s}
+  .bar nav a.link:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:10px;background:var(--ink);color:var(--bg);font-weight:500;font-size:16px;text-decoration:none;transition:transform .16s var(--ease),background-color .2s}
+  .btn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .btn:hover{background:#1f2a24}.dark .btn:hover{background:#fff}
+  .btn:active{transform:scale(.97)}
+  .bar .btn{min-height:40px;padding:0 16px;font-size:15px}
+  .cue{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--line);transition:border-color .2s}
+  .cue:hover{border-color:var(--ink)}
+
+  main{position:relative;z-index:2}
+  section{position:relative}
+  .step{min-height:100vh;padding:96px var(--gut);display:flex;flex-direction:column;justify-content:center}
+  .col{max-width:min(470px,39vw)}
+
+  /* hero: Lusion's two huge lines, the chips float on the right */
+  .hero{min-height:100vh;padding:0 var(--gut) 40px;display:flex;flex-direction:column;justify-content:flex-end}
+  .hero h1{font-size:clamp(64px,7.8vw,118px);line-height:.94;letter-spacing:-.045em;margin-left:-.05em}
+  .hero .sub{display:flex;flex-direction:column;gap:26px;margin-top:30px;max-width:560px}
+  .hero p{max-width:34ch;margin:0;color:var(--dim);font-size:19px;line-height:1.45}
+  .acts{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center}
+  .tiny,.hero .tiny{font-size:15px;color:var(--faint);margin:20px 0 0}
+  .crosses{display:grid;grid-template-columns:1fr 1fr auto 1fr 1fr;align-items:center;margin-top:44px;font-size:14px;color:var(--dim)}
+  .crosses i{font-style:normal;font-size:16px;line-height:1;color:var(--ink)}
+  .crosses i:nth-child(2){justify-self:center}.crosses i:nth-child(4){justify-self:center}.crosses i:last-child{justify-self:end}
+
+  /* the film: PLAY ▶ REEL, but with the video itself between the words */
+  .film{min-height:100vh;padding:110px var(--gut) 80px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:40px}
+  .film .w{font-size:clamp(48px,6.6vw,96px);line-height:.95;letter-spacing:-.04em}
+  .film .w.l{text-align:right}
+  .reel{position:relative;margin:0;width:min(340px,calc((100vh - 220px) * .5625))}
+  .reel video{width:100%;height:auto;aspect-ratio:9/16;display:block;border-radius:var(--r);background:#0b0f0d;object-fit:cover}
+  .reel figcaption{font-size:14px;color:var(--faint);margin-top:12px;line-height:1.4}
+  .reel .x{position:absolute;font-size:16px;line-height:1;color:var(--ink)}
+  .reel .x1{left:-22px;top:-22px}.reel .x2{right:-22px;top:-22px}.reel .x3{left:-22px;bottom:30px}.reel .x4{right:-22px;bottom:30px}
+  .play{position:absolute;left:0;top:0;width:100%;aspect-ratio:9/16;display:grid;place-items:center;padding:0;border:0;border-radius:var(--r);background:linear-gradient(rgb(11 15 13 / 0) 78%,rgb(11 15 13 / .45));color:#fff;font-family:inherit;cursor:pointer}
+  /* YouTube-style play: rounded rectangle, dark until hover, red on hover */
+  .play i{display:grid;place-items:center;width:84px;height:58px;border-radius:16px;background:rgb(15 15 15 / .92);box-shadow:0 6px 24px rgb(0 0 0 / .45)}
+  .play i svg{width:26px;height:26px;margin-left:2px}
+  .play span{position:absolute;left:16px;bottom:16px;font-size:15px;font-weight:500;line-height:1.2;text-align:left;text-shadow:0 1px 8px rgb(0 0 0 / .6)}
+  .play small{position:absolute;right:14px;bottom:14px;padding:3px 7px;border-radius:6px;background:rgb(0 0 0 / .78);color:#fff;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+  .play:hover i,.play:focus-visible i{background:#ff0033}
+  html:not(.js) .play{display:none}
+  @media (prefers-reduced-motion:no-preference){.play i{transition:transform .3s var(--ease),background-color .15s}.play:hover i{transform:scale(1.06)}}
+
+  /* story steps: text on the left, the stage on the right */
+  .step h2{font-size:clamp(40px,4.4vw,62px);letter-spacing:-.035em}
+  .lead{color:var(--dim);font-size:19px;margin:20px 0 0;max-width:42ch}
+  .data{margin:28px 0 0;padding:0;list-style:none;font-size:16px}
+  .data li{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--line)}
+  .data li:last-child{border-bottom:1px solid var(--line)}
+  .data b{font-weight:500}
+  .data .r{font-variant-numeric:tabular-nums;color:var(--dim)}
+  .data .tot b,.data .tot .r{color:var(--greenInk);font-weight:500}
+  .note{font-size:15px;color:var(--faint);margin:18px 0 0;max-width:46ch}
+  .rule .step+.step{min-height:85vh}
+  .rule .step p.lead:first-child{margin-top:0}
+  table{width:100%;border-collapse:collapse;margin-top:28px;font-size:16px;font-variant-numeric:tabular-nums}
+  th{font-weight:400;color:var(--faint);font-size:14px;text-align:right;padding:0 0 8px}
+  th:first-child,td:first-child{text-align:left}
+  td{text-align:right;padding:10px 0;border-top:1px solid var(--line)}
+  td:first-child{font-weight:500}
+  .up{color:var(--greenInk)}.down{color:var(--red)}
+  .pays{margin:28px 0 0;padding:0;list-style:none;font-size:18px}
+  .pays li{display:grid;grid-template-columns:1fr auto;padding:12px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .pays li:last-child{border-bottom:1px solid var(--line)}
+  .pays span{color:var(--dim)}
+  .pays b{font-weight:500}
+
+  /* phone */
+  .phone .qr{display:flex;gap:22px;align-items:center;margin-top:30px}
+  .phone .qr img{width:118px;height:118px;padding:8px;border-radius:10px;background:#fff;flex:none}
+  .phone .qr a{font-size:21px;font-weight:500;text-decoration:none;border-bottom:2px solid var(--green);overflow-wrap:anywhere}
+  .facts{margin:30px 0 0;padding:0}
+  .facts div{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:14px 0;border-top:1px solid var(--line)}
+  .facts dt{font-weight:500}.facts dd{margin:0;color:var(--dim);font-size:16px}
+
+  /* the end: the room goes dark, one stack is left */
+  .end{min-height:100vh;padding:52vh var(--gut) 56px;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .end h2{font-size:clamp(72px,11vw,160px);letter-spacing:-.05em;line-height:.9}
+  .end .lead{margin:22px auto 30px;text-align:center}
+  .end .acts{justify-content:center}
+  footer{margin-top:auto;padding-top:80px;font-size:14px;color:var(--faint)}
+
+  /* reveal on arrival */
+  .js .rv{opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+  .js .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}html,body{transition:none}}
+
+  @media (max-width:899px){
+    :root{--gut:16px}
+    body{font-size:17px}
+    .bar{padding:10px var(--gut)}
+    .bar nav a.link{display:none}
+    .hero{justify-content:flex-start;padding-top:96px}
+    .hero h1{font-size:clamp(52px,15vw,72px)}
+    .hero .sub{margin-top:20px;gap:20px}
+    .hero p{font-size:17px}
+    .hero .crosses{display:none}
+    .film{grid-template-columns:1fr;justify-items:center;align-content:start;gap:18px;padding:76px var(--gut) 72px}
+    .film .w{font-size:clamp(40px,12vw,56px);text-align:center}.film .w.l{text-align:center}
+    .reel{width:min(280px,72vw)}
+    .reel .x{display:none}
+    .play i{width:68px;height:48px;border-radius:12px}.play i svg{width:22px;height:22px}.play span{left:12px;bottom:12px;font-size:14px}.play small{right:10px;bottom:10px}
+    /* the stage takes the top half; the text arrives under it on a card */
+    .step{min-height:100vh;padding:48vh var(--gut) 40px;justify-content:flex-start}
+    .rule .step+.step{min-height:90vh}
+    #settle .step{padding-top:53vh}
+    .tag{font-size:14px}.tag span{font-size:13px}.tag.big{font-size:16px}.tag.big b{font-size:34px}.tag.pay{font-size:13px;padding:2px 6px}
+    .col{box-shadow:0 -28px 24px -10px var(--bg);max-width:none;background:var(--card);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-radius:14px;padding:22px 18px;margin:0 -2px}
+    .step h2{font-size:clamp(32px,9vw,42px)}
+    .lead{font-size:17px}
+    .data li{flex-wrap:wrap;gap:2px 16px}.data .r{margin-left:auto;text-align:right}
+    .facts div{grid-template-columns:1fr;gap:2px}
+    .phone .qr img{display:none}
+    .end{padding-top:46vh}
+    .end h2{font-size:clamp(64px,22vw,100px)}
+  }
 </style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 </head>
 <body>
-<main class="wrap">
-  <div class="video"><video src="bote-promo.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
+<canvas id="stage" aria-hidden="true"></canvas>
+<svg id="ink" aria-hidden="true"></svg>
+<div id="tags" aria-hidden="true"></div>
 
-  <section class="intro">
-    <div class="brand"><img src="icon.png" alt="">Bote</div>
-    <h1>Home poker, <span>settled.</span></h1>
-    <p class="lead">How many chips to hand each player, every rebuy tracked, and at the end of the night who pays whom, with the fewest payments. Free, no account, works offline.</p>
-    <div class="cta">
-      <a class="btn main" href="https://bote.nachosanbenito.com">♠ Open Bote</a>
-      <a class="btn ghost" href="https://github.com/nachoie123/bote">GitHub</a>
+<header class="bar">
+  <a class="brand" href="#top"><img src="icon.png" alt="">Bote</a>
+  <nav>
+    <a class="link" href="https://nachosanbenito.com/#work"><span aria-hidden="true">←</span>&nbsp;nachosanbenito.com</a>
+    <a class="btn" href="https://bote.nachosanbenito.com">Open Bote</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="top" data-k="cloud">
+    <h1>Home poker,<br>settled.</h1>
+    <div class="sub">
+      <div>
+        <p>Bote tells you how many chips to hand each player, keeps every rebuy, and at the end of the night says who pays whom, with the fewest payments.</p>
+      </div>
+      <div>
+        <div class="acts"><a class="btn" href="https://bote.nachosanbenito.com">Open Bote</a><a class="cue" href="https://github.com/nachoie123/bote">Code on GitHub</a></div>
+        <p class="tiny">Free and open source. A web app: nothing to download, works offline. The app speaks Spanish.</p>
+      </div>
     </div>
-    <p class="small">Free &amp; open source · web app, nothing to download · iPhone and Android · app in Spanish</p>
+    <div class="crosses" aria-hidden="true"><i>+</i><i>+</i><span>Scroll, and the chips fall</span><i>+</i><i>+</i></div>
   </section>
 
-  <h2>Made for your phone</h2>
-  <div class="card phone">
-    <div class="qr"><img src="qr.svg" alt="QR code to bote.nachosanbenito.com"></div>
-    <div><a class="url" href="https://bote.nachosanbenito.com">bote.nachosanbenito.com</a>
-      <p class="small">Scan it, then <b>Share → Add to Home Screen</b>. It opens like an app and keeps working with no signal at the table.</p></div>
-  </div>
+  <section class="film" id="film" data-k="away">
+    <div class="w l rv" aria-hidden="true">The whole<br>night</div>
+    <figure class="reel rv">
+      <video src="bote-promo.mp4" poster="film-poster.jpg" width="1080" height="1920" controls playsinline preload="none" aria-label="Bote promo film, 62 seconds, with sound"></video>
+      <button class="play" type="button" aria-label="Play the 62 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Sound on</span><small>1:02</small></button>
+      <span class="x x1" aria-hidden="true">+</span><span class="x x2" aria-hidden="true">+</span><span class="x x3" aria-hidden="true">+</span><span class="x x4" aria-hidden="true">+</span>
+      <figcaption>The promo film: the chip split, rebuys, the count and the settle-up, in the real app.</figcaption>
+    </figure>
+    <div class="w rv" aria-hidden="true">in 62<br>seconds.</div>
+  </section>
 
-  <h2>How many chips do I give everyone?</h2>
-  <div class="split">
-    <div class="card">
-      <p class="small" style="margin:0 0 10px">You type: 4 players and what's in the box</p>
-      <div class="row"><span class="dot" style="background:#e8e8ea"></span><div>White <small>· €0.10</small></div><span class="n">150</span></div>
-      <div class="row"><span class="dot" style="background:#dc2626"></span><div>Red <small>· €0.50</small></div><span class="n">100</span></div>
-      <div class="row"><span class="dot" style="background:#27272a"></span><div>Black <small>· €1.00</small></div><span class="n">100</span></div>
+  <section id="deal">
+    <div class="step" data-k="deal">
+      <div class="col rv">
+        <h2>How many chips do I give everyone?</h2>
+        <p class="lead">Tell it the players and what is in the box. Bote finds a split that adds up to the buy-in exactly, with plenty of low chips for the blinds.</p>
+        <ul class="data">
+          <li><span>In the box</span><span class="r">150 white · 100 red · 100 black</span></li>
+          <li><span>Players</span><span class="r">4</span></li>
+          <li><span>Each one gets</span><span class="r">35 × €0.10 + 25 × €0.50 + 24 × €1</span></li>
+          <li class="tot"><b>Buy-in</b><span class="r">€40.00 exact</span></li>
+        </ul>
+        <p class="note">It works like making change with coins: it tries every combination (a bounded knapsack, solved with dynamic programming). Leave the buy-in empty and it picks the biggest round one the box allows.</p>
+      </div>
     </div>
-    <div class="card">
-      <p class="small" style="margin:0 0 10px">Bote answers: <b>€40 each</b></p>
-      <div class="row"><span class="dot" style="background:#e8e8ea"></span><div>White</div><span class="n">× 35</span></div>
-      <div class="row"><span class="dot" style="background:#dc2626"></span><div>Red</div><span class="n">× 25</span></div>
-      <div class="row"><span class="dot" style="background:#27272a"></span><div>Black</div><span class="n">× 24</span></div>
-      <div class="row"><div>Exact sum</div><span class="n ok">€40.00</span></div>
+  </section>
+
+  <section class="rule" id="rule">
+    <div class="step" data-k="pair">
+      <div class="col rv">
+        <h2>Bought chips off a friend? That is not a buy-in.</h2>
+        <p class="lead">You and a friend sit down with €40 each. That is €80 of chips on the table.</p>
+        <p class="note">From here on, one chip in the 3D stacks is about €2.50.</p>
+      </div>
     </div>
-  </div>
-  <p class="small">It works like making change with coins: it tries every combination and finds the one that adds up exactly, with plenty of low chips for the blinds. Leave the buy-in empty and it picks the biggest round one your box allows.</p>
+    <div class="step" data-k="transfer">
+      <div class="col rv">
+        <p class="lead">You buy €10 of your friend's chips. The chips change hands and so does the money, but no new chips appear: still <b>€80 on the table</b>. Bote logs it as a transfer.</p>
+      </div>
+    </div>
+    <div class="step" data-k="rebuy">
+      <div class="col rv">
+        <p class="lead">Your friend rebuys for €20. That one is a buy-in: new chips come out of the box, and now there is <b>€100 on the table</b>.</p>
+        <p class="note">Log the transfer as a buy-in and the count at the end never adds up. That mix-up is why Bote exists.</p>
+      </div>
+    </div>
+  </section>
 
-  <h2>What it does</h2>
-  <div class="grid">
-    <div class="card"><b>Chips per player</b><p>Colours, values and what's in the box in; exactly how many of each to deal out.</p></div>
-    <div class="card"><b>Every rebuy, one tap</b><p>Buy-ins log themselves. Rebuys and cash paid mid-game are one tap each.</p></div>
-    <div class="card"><b>Bought chips off a friend?</b><p>Logged as a transfer, not a buy-in, so the totals always add up.</p></div>
-    <div class="card"><b>Count by colour</b><p>At the end, count each stack by colour and Bote does the maths.</p></div>
-    <div class="card"><b>Fewest payments</b><p>Who pays whom, in at most N−1 payments for N players. Share it to the group chat.</p></div>
-    <div class="card"><b>Yours, offline</b><p>No account, no server. Games and history stay on your phone.</p></div>
-  </div>
+  <section id="count">
+    <div class="step" data-k="count">
+      <div class="col rv">
+        <h2>End of the night: count each stack by colour.</h2>
+        <p class="lead">Everyone counts their chips by colour and Bote does the maths. Before it settles anything, it checks the count matches what went in. If not, it says where the gap is, like "3 black chips missing".</p>
+        <table>
+          <thead><tr><th scope="col">Player</th><th scope="col">Put in</th><th scope="col">Counted</th><th scope="col">Result</th></tr></thead>
+          <tbody>
+            <tr><td>Leo</td><td>€40</td><td>€72.50</td><td class="up">+€32.50</td></tr>
+            <tr><td>Marta</td><td>€40</td><td>€58.00</td><td class="up">+€18.00</td></tr>
+            <tr><td>Dani</td><td>€60</td><td>€53.50</td><td class="down">−€6.50</td></tr>
+            <tr><td>Sofía</td><td>€80</td><td>€66.00</td><td class="down">−€14.00</td></tr>
+            <tr><td>Hugo</td><td>€100</td><td>€70.00</td><td class="down">−€30.00</td></tr>
+          </tbody>
+        </table>
+        <p class="note">The example game from the film. Stack height follows what each player counted.</p>
+      </div>
+    </div>
+  </section>
 
-  <h2>Start in a minute</h2>
-  <ol class="steps">
-    <li class="card">Open <b>bote.nachosanbenito.com</b> in Safari (or Chrome on Android).</li>
-    <li class="card">Tap <b>Share → Add to Home Screen</b>. From then on it opens like an app, even offline.</li>
-    <li class="card">Tap <b>¿Cuántas fichas doy a cada uno?</b> (how many chips each), then <b>Nueva partida</b> (new game). The app speaks Spanish for now.</li>
-  </ol>
+  <section id="settle">
+    <div class="step" data-k="settle">
+      <div class="col rv">
+        <h2>Five players. Four payments.</h2>
+        <p class="lead">Whoever owes the most pays whoever is owed the most, then repeat. It never takes more than N−1 payments for N players. One tap shares it to the group chat.</p>
+        <ul class="pays">
+          <li><b>Hugo <span>→</span> Leo</b><b>€30.00</b></li>
+          <li><b>Sofía <span>→</span> Leo</b><b>€2.50</b></li>
+          <li><b>Sofía <span>→</span> Marta</b><b>€11.50</b></li>
+          <li><b>Dani <span>→</span> Marta</b><b>€6.50</b></li>
+        </ul>
+        <p class="note">Worked out by repartir() in motor.js, the same code the app runs. 42 tests check that the balances always add up to zero.</p>
+      </div>
+    </div>
+  </section>
 
-  <footer>Built by <a href="https://www.linkedin.com/in/nacho-san-benito/">Ignacio San Benito</a> · <a href="https://github.com/nachoie123/bote">GitHub</a></footer>
+  <section class="phone" id="phone">
+    <div class="step" data-k="pile">
+      <div class="col rv">
+        <h2>On your phone in a minute.</h2>
+        <div class="qr"><img src="qr.svg" alt="QR code to bote.nachosanbenito.com"><div><a href="https://bote.nachosanbenito.com">bote.nachosanbenito.com</a><p class="tiny">Scan it, then Share → Add to Home Screen.</p></div></div>
+        <dl class="facts">
+          <div><dt>Opens like an app</dt><dd>Added from Safari (or Chrome on Android), it gets its own icon and full screen.</dd></div>
+          <div><dt>No signal needed</dt><dd>Everything is cached on the phone, so it keeps working at the table.</dd></div>
+          <div><dt>Yours</dt><dd>No account, no server. Games and history stay on your phone.</dd></div>
+          <div><dt>First tap</dt><dd>¿Cuántas fichas doy a cada uno? (how many chips each), then Nueva partida (new game).</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="end" id="end" data-k="final">
+    <div class="rv">
+      <h2>Settled.</h2>
+      <p class="lead">Free, open source, and nothing to install.</p>
+      <div class="acts"><a class="btn" href="https://bote.nachosanbenito.com">Open Bote</a><a class="cue" href="https://github.com/nachoie123/bote">GitHub</a><a class="cue" href="#film">Watch the film <span aria-hidden="true">↑</span></a></div>
+    </div>
+    <footer><a href="https://nachosanbenito.com">Ignacio San Benito</a> · IE University</footer>
+  </section>
 </main>
+
+<script>
+/* film + reveals: plain script, works even if the 3D cannot start */
+(() => {
+  const film = document.querySelector('#film video'), pb = document.querySelector('#film .play');
+  film.controls = false;                       // native bar hidden under the button until the film starts
+  pb.addEventListener('click', () => film.play().catch(() => {}));
+  film.addEventListener('play', () => { film.controls = true; pb.remove() }, {once: true});
+  const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); rv.unobserve(e.target) } }), {rootMargin: '0px 0px -10% 0px'});
+  document.querySelectorAll('.rv').forEach(el => rv.observe(el));
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+const root = document.documentElement;
+const still = matchMedia('(prefers-reduced-motion: reduce)');
+const fine = matchMedia('(pointer: fine)').matches;
+const sysDark = matchMedia('(prefers-color-scheme: dark)');
+const cv = document.getElementById('stage'), ink = document.getElementById('ink'), tagBox = document.getElementById('tags');
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true}) }
+catch (e) { root.classList.add('no3d'); throw e }
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+scene.environmentIntensity = .85;
+const sun = new THREE.DirectionalLight(0xffffff, 1.7);
+sun.position.set(-7, 15, 9); sun.castShadow = true;
+Object.assign(sun.shadow.camera, {left: -11, right: 11, top: 11, bottom: -11, near: 1, far: 50});
+sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 5; sun.shadow.bias = -.0004;
+scene.add(sun);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({opacity: .13}));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const camera = new THREE.PerspectiveCamera(30, 1, .1, 200);
+
+/* ---- the chips: Bote's set (white €0.10, red €0.50, black €1) + the B chip from the Blender reel ---- */
+const R = 1, T = .19;
+function face(base, insert, ring, label, labelColor){
+  const c = document.createElement('canvas'); c.width = c.height = 512; const x = c.getContext('2d');
+  x.fillStyle = base; x.fillRect(0, 0, 512, 512);
+  x.fillStyle = insert;
+  for (let k = 0; k < 6; k++){ const a = k * Math.PI / 3, w = .23; x.beginPath(); x.arc(256, 256, 252, a - w, a + w); x.arc(256, 256, 204, a + w, a - w, true); x.closePath(); x.fill() }
+  x.strokeStyle = ring; x.lineWidth = 7; x.beginPath(); x.arc(256, 256, 160, 0, 7); x.stroke();
+  x.fillStyle = labelColor; x.font = '600 74px "Helvetica Neue",Helvetica,Arial,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(label, 256, 260);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+function edge(base, insert){
+  const c = document.createElement('canvas'); c.width = 512; c.height = 16; const x = c.getContext('2d');
+  x.fillStyle = base; x.fillRect(0, 0, 512, 16); x.fillStyle = insert;
+  for (let k = 0; k < 6; k++) x.fillRect(k * 512 / 6 + 30, 0, 26, 16);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const KINDS = [
+  {n: 50, base: '#eceeed', ins: '#22c55e', ring: '#9aa59f', lab: '0.10', lc: '#7c8882', rough: .55},
+  {n: 45, base: '#d42a2a', ins: '#f4f4f4', ring: '#f4f4f4', lab: '0.50', lc: '#f4f4f4', rough: .42},
+  {n: 45, base: '#1d2022', ins: '#eceeed', ring: '#eceeed', lab: '1', lc: '#eceeed', rough: .26},
+  {n: 1, base: '#eceeed', ins: '#22c55e', rough: .5, tex: 'chip-b.png'},
+];
+const geo = new THREE.CylinderGeometry(R, R, T, 56, 1);
+const chips = [];                                  // id -> {mesh, i}
+const meshes = KINDS.map((k, ki) => {
+  const top = k.tex ? new THREE.TextureLoader().load(k.tex, t => { t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true; dirty = true; wake() }) : face(k.base, k.ins, k.ring, k.lab, k.lc);
+  const sideM = new THREE.MeshStandardMaterial({map: edge(k.base, k.ins), roughness: k.rough});
+  const topM = new THREE.MeshStandardMaterial({map: top, roughness: k.rough});
+  const m = new THREE.InstancedMesh(geo, [sideM, topM, topM], k.n);
+  m.castShadow = true; m.frustumCulled = false; scene.add(m);
+  for (let i = 0; i < k.n; i++) chips.push({kind: ki, mesh: m, i});
+  return m;
+});
+const N = chips.length;
+const ids = ki => chips.map((c, id) => c.kind === ki ? id : -1).filter(i => i >= 0);
+const W = ids(0), RD = ids(1), B = ids(2), LOGO = ids(3)[0];
+
+/* ---- layouts: where every chip sits at each step of the story ---- */
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function stack(map, list, x, z){
+  list.forEach((id, j) => map.set(id, {p: [x + (rnd() - .5) * .07, T / 2 + j * T, z + (rnd() - .5) * .07], r: [(rnd() - .5) * .03, rnd() * 6.28, (rnd() - .5) * .03], k: j / Math.max(1, list.length - 1) * .75 + rnd() * .25}));
+}
+const banded = (n, o) => { const b = Math.round(n * .35), r = Math.round(n * .32); return [...B.slice(o.b, o.b += b), ...RD.slice(o.r, o.r += r), ...W.slice(o.w, o.w += n - b - r)] };
+const L = {};
+{ // floating cloud, like Lusion's hero objects
+  const m = new Map();
+  for (let id = 0; id < N; id++){
+    let x, y, z; do { x = rnd() * 2 - 1; y = rnd() * 2 - 1; z = rnd() * 2 - 1 } while (x * x + y * y + z * z > 1);
+    m.set(id, {p: [x * 4.1, 3.6 + y * 2.5, z * 2.4], r: [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28], k: rnd()});
+  }
+  m.set(LOGO, {p: [.3, 3.7, 3.1], r: [1.32, Math.PI / 2, 0], k: .5});   // face to the camera, B upright
+  L.cloud = m;
+  L.away = new Map([...m].map(([id, v]) => [id, {...v, p: [v.p[0] * 1.15, v.p[1] + 17, v.p[2]], k: rnd()}]));
+}
+{ const m = new Map(); stack(m, W.slice(0, 35), -2.4, 0); stack(m, RD.slice(0, 25), 0, 0); stack(m, B.slice(0, 24), 2.4, 0); L.deal = m }
+const you = [...B.slice(0, 6), ...RD.slice(0, 5), ...W.slice(0, 5)], fr = [...B.slice(6, 12), ...RD.slice(5, 10), ...W.slice(5, 10)];
+{ const m = new Map(); stack(m, you, -1.6, 0); stack(m, fr, 1.6, 0); L.pair = m }
+{ const m = new Map(); stack(m, [...you, ...fr.slice(12)], -1.6, 0); stack(m, fr.slice(0, 12), 1.6, 0); L.transfer = m }
+{ const m = new Map(); stack(m, [...you, ...fr.slice(12)], -1.6, 0); stack(m, [...fr.slice(0, 12), ...B.slice(12, 15), ...RD.slice(10, 13), ...W.slice(10, 12)], 1.6, 0); L.rebuy = m }
+const PLAYERS = [['Leo', 29, '+€32.50', 'up'], ['Marta', 23, '+€18.00', 'up'], ['Dani', 21, '−€6.50', 'down'], ['Sofía', 26, '−€14.00', 'down'], ['Hugo', 28, '−€30.00', 'down']];
+const piles = (() => { const o = {b: 0, r: 0, w: 0}; return PLAYERS.map(p => banded(p[1], o)) })();
+const ROW = PLAYERS.map((_, i) => [(i - 2) * 2.35, 0]);
+{ const m = new Map(); piles.forEach((l, i) => stack(m, l, ...ROW[i])); L.count = m }
+L.settle = L.count;                                // same stacks; the payments arc over them
+{ const o = {b: 20, r: 20, w: 20}; const m = new Map(); stack(m, [...banded(24, o), LOGO], 0, 0); m.get(LOGO).r = [0, .4, 0]; L.pile = m; L.final = m }
+
+/* camera framing per step: what to look at, how much must fit (w, h), from how high (deg),
+   and where on screen the stage sits [x, y, w, h] as fractions, desktop / phone */
+const CAM = {
+  cloud:    {at: [0, 3.6, 0], fit: [10.6, 7], el: 10, d: [.54, .08, .45, .62], m: [-.04, .5, 1.08, .46]},
+  away:     {at: [0, 3.6, 0], fit: [10.6, 7], el: 10, d: [.54, .08, .45, .62], m: [-.04, .5, 1.08, .46]},
+  deal:     {at: [0, 3.5, 0], fit: [7.6, 8.2], el: 13, d: [.44, .1, .52, .8], m: [0, .08, 1, .33]},
+  pair:     {at: [0, 2.2, 0], fit: [6.6, 5.6], el: 15, d: [.46, .14, .5, .72], m: [0, .13, 1, .3]},
+  transfer: {at: [0, 2.2, 0], fit: [6.6, 5.6], el: 15, d: [.46, .14, .5, .72], m: [0, .13, 1, .3]},
+  rebuy:    {at: [0, 2.2, 0], fit: [6.6, 5.6], el: 15, d: [.46, .14, .5, .72], m: [0, .13, 1, .3]},
+  count:    {at: [0, 2.9, 0], fit: [12.2, 7.6], el: 14, d: [.46, .12, .52, .74], m: [0, .1, 1, .32]},
+  settle:   {at: [0, 5, 0], fit: [12.2, 11.6], el: 12, d: [.46, .14, .52, .8], m: [0, .13, 1, .34]},
+  pile:     {at: [0, 2.6, 0], fit: [5.2, 6.4], el: 14, d: [.5, .12, .44, .74], m: [0, .08, 1, .38]},
+  final:    {at: [0, 2.6, 0], fit: [5.2, 6.4], el: 14, d: [.3, .06, .4, .42], m: [0, .07, 1, .36]},
+};
+
+/* labels that ride on the 3D */
+const g = ([x, z], y = -1) => [x, y, z];
+const TAGS = {
+  deal: [[g([-2.4, 0]), '<b>White × 35</b><span>€0.10 each</span>'], [g([0, 0]), '<b>Red × 25</b><span>€0.50 each</span>'], [g([2.4, 0]), '<b>Black × 24</b><span>€1 each</span>']],
+  pair: [[g([-1.6, 0]), '<b>You</b><span class="num">€40</span>'], [g([1.6, 0]), '<b>Friend</b><span class="num">€40</span>'], [[0, 4.6, 0], '<span>On the table</span><b class="num">€80</b>', 'big']],
+  transfer: [[g([-1.6, 0]), '<b>You</b><span class="num">€50</span>'], [g([1.6, 0]), '<b>Friend</b><span class="num">€30</span>'], [[0, 5.2, 0], '<span>On the table</span><b class="num">still €80</b>', 'big']],
+  rebuy: [[g([-1.6, 0]), '<b>You</b><span class="num">€50</span>'], [g([1.6, 0]), '<b>Friend</b><span class="num">€50</span>'], [[0, 5.2, 0], '<span>On the table</span><b class="num">€100</b>', 'big']],
+  count: PLAYERS.map((p, i) => [g(ROW[i]), `<b>${p[0]}</b><span class="num ${p[3]}">${p[2]}</span>`]),
+  settle: 'count',                                 // same labels stay on
+};
+const PAYS = [[4, 0, '€30.00'], [3, 0, '€2.50'], [3, 1, '€11.50'], [2, 1, '€6.50']];
+
+/* ---- story order comes from the page ---- */
+const steps = [...document.querySelectorAll('[data-k]')];
+const ORDER = steps.map(s => s.dataset.k);
+const tagEls = ORDER.map(k => typeof TAGS[k] === 'string' ? [] : (TAGS[k] || []).map(([pos, html, cls]) => { const d = document.createElement('div'); d.className = 'tag' + (cls ? ' ' + cls : ''); d.innerHTML = html; tagBox.appendChild(d); return {d, pos} }));
+const tagSteps = ORDER.map((k, j) => [j, ...ORDER.map((k2, j2) => TAGS[k2] === k ? j2 : -1).filter(x => x >= 0)]);   // steps that share a set of labels
+const SVGNS = 'http://www.w3.org/2000/svg';
+ink.innerHTML = '';
+const arrows = PAYS.map(([a, b, amt]) => {
+  const path = document.createElementNS(SVGNS, 'path'); path.setAttribute('pathLength', '1'); path.style.strokeDasharray = '1 1'; ink.appendChild(path);
+  const head = document.createElementNS(SVGNS, 'path'); head.setAttribute('class', 'head'); ink.appendChild(head);
+  const d = document.createElement('div'); d.className = 'tag pay num'; d.textContent = amt; tagBox.appendChild(d);
+  return {a, b, path, head, d, land: 0};
+});
+arrows.forEach(ar => { const same = arrows.filter(o => o.b === ar.b); if (same.length > 1) ar.land = same.indexOf(ar) === 0 ? -.2 : .4 });   // two payments into one stack land side by side
+
+let Wd = 0, Hd = 0, mobile = false, anchors = [];
+function measure(){
+  Wd = innerWidth; Hd = innerHeight; mobile = Wd < 900;
+  renderer.setPixelRatio(Math.min(mobile ? 1.75 : 2, devicePixelRatio || 1));
+  renderer.setSize(Wd, Hd, false);
+  ink.setAttribute('viewBox', `0 0 ${Wd} ${Hd}`);
+  const max = document.documentElement.scrollHeight - Hd;
+  anchors = steps.map((s, i) => {
+    if (i === 0) return 0;
+    const r = s.getBoundingClientRect(), top = r.top + scrollY;
+    return Math.min(max, mobile && (s.classList.contains('step') || s.id === 'film') ? top : top + r.height / 2 - Hd / 2);
+  });
+  for (let i = 1; i < anchors.length; i++) anchors[i] = Math.max(anchors[i], anchors[i - 1] + 1);
+  dirty = true;
+}
+function storyAt(y){
+  if (y <= anchors[0]) return 0;
+  for (let i = 0; i < anchors.length - 1; i++) if (y < anchors[i + 1]) return i + (y - anchors[i]) / (anchors[i + 1] - anchors[i]);
+  return anchors.length - 1;
+}
+
+/* ---- motion helpers ---- */
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const io3 = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const sstep = t => t * t * (3 - 2 * t);
+const lerp = (a, b, t) => a + (b - a) * t;
+const HOLD = .16;                                   // the layout rests a little around each step
+
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler(), P = new THREE.Vector3(), S = new THREE.Vector3(), V = new THREE.Vector3();
+const disp = Array.from({length: N}, () => ({x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0}));
+const ph = Array.from({length: N}, () => [rnd() * 6.28, .5 + rnd() * .6, (rnd() - .5) * .5]);
+const pos = Array.from({length: N}, () => [0, 0, 0]);
+const pointer = {x: 0, y: 0, on: false, nx: 0, ny: 0, sx: 0, sy: 0};
+let s = 0, dirty = true, t0 = performance.now(), last = t0, intro = still.matches ? 1 : 0;
+
+function placeCamera(i, u){
+  const A = CAM[ORDER[i]], Bc = CAM[ORDER[Math.min(i + 1, ORDER.length - 1)]];
+  const at = A.at.map((v, k) => lerp(v, Bc.at[k], u));
+  const fw = lerp(A.fit[0], Bc.fit[0], u), fh = lerp(A.fit[1], Bc.fit[1], u), el = lerp(A.el, Bc.el, u) * Math.PI / 180;
+  const ra = mobile ? A.m : A.d, rb = mobile ? Bc.m : Bc.d, st = ra.map((v, k) => lerp(v, rb[k], u));
+  const tan = Math.tan(camera.fov * Math.PI / 360), asp = Wd / Hd;
+  const dist = Math.max(fh / (2 * tan * st[3]), fw / (2 * tan * asp * st[2]));
+  const yaw = pointer.sx * .12;
+  camera.aspect = asp;
+  camera.position.set(at[0] + Math.sin(yaw) * Math.cos(el) * dist, at[1] + Math.sin(el) * dist - pointer.sy * .4, at[2] + Math.cos(yaw) * Math.cos(el) * dist);
+  camera.lookAt(at[0], at[1], at[2]);
+  const cx = (st[0] + st[2] / 2) * Wd, cy = (st[1] + st[3] / 2) * Hd;
+  camera.setViewOffset(Wd, Hd, Wd / 2 - cx, Hd / 2 - cy, Wd, Hd);
+  camera.updateProjectionMatrix();
+}
+function toScreen(p){ V.set(p[0], p[1], p[2]).project(camera); return [(V.x + 1) / 2 * Wd, (1 - V.y) / 2 * Hd, V.z] }
+
+/* pointer pushes the chips (springs pull them back) */
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(), hit = new THREE.Vector3(), nrm = new THREE.Vector3();
+function pushChips(dt, w){
+  let moving = false;
+  if (pointer.on){
+    camera.getWorldDirection(nrm); plane.setFromNormalAndCoplanarPoint(nrm, new THREE.Vector3(...CAM[ORDER[Math.round(s)]].at));
+    ray.setFromCamera({x: pointer.nx, y: pointer.ny}, camera); ray.ray.intersectPlane(plane, hit);
+  }
+  for (let id = 0; id < N; id++){
+    const d = disp[id];
+    if (pointer.on && hit){
+      const p = pos[id], dx = p[0] - hit.x, dy = p[1] - hit.y, dz = p[2] - hit.z, r2 = dx * dx + dy * dy + dz * dz;
+      if (r2 < 4.4){ const f = (1 - r2 / 4.4) * 34 * w / Math.sqrt(r2 + .05); d.vx += dx * f * dt; d.vy += dy * f * dt * .6; d.vz += dz * f * dt * .4 }
+    }
+    d.vx += (-38 * d.x - 7 * d.vx) * dt; d.vy += (-38 * d.y - 7 * d.vy) * dt; d.vz += (-38 * d.z - 7 * d.vz) * dt;
+    d.x = clamp(d.x + d.vx * dt, -1.6, 1.6); d.y = clamp(d.y + d.vy * dt, -1.2, 1.2); d.z = clamp(d.z + d.vz * dt, -1.2, 1.2);
+    if (Math.abs(d.vx) + Math.abs(d.vy) + Math.abs(d.vz) + Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) > 1e-3) moving = true;
+  }
+  return moving;
+}
+
+function frame(now){
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  const goal = storyAt(scrollY);
+  s = still.matches ? Math.round(goal) : (Math.abs(goal - s) < 1e-4 ? goal : s + (goal - s) * (1 - Math.exp(-dt * 7)));
+  if (!still.matches) intro = Math.min(1, intro + dt / 1.8);
+  const i = Math.min(Math.floor(s), ORDER.length - 2), t = s - i;
+  const u = io3(clamp((t - HOLD) / (1 - 2 * HOLD)));
+  const NONE = new Map(), A = mobile && ORDER[i] === 'away' ? NONE : L[ORDER[i]], Bm = mobile && ORDER[i + 1] === 'away' ? NONE : L[ORDER[i + 1]];   // phone: chips vanish instead of flying through the film words
+  pointer.sx += (pointer.x - pointer.sx) * (1 - Math.exp(-dt * 3)); pointer.sy += (pointer.y - pointer.sy) * (1 - Math.exp(-dt * 3));
+  placeCamera(i, u);
+
+  const tt = (now - t0) / 1000, wc = still.matches ? 0 : clamp(1 - s * 2);   // cloud is alive only up top
+  const springs = fine && !still.matches ? pushChips(dt, 1) : false;
+  const SP = .45;
+  for (let id = 0; id < N; id++){
+    const a = A.get(id), b = Bm.get(id), c = chips[id];
+    let px, py, pz, rx, ry, rz, sc = 1;
+    const k = (b || a)?.k ?? 0, uc = clamp((u - k * SP) / (1 - SP));
+    if (a && b){
+      const dx = b.p[0] - a.p[0], dz = b.p[2] - a.p[2], hd = Math.hypot(dx, dz), fall = a.p[1] - b.p[1] > 6;
+      const e = io3(uc), ey = fall ? uc * uc : e;
+      px = lerp(a.p[0], b.p[0], fall ? sstep(uc) : e); pz = lerp(a.p[2], b.p[2], fall ? sstep(uc) : e);
+      py = lerp(a.p[1], b.p[1], ey) + Math.min(2.6, hd * .4) * Math.sin(Math.PI * uc);
+      const tum = hd > .4 ? Math.sin(Math.PI * uc) * 1.1 : 0;
+      rx = lerp(a.r[0], b.r[0], e) + tum; ry = lerp(a.r[1], b.r[1], e); rz = lerp(a.r[2], b.r[2], e) + tum * .5;
+    } else if (b){                                  // new chips drop in from above
+      px = b.p[0]; pz = b.p[2]; py = b.p[1] + 12 * (1 - uc * uc);
+      rx = b.r[0] + (1 - uc) * .9; ry = b.r[1]; rz = b.r[2] + (1 - uc) * .5; sc = clamp(uc * 6);
+    } else if (a){                                  // leaving chips hop and vanish
+      px = a.p[0]; pz = a.p[2]; py = a.p[1] + uc * 2.5; rx = a.r[0]; ry = a.r[1]; rz = a.r[2]; sc = 1 - sstep(clamp(uc * 2.2));
+    } else sc = 0;
+    if (sc > 0){
+      if (wc > 0 && id !== LOGO){ const q = ph[id]; py += Math.sin(tt * q[1] + q[0]) * .22 * wc; rx += Math.sin(tt * .3 + q[0]) * .25 * wc; ry += tt * q[2] * wc; }
+      if (intro < 1){ const e = clamp(intro * 1.7 - (L.cloud.get(id).k) * .7); py += (1 - e * e) * 14 * (1 - s); if (e <= 0) sc = 0 }
+      const d = disp[id]; px += d.x; py += d.y; pz += d.z;
+    }
+    pos[id][0] = px; pos[id][1] = py; pos[id][2] = pz;
+    E.set(rx || 0, ry || 0, rz || 0); Q.setFromEuler(E); P.set(px || 0, py || 0, pz || 0); S.setScalar(sc || 1e-5);
+    M.compose(P, Q, S); c.mesh.setMatrixAt(c.i, M);
+  }
+  meshes.forEach(m => m.instanceMatrix.needsUpdate = true);
+
+  /* labels: fade in only while their step is on screen */
+  tagEls.forEach((list, j) => {
+    const o = Math.max(...tagSteps[j].map(q => clamp(1 - Math.abs(s - q) * 3.2)));
+    for (const tg of list){
+      if (o <= 0){ if (tg.d.style.opacity !== '0') tg.d.style.opacity = '0'; continue }
+      const [x, y] = toScreen(tg.pos);
+      tg.d.style.opacity = o.toFixed(3);
+      tg.d.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) translate(-50%,-50%)`;
+    }
+  });
+  /* who pays whom: arrows on the table, drawn as you arrive */
+  const si = ORDER.indexOf('settle'), ws = clamp((s - (si - .62)) / .55), out = clamp(1 - (s - si) * 2.6);
+  arrows.forEach((ar, n) => {
+    const pr = clamp((ws - n * .14) / .44) * out;
+    ar.path.style.opacity = ar.head.style.opacity = ar.d.style.opacity = pr > 0 ? 1 : 0;
+    if (pr <= 0){ ar.d.style.opacity = 0; return }
+    // an arc from the payer's stack to the winner's, higher the further it travels
+    const ha = PLAYERS[ar.a][1] * T + .35, hb = PLAYERS[ar.b][1] * T + .5, span = Math.abs(ar.a - ar.b);
+    const p0 = [ROW[ar.a][0] - .25, ha, 0], p2 = [ROW[ar.b][0] + ar.land, hb + (ar.land > 0 ? .15 : 0), 0], top = Math.max(ha, hb) + .5 + span * (mobile ? 1.1 : .8);   // phone: more room between the price tags
+    const p1 = [(p0[0] + p2[0]) / 2, 2 * top - (ha + hb) / 2, 0];
+    const pts = [];
+    for (let q = 0; q <= 24; q++){ const t2 = q / 24, m1 = 1 - t2; pts.push(toScreen([m1 * m1 * p0[0] + 2 * m1 * t2 * p1[0] + t2 * t2 * p2[0], m1 * m1 * p0[1] + 2 * m1 * t2 * p1[1] + t2 * t2 * p2[1], 0])) }
+    ar.path.setAttribute('d', 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L'));
+    ar.path.style.strokeDashoffset = 1 - pr;
+    const e2 = pts[24], e1 = pts[21], ang = Math.atan2(e2[1] - e1[1], e2[0] - e1[0]), hs = 13;
+    ar.head.setAttribute('d', `M${e2[0] + Math.cos(ang) * 4} ${e2[1] + Math.sin(ang) * 4}L${e2[0] + Math.cos(ang + 2.55) * hs} ${e2[1] + Math.sin(ang + 2.55) * hs}L${e2[0] + Math.cos(ang - 2.55) * hs} ${e2[1] + Math.sin(ang - 2.55) * hs}Z`);
+    ar.head.style.opacity = pr > .97 ? 1 : 0;
+    const mid = pts[[12, 9, 12, 12][n]]; ar.d.style.opacity = clamp((pr - .6) * 3).toFixed(3);
+    ar.d.style.transform = `translate(${mid[0].toFixed(1)}px,${mid[1].toFixed(1)}px) translate(-50%,-50%)`;
+  });
+
+  const dark = s > ORDER.indexOf('final') - .5;
+  if (dark !== root.classList.contains('dark')) root.classList.toggle('dark', dark);
+  floor.material.opacity = (dark || sysDark.matches ? .45 : .13) * clamp(s - 1);   // no ground under the floating cloud
+  renderer.render(scene, camera);
+  return wc > 0 || springs || intro < 1 || Math.abs(goal - s) > 1e-4;
+}
+
+/* run only while something moves; reduced motion = one still frame per step */
+let running = false;
+function tick(now){ if (document.hidden){ running = false; return } const more = frame(now); if (more || dirty){ dirty = false; requestAnimationFrame(tick) } else running = false }
+function wake(){ if (running || document.hidden) return; running = true; last = performance.now(); requestAnimationFrame(tick) }
+addEventListener('scroll', wake, {passive: true});
+addEventListener('resize', () => { measure(); wake() });
+document.addEventListener('visibilitychange', wake);
+still.addEventListener('change', () => { intro = 1; wake() });
+sysDark.addEventListener('change', () => { dirty = true; wake() });
+new ResizeObserver(() => { measure(); wake() }).observe(document.querySelector('main'));
+if (fine) addEventListener('pointermove', e => {
+  if (still.matches) return;
+  pointer.on = true; pointer.nx = e.clientX / Wd * 2 - 1; pointer.ny = -(e.clientY / Hd * 2 - 1);
+  pointer.x = e.clientX / Wd - .5; pointer.y = e.clientY / Hd - .5; wake();
+}, {passive: true});
+root.addEventListener('mouseleave', () => { pointer.on = false });
+measure(); wake();
+</script>
 </body>
 </html>
