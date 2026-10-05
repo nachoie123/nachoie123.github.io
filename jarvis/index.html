@@ -74,13 +74,16 @@
   /* the film: same frame as the clips, with a play button over the poster */
   .promo{position:relative}
   .promo video{aspect-ratio:16/9}
-  .play{position:absolute;left:0;top:0;width:100%;aspect-ratio:16/9;display:flex;align-items:flex-end;gap:14px;padding:22px;border:0;border-radius:var(--r);background:linear-gradient(rgb(5 6 13 / 0) 45%,rgb(5 6 13 / .7));color:var(--ink);font-family:inherit;font-size:15px;font-weight:500;line-height:1.2;text-align:left;cursor:pointer}
-  .play i{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--ink);color:var(--bg);box-shadow:0 0 0 8px rgb(232 236 255 / .12)}
-  .play i svg{width:22px;height:22px;margin-left:3px}
-  .play small{display:block;color:var(--dim);font-size:14px;font-weight:400;margin-top:4px;font-variant-numeric:tabular-nums}
+  .play{position:absolute;left:0;top:0;width:100%;aspect-ratio:16/9;display:grid;place-items:center;padding:0;border:0;border-radius:var(--r);background:linear-gradient(rgb(5 6 13 / 0) 55%,rgb(5 6 13 / .65));color:#fff;font-family:inherit;cursor:pointer}
+  /* YouTube-style play: rounded rectangle, dark until hover, red on hover */
+  .play i{display:grid;place-items:center;width:84px;height:58px;border-radius:16px;background:rgb(23 23 23 / .82);box-shadow:0 6px 24px rgb(0 0 0 / .45)}
+  .play i svg{width:26px;height:26px;margin-left:2px}
+  .play span{position:absolute;left:20px;bottom:18px;font-size:15px;font-weight:500;line-height:1.2;text-align:left;text-shadow:0 1px 8px rgb(0 0 0 / .6)}
+  .play small{position:absolute;right:16px;bottom:16px;padding:3px 7px;border-radius:6px;background:rgb(0 0 0 / .78);color:#fff;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+  .play:hover i,.play:focus-visible i{background:#ff0033}
   html:not(.js) .play{display:none}
   .play:focus-visible{outline:2px solid var(--listen);outline-offset:4px}
-  @media (prefers-reduced-motion:no-preference){.play i{transition:transform .3s var(--ease),box-shadow .3s}.play:hover i{transform:scale(1.06);box-shadow:0 0 0 12px rgb(232 236 255 / .14)}}
+  @media (prefers-reduced-motion:no-preference){.play i{transition:transform .3s var(--ease),background-color .15s}.play:hover i{transform:scale(1.06)}}
   .facts{margin:44px 0 0;padding:0}
   .facts div{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line)}
   .facts dt{font-weight:500}
@@ -144,7 +147,7 @@
     .hero{padding-bottom:84px}
     .hero p{font-size:16px}
     .split .col{margin:0;max-width:none}
-    .play{padding:14px;gap:12px}.play i{width:52px;height:52px}.play i svg{width:18px;height:18px}
+    .play i{width:68px;height:48px;border-radius:12px}.play i svg{width:22px;height:22px}.play span{left:14px;bottom:12px;font-size:14px}.play small{right:10px;bottom:10px}
     .lead{font-size:17px}
     .facts div{grid-template-columns:1fr;gap:2px}
     .tools{grid-template-columns:1fr}
@@ -176,7 +179,7 @@
       <p class="lead">Start here: the voice, the HUD, the buttons and the hands, in one short film. It has sound.</p>
       <figure class="clip promo">
         <video src="jarvis-promo.mp4" poster="media/promo.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Jarvis promo film, 82 seconds, with sound"></video>
-        <button class="play" type="button" aria-label="Play the 82 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch the film<small>1:22, sound on</small></span></button>
+        <button class="play" type="button" aria-label="Play the 82 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch the film · sound on</span><small>1:22</small></button>
         <figcaption><b>The promo film.</b> Everything below, shown in order. Controls let you pause or go full screen.</figcaption>
       </figure>
     </div>
