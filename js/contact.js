@@ -2,7 +2,7 @@
 // Cambio al coserla: el formulario abre el correo con el mensaje ya escrito (la web no tiene servidor).
 import './shared.js';   // registra ScrollTrigger y lo sincroniza con el scroll suave
 
-const MAIL = 'ignaciosanbenitop@gmail.com';
+const MAIL = 'nsanbenitop@gmail.com';
 
 // Trocea cada titular en palabras y letras, y deja caer las letras con el scroll
 document.querySelectorAll('.animation-title').forEach(title => {
