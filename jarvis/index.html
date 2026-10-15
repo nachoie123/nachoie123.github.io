@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jarvis</title>
-<meta name="description" content="A personal butler that lives on my Mac. One click plans the day, triages the inbox and runs thinking tools; its hands open apps, search and type for me. Private project.">
+<meta name="description" content="A personal butler that lives on my Mac. Talk to it with ⌘M: it answers out loud, plans the day, triages the inbox and uses the Mac for me. Private project.">
 <meta property="og:title" content="Jarvis, a butler that lives on my Mac">
-<meta property="og:description" content="Plans my day, triages the inbox, and uses my Mac for me. 43 buttons, voice, a notch island and hands that act outside the app.">
+<meta property="og:description" content="Plans my day, triages the inbox, and uses my Mac for me. Claude as the brain, a butler voice, an island beside the notch and hands that act outside the app.">
 <meta property="og:image" content="https://nachosanbenito.com/jarvis/poster.jpg">
 <meta name="theme-color" content="#05060d">
 <meta name="color-scheme" content="dark">
@@ -188,15 +188,15 @@
   <section class="scene split" data-state="listening" id="listen">
     <div class="col rv">
       <h2>Hold ⌘M and talk.</h2>
-      <p class="lead">Hold ⌘M like a walkie-talkie, or double-tap it for hands-free. Whisper turns my voice into text locally, on the Mac.</p>
+      <p class="lead">Hold ⌘M like a walkie-talkie, or double-tap it for hands-free: then saying “Jarvis” is enough, and two minutes of silence turns it off. Speech is recognised on the Mac.</p>
       <figure class="clip">
         <video data-src="media/ask.mp4" poster="media/ask.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: a question asked in the Jarvis HUD"></video>
         <figcaption><b>Real recording.</b> A question goes into the HUD and the sphere changes colour while it thinks and answers.</figcaption>
       </figure>
       <dl class="facts">
-        <div><dt>Notch island</dt><dd>Hover the notch to see what is next, the last answer and a music card.</dd></div>
-        <div><dt>Inside Obsidian</dt><dd>The HUD also runs as an Obsidian plugin, and every order leaves a ticket in the vault.</dd></div>
-        <div><dt>The mirror</dt><dd>Reads 269 of my chats with Claude, finds what I correct most and proposes CLAUDE.md changes. Nothing applies until I approve.</dd></div>
+        <div><dt>Island beside the notch</dt><dd>Shows what it is doing. Drag it along the edge of the screen; hover it for the full card.</dd></div>
+        <div><dt>Dictation</dt><dd>Say “write the following” and it types what you say into any app.</dd></div>
+        <div><dt>Receipts</dt><dd>Every order leaves a short receipt in Obsidian.</dd></div>
       </dl>
     </div>
   </section>
@@ -204,13 +204,8 @@
   <section class="scene split" data-state="thinking" id="think">
     <div class="col rv">
       <h2>Then it decides who does the job.</h2>
-      <p class="lead">Plain rules check every order first: no model, 0 ms. If they are unsure, JEV picks a route in about 0.4 s and the job goes to Gemini or Claude.</p>
-      <div class="split61" id="split61">
-        <p class="t">Who handled the 61 orders on 1 October</p>
-        <div class="bar" role="img" aria-label="Rules 24, Gemini 33, Claude 4"><i style="flex:24;--c:var(--listen)"></i><i style="flex:33;--c:var(--think)"></i><i style="flex:4;--c:var(--speak)"></i></div>
-        <div class="nums"><div><b>24</b><span>Rules</span></div><div><b>33</b><span>Gemini</span></div><div><b>4</b><span>Claude</span></div></div>
-      </div>
-      <dl class="tools">
+      <p class="lead">Everyday orders take a fast lane with no model at all. The rest go to Claude Sonnet, with Gemini as the backup if Claude is down.</p>
+        <dl class="tools">
         <div><dt>Roast my idea</dt><dd>Believer, sceptic, investor and judge give a verdict: build, fix first or kill.</dd></div>
         <div><dt>Grill me</dt><dd>One question at a time until the plan has no holes, then it writes the spec.</dd></div>
         <div><dt>LLM council</dt><dd>Five advisors debate a decision.</dd></div>
@@ -228,12 +223,12 @@
   <section class="scene split" data-state="speaking" id="speak">
     <div class="col rv">
       <h2>It answers out loud.</h2>
-      <p class="lead">Replies come back in a British butler voice. One click plans the day: classes, deadlines, events and three priorities, written into today's Obsidian note.</p>
+      <p class="lead">Replies come back in a British butler voice that starts speaking in about 0.1 s, while the rest of the answer is still being written. One click plans the day: classes, deadlines, events and three priorities, written into today's Obsidian note.</p>
       <figure class="clip">
         <video data-src="media/day.mp4" poster="media/day.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Plan my day in the Jarvis HUD"></video>
         <figcaption><b>Real recording.</b> Plan my day, pressed in the HUD. Schedule and priorities on screen are example data.</figcaption>
       </figure>
-      <p class="note">Also one click: close the day, score the week from 1 to 10, sort the inbox into urgent, reply and ignore with drafts (it never sends), find internships that fit, and check my CV against a posting.</p>
+      <p class="note">Also one click: close the day, score the week from 1 to 10, sort the inbox into urgent, reply and ignore with drafts (it never sends), find internships that fit, and check a CV against a posting.</p>
     </div>
   </section>
 
@@ -252,16 +247,16 @@
         <figcaption><q>Search lofi beats on Spotify.</q> It types the query inside the app.</figcaption>
       </figure>
       <figure class="clip rv">
-        <video data-src="media/hands-message.mp4" poster="media/hands-message.jpg" width="1600" height="1040" muted loop playsinline preload="none" aria-label="Screen recording: Jarvis writes a message to Paco"></video>
-        <figcaption><q>Message Paco: running late.</q> It writes the text, then asks before pressing Enter.</figcaption>
+        <video data-src="media/hands-message.mp4" poster="media/hands-message.jpg" width="1600" height="1040" muted loop playsinline preload="none" aria-label="Screen recording: Jarvis writes a message"></video>
+        <figcaption><q>Message: running late.</q> It writes the text, says what it will send and counts down; a click or “stop” cancels.</figcaption>
       </figure>
     </div>
     <dl class="more rv">
-      <div><dt>Where is X?</dt><dd>Tutor mode: it points at the button instead of pressing it.</dd></div>
+      <div><dt>Explain it to me</dt><dd>Teacher mode: the pointer glides to each step, types at the pace of the voice and leaves a checklist.</dd></div>
       <div><dt>Learns recipes</dt><dd>When a plan works, it saves it and repeats it next time without calling a model.</dd></div>
-      <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Irreversible actions always ask first.</dd></div>
+      <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Before acting it says what it will do and counts down on the island, so you can stop it.</dd></div>
     </dl>
-    <p class="code">Code: manos.py (770 lines), ojos.py (527), cerebro.py (587). Every clip on this page is a real screen recording of Jarvis at work.</p>
+    <p class="code">Built on <a href="https://github.com/hussainn7/plip-oss">Plip</a> (MIT), an open-source Mac agent. Every clip on this page is a real screen recording; the hands clips show an earlier version.</p>
   </section>
 
   <section class="scene end" data-state="idle" id="end">
@@ -269,7 +264,7 @@
       <h2>Private project, runs on my Mac.</h2>
       <p class="lead">It holds my calendar, mail access and account keys, so there is no public repository. If you want to see how it is built, ask.</p>
       <ul class="figs">
-        <li><b>43</b> buttons</li><li><b>61</b> orders in one day</li><li><b>9,306</b> lines of Python</li><li><b>2,137</b> lines of Swift</li>
+        <li><b>⌘M</b> to talk</li><li><b>0.1 s</b> to the first word</li><li><b>~1 %</b> CPU when idle</li>
       </ul>
       <div class="actions">
         <a class="btn" href="https://nachosanbenito.com/#contact">Get in touch</a>
