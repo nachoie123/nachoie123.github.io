@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Drive · Going Nowhere Fast</title>
-<meta name="description" content="Drive through a small town while Screen Door's album Going Nowhere Fast plays on the car radio.">
+<meta name="description" content="Drive a palm-lined boulevard at sunset while Screen Door's album Going Nowhere Fast plays on the car radio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
   .cond { font-weight: 900; font-stretch: 62%; text-transform: uppercase; letter-spacing: .01em; }
 
   .game {
-    --dash-h: 124px;
     display: grid; grid-template-columns: 64fr 36fr;
     width: 100vw; height: 100vh; height: 100dvh;
   }
@@ -32,52 +31,36 @@
     font-family: var(--hand); font-size: 18px; color: #fff3df; text-shadow: 0 1px 6px rgba(0,0,0,.55);
   }
 
-  /* dashboard */
-  .dash {
-    position: absolute; left: 0; right: 0; bottom: 0; height: var(--dash-h);
-    background: linear-gradient(#1d2026, #0d0f13 60%);
-    border-radius: 50% 50% 0 0 / 34px 34px 0 0;
-    box-shadow: 0 -2px 0 rgba(255,255,255,.05), 0 -18px 40px rgba(0,0,0,.35);
-    display: flex; align-items: center; justify-content: flex-end; gap: 16px;
-    padding: 14px clamp(12px, 3%, 28px) 10px calc(var(--wheel) * .9 + 4%);
-    --wheel: calc(var(--dash-h) * 2.2);
-  }
-  .cluster {
-    position: absolute; left: calc(4% + var(--wheel) * .5); bottom: calc(var(--dash-h) * .62);
-    transform: translateX(-50%); text-align: center; line-height: 1; z-index: 3;
-    color: #ffb347; text-shadow: 0 0 10px rgba(255,170,60,.45);
-  }
-  .cluster b { display: block; font-size: 34px; font-variant-numeric: tabular-nums; }
-  .cluster small { font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #c99a5e; text-transform: uppercase; }
-  .wheel {
-    position: absolute; z-index: 2; left: 4%; bottom: calc(var(--dash-h) * -.78);
-    width: var(--wheel); height: var(--wheel); pointer-events: none;
-    filter: drop-shadow(0 6px 10px rgba(0,0,0,.5));
-    will-change: transform;
-  }
+  /* the 3D cockpit is drawn in WebGL; this layer only carries the radio and the speed for screen readers */
+  .dash { position: absolute; inset: 0; pointer-events: none; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
   .radio {
-    position: relative; z-index: 3; flex: 1 1 auto; max-width: 470px; min-width: 0;
-    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
-    background: #17191e; border: 1px solid #2a2d34; border-radius: 6px; padding: 8px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    position: absolute; right: clamp(8px, 1.6%, 20px); top: 75.5%; width: clamp(176px, 21%, 330px);
+    pointer-events: auto; z-index: 3;
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 6px;
+    background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,0) 38%), #07090c;
+    border: 1px solid #23272e; border-radius: 9px; padding: 7px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.7);
+    transform: perspective(800px) rotateY(9deg); transform-origin: right center;
   }
+  .radio .btns { grid-column: 1 / -1; }
   .icon {
-    width: 50px; height: 50px; border-radius: 3px; display: grid; place-items: center;
+    width: 38px; height: 38px; border-radius: 3px; display: grid; place-items: center;
     background: var(--icon-bg, #a9cbd0); color: var(--icon-fg, #13232a);
-    font-size: 34px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+    font-size: 26px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
   }
   .led {
-    min-width: 0; background: #1a0e04; border-radius: 3px; padding: 6px 10px;
+    min-width: 0; background: #120a03; border-radius: 3px; padding: 4px 8px;
     color: #ffb347; text-shadow: 0 0 8px rgba(255,160,50,.6);
     box-shadow: inset 0 2px 6px rgba(0,0,0,.7);
   }
-  .led-title { font-weight: 800; font-stretch: 70%; text-transform: uppercase; font-size: 17px; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .led-sub { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #d58c33; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .btns { display: flex; gap: 4px; }
+  .led-title { font-weight: 800; font-stretch: 70%; text-transform: uppercase; font-size: 15px; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .led-sub { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #d58c33; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btns { display: flex; gap: 4px; justify-content: space-between; }
   .btn {
-    width: 44px; height: 44px; display: grid; place-items: center; padding: 0;
-    background: #24272e; color: #efe6d6; border: 1px solid #353943; border-radius: 4px;
+    flex: 1; min-width: 36px; height: 40px; display: grid; place-items: center; padding: 0;
+    background: #181b21; color: #efe6d6; border: 1px solid #2c3039; border-radius: 4px;
     transition: background-color .15s, transform .1s;
   }
   .btn:hover { background: #2f333c; }
@@ -87,7 +70,7 @@
   :focus-visible { outline: 2px solid #f2a945; outline-offset: 2px; }
 
   /* touch */
-  .touch { position: absolute; left: 0; right: 0; bottom: calc(var(--dash-h) + 10px); display: flex; justify-content: space-between; padding: 0 12px; pointer-events: none; z-index: 4; }
+  .touch { position: absolute; left: 0; right: 0; bottom: 98px; display: flex; justify-content: space-between; padding: 0 12px; pointer-events: none; z-index: 4; }
   .touch div { display: flex; gap: 10px; }
   .tbtn {
     pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
@@ -166,22 +149,21 @@
   .go:hover { background: #ffbd5e; transform: translateY(-1px); }
 
   @media (max-width: 759px), (orientation: portrait) {
-    .game { grid-template-columns: 1fr; grid-template-rows: 58fr 42fr; --dash-h: 112px; }
+    .game { grid-template-columns: 1fr; grid-template-rows: 58fr 42fr; }
     .panel { border-left: 0; border-top: 1px solid rgba(239,230,214,.1); }
     .head { grid-template-columns: auto 1fr; justify-items: start; text-align: left; column-gap: 16px; row-gap: 2px; padding: 14px 18px 8px; align-items: center; }
     .disc { grid-row: span 3; width: clamp(72px, 11vh, 110px); margin: 0; }
     .tt { font-size: 30px; }
     .lyrics { padding: 12vh 20px 18vh; }
     .ln { font-size: 17px; }
-    .dash { --wheel: calc(var(--dash-h) * 1.8); padding-left: calc(var(--wheel) * .72); gap: 8px; }
-    .wheel { left: calc(var(--wheel) * -.2); bottom: calc(var(--dash-h) * -.55); }
-    .cluster { left: calc(var(--wheel) * .3); }
-    .cluster b { font-size: 26px; }
-    .radio { grid-template-columns: auto minmax(0, 1fr); gap: 6px; padding: 6px; }
-    .btns { grid-column: 1 / -1; justify-content: space-between; }
-    .icon { width: 40px; height: 40px; font-size: 27px; }
-    .led { padding: 4px 8px; }
-    .led-title { font-size: 15px; }
+    .where { top: 8px; left: 12px; font-size: 15px; }
+    .touch { bottom: 8px; }
+    .radio { top: 34px; bottom: auto; left: 6px; right: 6px; width: auto; transform: none; grid-template-columns: auto minmax(0, 1fr) auto; padding: 5px; }
+    .radio .btns { grid-column: auto; }
+    .btn { flex: 0 0 38px; height: 38px; }
+    .icon { width: 34px; height: 34px; font-size: 23px; }
+    .led-title { font-size: 14px; }
+    .tbtn { min-width: 54px; height: 54px; }
   }
 </style>
 </head>
@@ -204,15 +186,7 @@
     </div>
 
     <div class="dash">
-      <div class="cluster" aria-live="off"><b id="speed">0</b><small>mph</small></div>
-      <svg class="wheel" id="wheel" viewBox="-100 -100 200 200" aria-hidden="true">
-        <circle r="84" fill="none" stroke="#0c0d10" stroke-width="18"/>
-        <circle r="84" fill="none" stroke="#2a2d33" stroke-width="3" stroke-dasharray="2 9" opacity=".7"/>
-        <path d="M-78 6 Q-40 -2 -22 0 L22 0 Q40 -2 78 6 L76 22 Q40 14 22 16 L10 40 L4 80 L-4 80 L-10 40 L-22 16 Q-40 14 -76 22Z" fill="#14161a"/>
-        <circle r="24" fill="#1b1e23" stroke="#0a0b0d" stroke-width="3"/>
-        <circle r="7" fill="#f2a945" opacity=".85"/>
-        <rect x="-5" y="-92" width="10" height="16" rx="2" fill="#f2a945" opacity=".8"/>
-      </svg>
+      <p class="sr" aria-live="off"><span id="speed">0</span> mph</p>
       <div class="radio" role="group" aria-label="Car radio">
         <div class="icon cond" id="icon" aria-hidden="true">01</div>
         <div class="led" aria-live="polite">
