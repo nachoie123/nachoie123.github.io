@@ -731,14 +731,27 @@ loadHands();
 // cool sky fill from the rear window so the hands are not lit by the sunset alone
 const fill = new THREE.PointLight(0x9db4ff, 0.12, 1.6, 2); fill.position.set(0, 0.25, 0.25); rig.add(fill);
 
-// forearms and jacket sleeves, re-aimed every frame from the wrists to fixed elbows
-const sleeveMat = std(0x1b2029, { roughness: 0.95, envMapIntensity: cabinEnv });
-const armGeo = paint(new THREE.CylinderGeometry(0.043, 0.027, 1, 20, 1, true).translate(0, 0.5, 0), 0xffffff);
-const sleeveGeo = new THREE.CylinderGeometry(0.066, 0.05, 1, 22, 1, true).translate(0, 0.5, 0);
-const cuffGeo = new THREE.TorusGeometry(0.05, 0.009, 10, 28);
+// forearms in worn denim jacket sleeves, re-aimed every frame from the wrists to fixed elbows
+const denim = noiseCanvas(128, [66, 82, 112], 26, (x, y) => (((x + y) & 3) < 2 ? 9 : -9) + 6 * Math.sin(y * 0.3))[0]; // diagonal twill, faded warp
+const sleeveMat = new THREE.MeshPhysicalMaterial({ color: 0xc4c4c4, map: tex(denim), bumpMap: tex(denim, false), bumpScale: 1.5, roughness: 0.9,
+  sheen: 0.7, sheenColor: new THREE.Color(0x9db0cc), sheenRoughness: 0.55, envMapIntensity: cabinEnv, side: THREE.DoubleSide });
+sleeveMat.map.repeat.set(5, 9); sleeveMat.bumpMap.repeat.set(5, 9);
+const cuffMat = sleeveMat.clone(); cuffMat.color.set(0xffffff); cuffMat.sheen = 1; // the worn hem edge catches the low sun
+const armGeo = new THREE.CylinderGeometry(0.043, 0.027, 1, 20, 1, true).translate(0, 0.5, 0);
+const sleeveGeo = (() => { // unit length (cuff at y=0, elbow at y=1); tapered, with bunched folds that are not perfect rings
+  const g = new THREE.CylinderGeometry(1, 1, 1, 32, 48, true).translate(0, 0.5, 0), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i), t = p.getY(i), th = Math.atan2(z, x);
+    let r = (0.05 + 0.022 * t) * (1 + 0.1 * Math.sin(t * 70 + 1.8 * Math.sin(th * 2 + t * 11)) * (0.5 + 0.5 * Math.sin(th * 3 + 1.3 + t * 6)));
+    if (t < 0.03) r += 0.003; // folded hem
+    p.setXYZ(i, x * r, t, z * r);
+  }
+  g.computeVertexNormals(); return g;
+})();
+const cuffGeo = new THREE.TorusGeometry(0.052, 0.0065, 10, 36);
 const arms = [-1, 1].map((s) => {
-  const arm = cab(armGeo, skin), sleeve = cab(sleeveGeo, sleeveMat), cuff = cab(cuffGeo, sleeveMat);
-  return { s, arm, sleeve, cuff, hand: s > 0 ? handR : handL, elbow: new V3(s * 0.36, -0.78, 0.02) };
+  const arm = cab(armGeo, realSkin), sleeve = cab(sleeveGeo, sleeveMat), cuff = cab(cuffGeo, cuffMat);
+  return { s, arm, sleeve, cuff, hand: s > 0 ? handR : handL, elbow: new V3(s * 0.42, -0.62, -0.12) };
 });
 const _w = new V3(), _c = new V3();
 function aimArms() {
@@ -747,12 +760,12 @@ function aimArms() {
     a.hand.updateMatrix();
     _w.copy(wristW).applyMatrix4(a.hand.matrix).applyMatrix4(wheel.matrix).applyMatrix4(wheelTilt.matrix);
     span(a.arm, _w, a.elbow, 0.2);
-    _c.subVectors(a.elbow, _w).normalize().multiplyScalar(0.075).add(_w);
+    _c.subVectors(a.elbow, _w).normalize().multiplyScalar(0.042).add(_w); // a strip of bare wrist between hand and cuff
     span(a.sleeve, _c, a.elbow, 0.4);
     a.cuff.position.copy(_c); a.cuff.quaternion.setFromUnitVectors(ZAX, _d.subVectors(a.elbow, _c).normalize());
     if (a.s < 0) { // face of the watch turned towards the eye
       const f = _w.clone().negate().normalize(); f.addScaledVector(_d, -f.dot(_d)).normalize();
-      watch.position.copy(_w).addScaledVector(_d, 0.045);
+      watch.position.copy(_w).addScaledVector(_d, 0.026);
       watch.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new V3().crossVectors(f, _d), f, _d));
     }
   }
@@ -825,6 +838,10 @@ function stepLight(dt) {
   lampHeadMat.color.setRGB(0.35 + 3 * n, 0.35 + 2.2 * n, 0.37 + 1.2 * n);
   carLightMat.color.setScalar(cur.tail);
   gaugeMat.color.setScalar(0.75 + 0.25 * n);
+  const lit = 1 - 0.65 * THREE.MathUtils.smoothstep(n, 0.3, 1); // at night the arms sit in shadow, lit by the cool fill and the gauges
+  realSkin.color.setHex(0x9c7860).multiplyScalar(lit); skin.color.setHex(0x93705a).multiplyScalar(lit); realSkin.sheen = 0.4 * lit;
+  sleeveMat.color.setHex(0xc4c4c4).multiplyScalar(lit); cuffMat.color.setScalar(lit); sleeveMat.sheen = 0.7 * lit; cuffMat.sheen = lit;
+  fill.intensity = 0.12 + 0.06 * n;
   cabinLight.intensity = 0.03 + n * 0.03; // light bounced off the dash, plus the gauges at night
   head.intensity = n * 45;
   sky.position.copy(camera.position);
