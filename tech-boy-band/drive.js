@@ -781,15 +781,16 @@ function layoutCockpit(aspect) {
 }
 
 layoutCockpit(1);
+// sized from the canvas, not the section: on phones the touch strip takes the bottom of the section
 new ResizeObserver(() => {
-  const w = host.clientWidth, h = host.clientHeight;
+  const w = renderer.domElement.clientWidth, h = renderer.domElement.clientHeight;
   if (!w || !h) return;
   renderer.setSize(w, h, false);
   if (composer) { composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h); }
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   layoutCockpit(camera.aspect);
-}).observe(host);
+}).observe(renderer.domElement);
 
 /* ---------------- light presets per track ---------------- */
 const PRESETS = {
@@ -1047,6 +1048,7 @@ ui.mute.addEventListener('click', () => setMuted(!S.muted));
 
 if (matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0) {
   $('touch').hidden = false;
+  host.classList.add('touchy');
   for (const b of document.querySelectorAll('.tbtn')) {
     const k = b.dataset.key, set = (on) => { keys[k] = on; b.classList.toggle('on', on); };
     b.addEventListener('pointerdown', (e) => { e.preventDefault(); b.setPointerCapture(e.pointerId); set(true); });

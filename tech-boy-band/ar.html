@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hidden track · Screen Door</title>
+<meta name="description" content="The B-side: put the Going Nowhere Fast cassette in your room, in AR.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  .ar { min-height: calc(100dvh - 65px); display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(24px, 4vw, 64px); align-items: center; padding-block: 32px 64px; }
+  .ar .lead { margin: 20px 0 28px; }
+  model-viewer { width: 100%; height: min(70vh, 640px); --poster-color: transparent; background: radial-gradient(circle at 50% 60%, #1b2a3c, transparent 70%); border-radius: 6px; }
+  model-viewer::part(default-progress-bar) { display: none; }
+  .ar-btn { position: absolute; left: 50%; bottom: 20px; translate: -50% 0; }
+  .qr { display: flex; gap: 18px; align-items: center; margin-top: 8px; }
+  .qr img { width: 132px; height: 132px; background: #fff; padding: 8px; border-radius: 6px; }
+  .qr p { color: var(--soft); font-size: 15px; max-width: 16em; }
+  @media (pointer: coarse) { .qr { display: none; } }
+  @media (max-width: 860px) { .ar { grid-template-columns: 1fr; } model-viewer { height: 56vh; } }
+</style>
+</head>
+<body data-light="night">
+<main class="wrap ar">
+  <div>
+    <p class="kicker">You found the B-side</p>
+    <h1 class="display" style="font-size:clamp(56px,8vw,112px)">Hidden track</h1>
+    <p class="lead">The tape they recorded that afternoon, still turning. Open it on your phone and put it on your desk, your bed, the passenger seat.</p>
+    <div class="qr">
+      <img src="assets/ar/qr.svg" alt="QR code that opens this page on a phone">
+      <p>Scan with your phone camera to see the cassette in your room.</p>
+    </div>
+  </div>
+  <model-viewer id="tape" src="assets/ar/cassette.glb" ios-src="assets/ar/cassette.usdz"
+    alt="The Going Nowhere Fast cassette, reels turning" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor"
+    camera-controls auto-rotate autoplay camera-orbit="-20deg 55deg auto" shadow-intensity="1" exposure="1.1" environment-image="neutral" touch-action="pan-y">
+    <div slot="progress-bar"></div>
+    <button slot="ar-button" class="btn ar-btn">View in your room</button>
+  </model-viewer>
+</main>
+<script src="data.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

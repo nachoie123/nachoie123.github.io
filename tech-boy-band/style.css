@@ -4,14 +4,14 @@
   --golden-bg: #e39a52;    --golden-ink: #24130a;    --golden-accent: #1f4e52;
   --night-bg: #0e1724;     --night-ink: #efe6d6;     --night-accent: #f2a945;
   --bg: var(--afternoon-bg); --ink: var(--afternoon-ink); --accent: var(--afternoon-accent);
-  --line: color-mix(in srgb, var(--ink) 22%, transparent);
-  --soft: color-mix(in srgb, var(--ink) 70%, transparent);
   --wide: 'Archivo', system-ui, sans-serif;
   --hand: 'Permanent Marker', 'Archivo', cursive;
   --ease: cubic-bezier(.22, 1, .36, 1);
 }
 body[data-light="golden"] { --bg: var(--golden-bg); --ink: var(--golden-ink); --accent: var(--golden-accent); }
 body[data-light="night"] { --bg: var(--night-bg); --ink: var(--night-ink); --accent: var(--night-accent); }
+/* declared on body so they follow the current --ink */
+body { --line: color-mix(in srgb, var(--ink) 22%, transparent); --soft: color-mix(in srgb, var(--ink) 70%, transparent); }
 
 * { box-sizing: border-box; margin: 0; }
 html { -webkit-text-size-adjust: 100%; }
@@ -124,7 +124,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .toast { position: fixed; left: 50%; bottom: 24px; translate: -50% 140%; z-index: 120; background: var(--ink); color: var(--bg); padding: 14px 20px; border-radius: 6px; font-weight: 600; transition: translate .3s var(--ease); max-width: calc(100% - 32px); }
 .toast:empty { visibility: hidden; }
 .toast.show { translate: -50% 0; }
-dialog { border: 0; border-radius: 8px; padding: 0; max-width: min(460px, calc(100% - 32px)); background: var(--night-bg); color: var(--night-ink); }
+dialog { margin: auto; border: 0; border-radius: 8px; padding: 0; max-width: min(460px, calc(100% - 32px)); background: var(--night-bg); color: var(--night-ink); }
 dialog::backdrop { background: rgba(5,10,15,.7); }
 
 @media (prefers-reduced-motion: reduce) {
