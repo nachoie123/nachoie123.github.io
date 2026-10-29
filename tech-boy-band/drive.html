@@ -44,7 +44,7 @@
   }
   .cluster {
     position: absolute; left: calc(4% + var(--wheel) * .5); bottom: calc(var(--dash-h) * .62);
-    transform: translateX(-50%); text-align: center; line-height: 1; z-index: 1;
+    transform: translateX(-50%); text-align: center; line-height: 1; z-index: 3;
     color: #ffb347; text-shadow: 0 0 10px rgba(255,170,60,.45);
   }
   .cluster b { display: block; font-size: 34px; font-variant-numeric: tabular-nums; }
@@ -174,7 +174,7 @@
     .lyrics { padding: 12vh 20px 18vh; }
     .ln { font-size: 17px; }
     .dash { --wheel: calc(var(--dash-h) * 1.8); padding-left: calc(var(--wheel) * .72); gap: 8px; }
-    .wheel { left: calc(var(--wheel) * -.2); bottom: calc(var(--dash-h) * -.85); }
+    .wheel { left: calc(var(--wheel) * -.2); bottom: calc(var(--dash-h) * -.55); }
     .cluster { left: calc(var(--wheel) * .3); }
     .cluster b { font-size: 26px; }
     .radio { grid-template-columns: auto minmax(0, 1fr); gap: 6px; padding: 6px; }
