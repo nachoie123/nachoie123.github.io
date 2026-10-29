@@ -8,6 +8,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const $ = (id) => document.getElementById(id);
 const qs = new URLSearchParams(location.search);
@@ -601,7 +602,7 @@ wheelTilt.add(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.3, 16).rot
 // the left hand is its mirror image at 10 o'clock
 const skin = new THREE.MeshPhysicalMaterial({ color: 0x93705a, roughness: 0.56, envMapIntensity: 0.5, sheen: 0.25, sheenColor: new THREE.Color(0xffb8a0), sheenRoughness: 0.5, clearcoat: 0.06, clearcoatRoughness: 0.6, vertexColors: true });
 // canonical hand: bar along x (index side +x), back of the hand +y, fingers curl from +y over +z
-const HAND_TH = 36 * D2R, PHI = 100 * D2R;
+const HAND_TH = 36 * D2R, PHI = 100 * D2R, GPHI = 70 * D2R;
 const hu = new V3(Math.cos(HAND_TH), Math.sin(HAND_TH), 0), htg = new V3(-Math.sin(HAND_TH), Math.cos(HAND_TH), 0), hn = new V3(0, 0, 1);
 const HX = htg.clone().negate(); // index finger points down the rim, the thumb sits below
 const HY = hu.clone().multiplyScalar(Math.cos(PHI)).addScaledVector(hn, Math.sin(PHI)), HZ = new V3().crossVectors(HX, HY), HP = hu.clone().multiplyScalar(RW);
@@ -647,7 +648,7 @@ handParts.push(ellipsoid(new V3(0.022, 0.0, -0.062), hx, ha, hd, 0.017, 0.03, 0.
 handParts.push(ellipsoid(new V3(-0.029, -0.004, -0.058), hx, ha, hd, 0.012, 0.034, 0.012));
 handParts.push(ellipsoid(HWR.clone().addScaledVector(ha, 0.006), hx, ha, hd, 0.031, 0.022, 0.02)); // wrist
 const handGeo = bendGeo(mergeGeometries(handParts));
-const wristW = bendPoint(HWR.clone().addScaledVector(ha, -0.004));
+let wristW = bendPoint(HWR.clone().addScaledVector(ha, -0.004));
 const handR = new THREE.Mesh(handGeo, skin), handL = new THREE.Mesh(handGeo, skin);
 handL.scale.x = -1;
 wheel.add(handR, handL);
@@ -655,11 +656,81 @@ wheel.add(handR, handL);
 const watch = new THREE.Group(); rig.add(watch);
 watch.add(new THREE.Mesh(new THREE.TorusGeometry(0.029, 0.006, 8, 32), std(0x141416, { roughness: 0.6, envMapIntensity: 0.3 })));
 {
-  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.008, 32), new THREE.MeshPhysicalMaterial({ color: 0x0d1014, metalness: 0.2, roughness: 0.15, clearcoat: 1, envMapIntensity: 0.6 }));
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.008, 32), new THREE.MeshPhysicalMaterial({ color: 0x0d1014, metalness: 0.2, roughness: 0.3, clearcoat: 0.4, envMapIntensity: 0.15 }));
   const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.016, 0.0022, 8, 32).rotateX(Math.PI / 2), std(0xc2c6cc, { metalness: 1, roughness: 0.25, envMapIntensity: 0.6 }));
   face.position.y = bezel.position.y = 0.033; bezel.position.y = 0.0375;
   watch.add(face, bezel);
 }
+// Real hands: the WebXR "generic-hand" skinned mesh (MIT licence, immersive-web/webxr-input-profiles assets),
+// loaded from jsDelivr. Its joints are siblings, so the grip is posed here with a small forward-kinematics pass.
+// The procedural hands above stay as the fallback while it loads or if the CDN is unreachable.
+const HAND_URL = 'https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets@1.0/dist/profiles/generic-hand/right.glb';
+// flexion in degrees per joint (metacarpal, knuckle, middle joint, last joint); each finger a little different
+const GRIP = {
+  'index-finger': [0, 52, 72, 44], 'middle-finger': [0, 56, 78, 48], 'ring-finger': [2, 60, 80, 50], 'pinky-finger': [4, 66, 82, 50],
+  thumb: [0, 18, 28],
+};
+const JOINTS = (f) => f === 'thumb' ? ['thumb-metacarpal', 'thumb-phalanx-proximal', 'thumb-phalanx-distal', 'thumb-tip']
+  : [`${f}-metacarpal`, `${f}-phalanx-proximal`, `${f}-phalanx-intermediate`, `${f}-phalanx-distal`, `${f}-tip`];
+function curl(chain, deg) { // bend each joint about its own x axis, carrying the rest of the finger with it
+  const P = chain.map((b) => b.position.clone()), Q = chain.map((b) => b.quaternion.clone());
+  const D = new THREE.Quaternion(), pos = P[0].clone(), step = new THREE.Quaternion();
+  chain.forEach((b, k) => {
+    if (k) pos.add(P[k].clone().sub(P[k - 1]).applyQuaternion(D));
+    if (deg[k]) D.premultiply(step.setFromAxisAngle(new V3(1, 0, 0).applyQuaternion(Q[k]).applyQuaternion(D), -deg[k] * D2R));
+    b.position.copy(pos); b.quaternion.copy(D).multiply(Q[k]);
+  });
+}
+const circumcenter = (a, b, c) => { // centre of the circle through three points
+  const ab = b.clone().sub(a), ac = c.clone().sub(a), n = new V3().crossVectors(ab, ac);
+  const t = new V3().crossVectors(n, ab).multiplyScalar(ac.lengthSq()).add(new V3().crossVectors(ac, n).multiplyScalar(ab.lengthSq()));
+  return a.clone().add(t.divideScalar(2 * n.lengthSq()));
+};
+const skinTex = (() => { // fine pores and creases for the bump map
+  const [c] = noiseCanvas(256, [128, 128, 128], 60);
+  return tex(c, false);
+})();
+const realSkin = new THREE.MeshPhysicalMaterial({
+  color: 0x9c7860, roughness: 0.55, roughnessMap: skinTex, bumpMap: skinTex, bumpScale: 0.35,
+  sheen: 0.4, sheenColor: new THREE.Color(0xd8a088), sheenRoughness: 0.45, clearcoat: 0.08, clearcoatRoughness: 0.5, envMapIntensity: 0.5,
+});
+skinTex.repeat.set(3, 3);
+function loadHands() {
+  const loader = new GLTFLoader();
+  Promise.all([loader.loadAsync(HAND_URL), loader.loadAsync(HAND_URL)]).then(([gr, gl]) => {
+    let place = null, wrist = null;
+    const roots = [gr.scene, gl.scene].map((root) => {
+      const bones = {};
+      root.traverse((o) => {
+        if (o.isBone) bones[o.name] = o;
+        if (o.isSkinnedMesh) { o.material = realSkin; o.frustumCulled = false; }
+      });
+      for (const f in GRIP) curl(JOINTS(f).map((n) => bones[n]), GRIP[f]);
+      if (!place) { // fit the rim inside the middle finger's curl, then map that grip onto the hand frame used above
+        const p = (n) => bones[n].position;
+        const C = circumcenter(p('middle-finger-phalanx-proximal'), p('middle-finger-phalanx-intermediate'), p('middle-finger-phalanx-distal'));
+        const cx = p('index-finger-phalanx-proximal').clone().sub(p('pinky-finger-phalanx-proximal')).normalize();
+        const cy = p('middle-finger-phalanx-proximal').clone().sub(C); cy.addScaledVector(cx, -cy.dot(cx)).normalize();
+        const cz = new V3().crossVectors(cx, cy);
+        const grip = new THREE.Matrix4().makeBasis(cx, cy, cz).setPosition(C).invert();
+        // back of the hand up towards the eye, fingers rolling over the rim's outer edge, wrist low and inside
+        const gX = htg.clone(), gY = hu.clone().multiplyScalar(Math.cos(GPHI)).addScaledVector(hn, Math.sin(GPHI)), gZ = new V3().crossVectors(gX, gY);
+        place = new THREE.Matrix4().makeBasis(gX, gY, gZ).setPosition(HP).multiply(grip);
+        wrist = p('wrist').clone();
+      }
+      return root;
+    });
+    const mirror = new THREE.Matrix4().makeScale(-1, 1, 1);
+    roots.forEach((root, k) => { (k ? mirror.clone().multiply(place) : place).decompose(root.position, root.quaternion, root.scale); wheel.add(root); });
+    handR.visible = handL.visible = false;
+    arms[1].hand = roots[0]; arms[0].hand = roots[1];
+    wristW = wrist;
+  }).catch(() => {}); // offline: keep the procedural hands
+}
+loadHands();
+// cool sky fill from the rear window so the hands are not lit by the sunset alone
+const fill = new THREE.PointLight(0x9db4ff, 0.12, 1.6, 2); fill.position.set(0, 0.25, 0.25); rig.add(fill);
+
 // forearms and jacket sleeves, re-aimed every frame from the wrists to fixed elbows
 const sleeveMat = std(0x1b2029, { roughness: 0.95, envMapIntensity: cabinEnv });
 const armGeo = paint(new THREE.CylinderGeometry(0.043, 0.027, 1, 20, 1, true).translate(0, 0.5, 0), 0xffffff);
@@ -762,7 +833,7 @@ function stepLight(dt) {
 
 /* ---------------- driving ---------------- */
 const car = { x: 4 * CELL + 3.5, z: 3 * CELL + CELL * 0.75, h: 0, v: 0, steer: 0 };
-if (AUTOSTART) window.__car = car; // read by the headless check
+if (AUTOSTART) { window.__car = car; window.__dbg = { wheelTilt }; } // read by the headless check
 const keys = { up: false, down: false, left: false, right: false };
 const R = 1.1;
 function blocked(x, z) {
