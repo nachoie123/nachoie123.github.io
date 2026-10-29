@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Screen Door · Going Nowhere Fast</title>
+<meta name="description" content="Screen Door's debut album: one last afternoon of summer, recorded on a cassette by four friends before they all leave.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero { min-height: calc(100dvh - 65px); display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: clamp(32px, 5vw, 80px); padding-block: 48px 80px; }
+  .hero .lead { margin: 28px 0 32px; }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero .deck { display: grid; justify-items: center; gap: 18px; }
+  .deck-caption { font-weight: 600; color: var(--soft); text-align: center; min-height: 1.6em; }
+  .screw-a { left: 3%; top: 4%; } .screw-b { right: 3%; top: 4%; } .screw-c { left: 3%; bottom: 5%; } .screw-d { right: 3%; bottom: 5%; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 32px; } .hero .deck { order: -1; } }
+
+  .lights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; }
+  .light { box-shadow: inset 0 0 0 1px var(--line); padding: 28px 24px 32px; min-height: 340px; display: flex; flex-direction: column; gap: 14px; color: var(--c-ink); }
+  .light ol { list-style: none; padding: 0; display: grid; gap: 6px; font-weight: 600; }
+  .light ol span { opacity: .55; margin-right: 10px; font-variant-numeric: tabular-nums; }
+  .light h3 { font-size: 34px; font-stretch: 62%; font-weight: 900; text-transform: uppercase; }
+  .l-afternoon { background: var(--afternoon-bg); --c-ink: var(--afternoon-ink); }
+  .l-golden { background: var(--golden-bg); --c-ink: var(--golden-ink); }
+  .l-night { background: var(--night-bg); --c-ink: var(--night-ink); box-shadow: inset 0 0 0 1px rgba(239,230,214,.12); }
+  @media (max-width: 760px) { .lights { grid-template-columns: 1fr; } .light { min-height: 0; } }
+
+  .single { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 5vw, 72px); align-items: start; margin-top: 40px; }
+  .chorus { font-size: clamp(20px, 2.2vw, 26px); line-height: 1.45; font-weight: 500; white-space: pre-line; border-left: 3px solid var(--ink); padding-left: 20px; }
+  .images { margin-top: 32px; display: grid; gap: 8px; font-weight: 600; }
+  .images li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px; list-style: none; }
+  .images { padding: 0; }
+  @media (max-width: 860px) { .single { grid-template-columns: 1fr; } }
+
+  .drive-frame { margin-top: 36px; width: 100%; height: min(78vh, 760px); min-height: 560px; border: 0; border-radius: 6px; background: #05080d; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
+  .teasers { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .teaser { position: relative; display: block; overflow: hidden; border-radius: 6px; aspect-ratio: 4 / 3; text-decoration: none; color: #f6efe2; }
+  .teaser img { width: 100%; height: 100%; object-fit: cover; transition: scale .8s var(--ease); }
+  .teaser:hover img { scale: 1.04; }
+  .teaser div { position: absolute; inset: auto 0 0; padding: 24px; background: linear-gradient(transparent, rgba(5,10,15,.75)); }
+  @media (max-width: 760px) { .teasers { grid-template-columns: 1fr; } }
+  .egg p { margin: 12px 0 20px; }
+</style>
+</head>
+<body data-light="afternoon">
+
+<main>
+  <section class="wrap hero" data-light-section="afternoon">
+    <div>
+      <p class="kicker">Screen Door · the debut album</p>
+      <h1 class="display">Going Nowhere Fast</h1>
+      <p class="lead">One last afternoon of summer in a small town, recorded onto a cassette by four friends before they all leave. Ten tracks that follow the light, and end when the tape runs out.</p>
+      <div class="actions">
+        <button class="btn" id="play" aria-pressed="false">▶ Press play</button>
+        <a class="btn ghost" href="#drive">Drive the album</a>
+      </div>
+    </div>
+    <div class="deck">
+      <div class="cassette" id="tape">
+        <div class="label">
+          <span class="hand">Going Nowhere Fast</span>
+          <span class="side">A</span>
+        </div>
+        <div class="window"><div class="reel"></div><div class="reel"></div></div>
+        <button class="screw screw-a" aria-hidden="true" tabindex="-1"></button>
+        <button class="screw screw-b" id="egg" aria-label="A loose screw"></button>
+        <button class="screw screw-c" aria-hidden="true" tabindex="-1"></button>
+        <button class="screw screw-d" aria-hidden="true" tabindex="-1"></button>
+      </div>
+      <p class="deck-caption" id="deckCaption">01 · Tape Hiss (Intro)</p>
+    </div>
+  </section>
+
+  <section class="wrap" id="light" data-light-section="afternoon">
+    <p class="kicker rv">How the album works</p>
+    <h2 class="rv">It follows the light</h2>
+    <div class="lights rv" id="lights"></div>
+  </section>
+
+  <section class="wrap" data-light-section="golden">
+    <p class="kicker rv">Lead single</p>
+    <h2 class="rv">Slow Light</h2>
+    <div class="single">
+      <div class="rv">
+        <p class="chorus" id="chorus"></p>
+        <ul class="images" aria-label="Every song grows out of one image in Slow Light">
+          <li><span>"a borrowed key"</span><span>→ 02 Borrowed Key</span></li>
+          <li><span>"empty pool"</span><span>→ 04 Empty Pool</span></li>
+          <li><span>"paint on the wall"</span><span>→ 06 Paint on the Wall</span></li>
+          <li><span>"out of tune"</span><span>→ 07 Out of Tune</span></li>
+          <li><span>"a screen door in the wind"</span><span>→ 09 Screen Door</span></li>
+          <li><span>"going nowhere fast"</span><span>→ 10 Nowhere Fast</span></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <div class="video-ph" role="img" aria-label="Videoclip placeholder">
+          <div class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg></div>
+          <div class="meta"><span>Slow Light · official video</span><span>Coming soon</span></div>
+        </div>
+        <p style="margin-top:16px;color:var(--soft)">One afternoon in real time, from PLAY to STOP. A drive, a sun shower, the empty pool, a bonfire, and the final chorus on a hilltop as the town lights come on. 35mm, warm amber and faded teal.</p>
+        <p style="margin-top:20px"><a class="btn ghost" href="album.html#t3">Read the full lyrics</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="drive" data-light-section="night">
+    <p class="kicker rv">Minigame</p>
+    <h2 class="rv">Drive the album</h2>
+    <p class="lead rv" style="margin-top:20px">Take your brother's car through town with the radio on. Switch between the ten tracks, read along, and watch the light change from afternoon to night.</p>
+    <iframe class="drive-frame" src="drive.html" title="Drive the album: 3D driving game" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <p style="margin-top:12px;color:var(--soft)">Arrows or WASD to drive · Q / E to change track · Space to pause. On a phone, use the buttons. <a href="drive.html">Open full screen</a></p>
+  </section>
+
+  <section class="wrap teasers" data-light-section="night">
+    <a class="teaser rv" href="band.html"><img src="assets/img/band-night.jpg" alt="The four members of Screen Door outside a corner shop at night" loading="lazy"><div><h3>Meet the band</h3><p>Noah, Hudson, Elijah and Mason</p></div></a>
+    <a class="teaser rv" href="merch.html"><img src="assets/img/band-walk.jpg" alt="Screen Door walking along a river channel at golden hour" loading="lazy"><div><h3>Merch</h3><p>Tees, posters, vinyl and the cassette</p></div></a>
+  </section>
+</main>
+
+<dialog id="eggDialog" class="egg">
+  <div style="padding:28px">
+    <p class="kicker" style="color:var(--night-accent)">You found the B-side</p>
+    <h3 style="font-size:34px;font-stretch:62%;font-weight:900;text-transform:uppercase;margin-top:6px">Hidden track</h3>
+    <p>Point your phone at the cover to see it come alive in AR.</p>
+    <!-- AR easter egg: replace this placeholder with the group's AR link / QR -->
+    <div style="aspect-ratio:1;max-width:180px;border:2px dashed rgba(239,230,214,.4);display:grid;place-items:center;border-radius:6px;margin-bottom:20px;text-align:center;padding:12px">AR link coming soon</div>
+    <form method="dialog"><button class="btn" style="background:var(--night-ink);color:var(--night-bg)">Close</button></form>
+  </div>
+</dialog>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+  // three light columns built from the tracklist
+  document.getElementById('lights').innerHTML = Object.entries(LIGHTS).map(([k, l]) => `
+    <div class="light l-${k}">
+      <p class="kicker" style="color:inherit;opacity:.7">${l.range}</p>
+      <h3>${l.label}</h3>
+      <ol>${TRACKS.filter(t => t.light === k).map(t => `<li><span>${String(t.n).padStart(2, '0')}</span>${t.title}</li>`).join('')}</ol>
+    </div>`).join('');
+  document.getElementById('chorus').textContent = SLOW_LIGHT_CHORUS;
+
+  // the cassette plays the intro track
+  const intro = new Audio(audioSrc(TRACKS[0]));
+  const tape = document.getElementById('tape'), btn = document.getElementById('play'), cap = document.getElementById('deckCaption');
+  btn.onclick = () => {
+    if (intro.paused) {
+      intro.play().then(() => { tape.classList.add('playing'); btn.textContent = '❚❚ Pause'; btn.setAttribute('aria-pressed', 'true'); })
+        .catch(() => { tape.classList.add('playing'); cap.textContent = 'Audio coming soon'; setTimeout(() => tape.classList.remove('playing'), 2500); });
+    } else { intro.pause(); tape.classList.remove('playing'); btn.textContent = '▶ Press play'; btn.setAttribute('aria-pressed', 'false'); }
+  };
+
+  // easter egg: unscrew the top-right screw (3 clicks)
+  let turns = 0;
+  document.getElementById('egg').onclick = e => {
+    e.currentTarget.style.rotate = `${++turns * 120}deg`;
+    if (turns === 3) { turns = 0; document.getElementById('eggDialog').showModal(); }
+  };
+</script>
+</body>
+</html>

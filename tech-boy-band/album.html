@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Album · Screen Door</title>
+<meta name="description" content="Going Nowhere Fast: the full tracklist, lyrics and sound notes.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .album { display: grid; grid-template-columns: minmax(280px, .8fr) 1.2fr; gap: clamp(32px, 5vw, 80px); align-items: start; padding-block: 48px 96px; }
+  .side { position: sticky; top: 96px; display: grid; gap: 20px; }
+  .now { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .now button { width: 48px; height: 48px; border-radius: 4px; border: 0; background: var(--ink); color: var(--bg); display: grid; place-items: center; flex: none; }
+  .now .info { min-width: 0; flex: 1; }
+  .now .info strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar { height: 4px; background: var(--line); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ink); }
+  .note { font-size: 14px; color: var(--soft); }
+
+  .group-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 40px 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
+  .group-title:first-child { margin-top: 0; }
+  .group-title h2 { font-size: clamp(32px, 4vw, 48px); }
+  .track { border-bottom: 1px solid var(--line); }
+  .track > button {
+    width: 100%; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; text-align: left;
+    min-height: 64px; padding: 10px 4px; background: none; border: 0; border-radius: 4px; transition: background-color .2s;
+  }
+  .track > button:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .track .no { font-weight: 800; font-variant-numeric: tabular-nums; opacity: .55; }
+  .track .ti { font-weight: 800; font-size: 20px; line-height: 1.2; }
+  .track .ty { display: block; font-size: 14px; font-weight: 500; color: var(--soft); }
+  .track .ln { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .track.on .no { opacity: 1; color: var(--accent); }
+  .body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease); }
+  .track.open .body { grid-template-rows: 1fr; }
+  .body > div { overflow: hidden; }
+  .body .inner { padding: 4px 4px 28px 60px; }
+  .body .notes { color: var(--soft); margin-bottom: 18px; max-width: 36em; }
+  .lyrics { white-space: pre-line; font-size: 18px; line-height: 1.6; }
+  .lyrics b { display: block; margin-top: 16px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+  @media (max-width: 860px) { .album { grid-template-columns: 1fr; } .side { position: static; } .body .inner { padding-left: 4px; } }
+</style>
+</head>
+<body data-light="afternoon">
+<main class="wrap album">
+  <aside class="side">
+    <div class="cover"><img src="assets/img/mood-pool.jpg" alt="Album cover: someone floating in a backyard pool, faded film colours"><p class="t"><small>Screen Door</small>Going Nowhere Fast</p></div>
+    <div class="now" aria-live="polite">
+      <button id="pp" aria-label="Play">▶</button>
+      <div class="info"><strong id="nowTitle">01 · Tape Hiss (Intro)</strong><span class="note" id="nowNote">10 tracks · ~25 min</span><div class="bar"><i id="bar"></i></div></div>
+    </div>
+    <p class="note">Recorded on one cassette, one afternoon. Side A runs from afternoon to golden hour, side B into the night.</p>
+  </aside>
+  <div id="list"></div>
+</main>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+  const list = document.getElementById('list');
+  const fmtLyrics = s => s.split('\n').map(l => l.startsWith('[') ? `<b>${l.slice(1, -1)}</b>` : l.replace(/</g, '&lt;')).join('\n').replace(/\n<b>/g, '<b>').replace(/<\/b>\n/g, '</b>');
+  list.innerHTML = Object.entries(LIGHTS).map(([k, l]) => `
+    <div class="group-title"><h2>${l.label}</h2><span class="kicker">${l.range}</span></div>
+    ${TRACKS.filter(t => t.light === k).map(t => `
+    <div class="track" id="t${t.n}" data-n="${t.n}">
+      <button aria-expanded="false" aria-controls="b${t.n}">
+        <span class="no">${String(t.n).padStart(2, '0')}</span>
+        <span class="ti">${t.title}<span class="ty">${t.type}</span></span>
+        <span class="ln">${t.len}</span>
+      </button>
+      <div class="body" id="b${t.n}"><div><div class="inner">
+        <p class="notes">${t.notes}</p>
+        ${t.lyrics ? `<div class="lyrics">${fmtLyrics(t.lyrics)}</div>` : '<p class="kicker">Instrumental · no lyrics</p>'}
+      </div></div></div>
+    </div>`).join('')}`).join('');
+
+  const audio = new Audio();
+  let cur = TRACKS[0], fake = null;
+  const pp = document.getElementById('pp'), bar = document.getElementById('bar');
+  const paint = playing => { pp.textContent = playing ? '❚❚' : '▶'; pp.setAttribute('aria-label', playing ? 'Pause' : 'Play'); };
+
+  function open(t, play) {
+    document.querySelectorAll('.track').forEach(el => {
+      const on = +el.dataset.n === t.n;
+      el.classList.toggle('open', on);
+      el.classList.toggle('on', on);
+      el.querySelector('button').setAttribute('aria-expanded', el.classList.contains('open'));
+    });
+    document.body.dataset.light = t.light;
+    if (cur !== t || audio.src === '') { cur = t; audio.src = audioSrc(t); bar.style.width = 0; }
+    document.getElementById('nowTitle').textContent = `${String(t.n).padStart(2, '0')} · ${t.title}`;
+    document.getElementById('nowNote').textContent = `${t.type} · ${t.len}`;
+    if (play) start();
+  }
+  function start() {
+    audio.play().then(() => paint(true)).catch(() => {
+      document.getElementById('nowNote').textContent = 'Audio coming soon';
+      paint(false);
+    });
+  }
+  audio.ontimeupdate = () => audio.duration && (bar.style.width = `${audio.currentTime / audio.duration * 100}%`);
+  audio.onended = () => open(TRACKS[cur.n % TRACKS.length], true);
+  pp.onclick = () => audio.paused ? (audio.src ? start() : open(cur, true)) : (audio.pause(), paint(false));
+  list.addEventListener('click', e => {
+    const tr = e.target.closest('.track > button');
+    if (tr) open(TRACKS[tr.parentElement.dataset.n - 1], true);
+  });
+  const deep = location.hash.match(/^#t(\d+)$/);
+  if (deep) { open(TRACKS[deep[1] - 1], false); document.getElementById(`t${deep[1]}`).scrollIntoView({ block: 'start' }); }
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merch · Screen Door</title>
+<meta name="description" content="Screen Door merch: t-shirts, posters, the vinyl LP and the cassette.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .head { padding-block: 48px 32px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 96px; }
+  .prod { display: grid; gap: 12px; align-content: start; }
+  .stage { position: relative; aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; overflow: hidden; }
+  .stage > * { transition: transform .6s var(--ease); }
+  .prod:hover .stage > * { transform: translateY(-6px) rotate(-1.5deg); }
+  .s-teal { background: #c9dcdc; } .s-amber { background: #f1c08c; } .s-navy { background: #1b2738; } .s-rust { background: #d9a28a; }
+  .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .row h3 { font-size: 20px; }
+  .price { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .desc { color: var(--soft); font-size: 15px; }
+  .buy { display: flex; gap: 8px; }
+  .buy select { min-height: 48px; padding: 0 12px; border-radius: 4px; border: 2px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 600; }
+  .buy .btn { flex: 1; justify-content: center; }
+
+  .tee { width: 78%; }
+  .poster { width: 58%; aspect-ratio: 3 / 4; background: center / cover; box-shadow: 0 24px 40px -20px rgba(0,0,0,.55); position: relative; color: #f6efe2; padding: 7%; display: flex; flex-direction: column; justify-content: flex-end; }
+  .poster b { font-weight: 900; font-stretch: 62%; text-transform: uppercase; font-size: clamp(22px, 3vw, 34px); line-height: .88; }
+  .poster small { font-family: var(--hand); font-size: 14px; }
+  .tracklist-poster { background: #0e1724; justify-content: space-between; }
+  .tracklist-poster ol { list-style: none; padding: 0; font-size: 10px; line-height: 1.5; font-weight: 600; opacity: .85; }
+  .lp { position: relative; width: 66%; aspect-ratio: 1; }
+  .lp .disc { position: absolute; inset: 3%; border-radius: 50%; background: radial-gradient(circle, #e39a52 0 15%, #111 15.5% 17%, transparent 17.5%), repeating-radial-gradient(circle, #151515 0 2px, #222 2px 3px); transition: transform .8s var(--ease); }
+  .prod:hover .lp .disc { transform: translateX(28%) rotate(90deg); }
+  .lp .cover { position: absolute; inset: 0; }
+  .mini-tape { width: 70%; }
+  .mini-tape .label .hand { font-size: 13px; }
+  .mini-tape .label .side { font-size: 18px; }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-light="afternoon">
+<main class="wrap">
+  <div class="head">
+    <div><p class="kicker">Official store</p><h1 class="display" style="font-size:clamp(64px,11vw,160px)">Merch</h1></div>
+    <p class="lead" style="max-width:24em">Pre-orders ship at the start of next summer. Every order comes with a hand-written tape label.</p>
+  </div>
+
+  <div class="grid">
+    <article class="prod rv" data-name="Slow Light tee" data-price="28">
+      <div class="stage s-teal">
+        <svg class="tee" viewBox="0 0 200 200" role="img" aria-label="Faded teal t-shirt with a sun and SLOW LIGHT printed on the chest">
+          <path d="M60 20 L82 14 Q100 28 118 14 L140 20 L178 48 L162 76 L146 66 L146 186 L54 186 L54 66 L38 76 L22 48 Z" fill="#2f6f73"/>
+          <circle cx="100" cy="88" r="20" fill="#f2a945"/>
+          <rect x="70" y="92" width="60" height="18" fill="#2f6f73"/>
+          <text x="100" y="125" text-anchor="middle" font-family="Archivo" font-weight="900" font-stretch="62%" font-size="18" fill="#efe6d6">SLOW LIGHT</text>
+          <text x="100" y="140" text-anchor="middle" font-family="Permanent Marker" font-size="8" fill="#efe6d6">screen door</text>
+        </svg>
+      </div>
+      <div class="row"><h3>Slow Light tee</h3><span class="price">€28</span></div>
+      <p class="desc">Garment-dyed cotton, faded teal. The lead single's sun on the chest.</p>
+      <div class="buy"><select aria-label="Size"><option>S</option><option selected>M</option><option>L</option><option>XL</option></select><button class="btn">Add to bag</button></div>
+    </article>
+
+    <article class="prod rv" data-name="Going Nowhere Fast tee" data-price="28">
+      <div class="stage s-amber">
+        <svg class="tee" viewBox="0 0 200 200" role="img" aria-label="Black t-shirt with the album tracklist on the back">
+          <path d="M60 20 L82 14 Q100 28 118 14 L140 20 L178 48 L162 76 L146 66 L146 186 L54 186 L54 66 L38 76 L22 48 Z" fill="#161616"/>
+          <text x="100" y="80" text-anchor="middle" font-family="Archivo" font-weight="900" font-stretch="62%" font-size="15" fill="#f2a945">GOING NOWHERE</text>
+          <text x="100" y="96" text-anchor="middle" font-family="Archivo" font-weight="900" font-stretch="62%" font-size="15" fill="#f2a945">FAST</text>
+          <g font-family="Archivo" font-size="5.6" fill="#efe6d6" text-anchor="middle" font-weight="600">
+            <text x="100" y="112">TAPE HISS · BORROWED KEY · SLOW LIGHT</text>
+            <text x="100" y="121">EMPTY POOL · RADIO STATIC · PAINT ON THE WALL</text>
+            <text x="100" y="130">OUT OF TUNE · PORCH TALK · SCREEN DOOR</text>
+            <text x="100" y="139">NOWHERE FAST</text>
+          </g>
+        </svg>
+      </div>
+      <div class="row"><h3>Tracklist tee</h3><span class="price">€28</span></div>
+      <p class="desc">Heavyweight black tee. All ten tracks, like a tour shirt for a tour that never left town.</p>
+      <div class="buy"><select aria-label="Size"><option>S</option><option selected>M</option><option>L</option><option>XL</option></select><button class="btn">Add to bag</button></div>
+    </article>
+
+    <article class="prod rv" data-name="Vinyl LP" data-price="32">
+      <div class="stage s-rust">
+        <div class="lp" aria-hidden="true">
+          <div class="disc"></div>
+          <div class="cover"><img src="assets/img/mood-pool.jpg" alt=""><p class="t"><small>Screen Door</small>Going Nowhere Fast</p></div>
+        </div>
+      </div>
+      <div class="row"><h3>Vinyl LP</h3><span class="price">€32</span></div>
+      <p class="desc">12" sunset-orange vinyl. Side A: afternoon to golden hour. Side B: the night.</p>
+      <div class="buy"><button class="btn">Add to bag</button></div>
+    </article>
+
+    <article class="prod rv" data-name="Golden hour poster" data-price="18">
+      <div class="stage s-amber">
+        <div class="poster" style="background-image:linear-gradient(transparent 45%, rgba(20,10,5,.7)), url(assets/img/band-walk.jpg)" role="img" aria-label="Poster of the band walking at golden hour">
+          <small>Screen Door</small><b>Going Nowhere Fast</b>
+        </div>
+      </div>
+      <div class="row"><h3>Golden hour poster</h3><span class="price">€18</span></div>
+      <p class="desc">A2, matte paper. The four of them walking into the last light.</p>
+      <div class="buy"><button class="btn">Add to bag</button></div>
+    </article>
+
+    <article class="prod rv" data-name="Tracklist poster" data-price="18">
+      <div class="stage s-teal">
+        <div class="poster tracklist-poster" role="img" aria-label="Navy poster with the album tracklist">
+          <small style="color:#f2a945">Screen Door</small>
+          <ol>
+            <li>01 Tape Hiss</li><li>02 Borrowed Key</li><li>03 Slow Light</li><li>04 Empty Pool</li><li>05 Radio Static</li>
+            <li>06 Paint on the Wall</li><li>07 Out of Tune</li><li>08 Porch Talk</li><li>09 Screen Door</li><li>10 Nowhere Fast</li>
+          </ol>
+          <b style="color:#f2a945">Going Nowhere Fast</b>
+        </div>
+      </div>
+      <div class="row"><h3>Tracklist poster</h3><span class="price">€18</span></div>
+      <p class="desc">A2, navy and amber. For the wall of a room you're about to move out of.</p>
+      <div class="buy"><button class="btn">Add to bag</button></div>
+    </article>
+
+    <article class="prod rv" data-name="Cassette" data-price="12">
+      <div class="stage s-navy">
+        <div class="cassette mini-tape" aria-hidden="true">
+          <div class="label"><span class="hand">Going Nowhere Fast</span><span class="side">A</span></div>
+          <div class="window"><div class="reel"></div><div class="reel"></div></div>
+        </div>
+      </div>
+      <div class="row"><h3>The cassette</h3><span class="price">€12</span></div>
+      <p class="desc">How it was meant to be heard. 25 minutes on one side, until the tape runs out.</p>
+      <div class="buy"><button class="btn">Add to bag</button></div>
+    </article>
+  </div>
+</main>
+<script src="data.js"></script>
+<script src="site.js"></script>
+<script>
+  document.querySelectorAll('.prod .btn').forEach(b => b.onclick = () => {
+    const p = b.closest('.prod'), size = p.querySelector('select')?.value;
+    bag.add({ name: p.dataset.name, size, price: +p.dataset.price });
+    const total = bag.get().reduce((s, i) => s + i.price, 0);
+    toast(`Added ${p.dataset.name}${size ? ` (${size})` : ''}. Bag: €${total}`);
+  });
+</script>
+</body>
+</html>

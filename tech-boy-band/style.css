@@ -1,0 +1,130 @@
+/* Screen Door · the site follows the light: afternoon → golden hour → night */
+:root {
+  --afternoon-bg: #a9cbd0; --afternoon-ink: #13232a; --afternoon-accent: #c4572b;
+  --golden-bg: #e39a52;    --golden-ink: #24130a;    --golden-accent: #1f4e52;
+  --night-bg: #0e1724;     --night-ink: #efe6d6;     --night-accent: #f2a945;
+  --bg: var(--afternoon-bg); --ink: var(--afternoon-ink); --accent: var(--afternoon-accent);
+  --line: color-mix(in srgb, var(--ink) 22%, transparent);
+  --soft: color-mix(in srgb, var(--ink) 70%, transparent);
+  --wide: 'Archivo', system-ui, sans-serif;
+  --hand: 'Permanent Marker', 'Archivo', cursive;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+body[data-light="golden"] { --bg: var(--golden-bg); --ink: var(--golden-ink); --accent: var(--golden-accent); }
+body[data-light="night"] { --bg: var(--night-bg); --ink: var(--night-ink); --accent: var(--night-accent); }
+
+* { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--wide); font-size: 17px; line-height: 1.55;
+  background: var(--bg); color: var(--ink);
+  transition: background-color .9s var(--ease), color .9s var(--ease);
+  overflow-x: hidden;
+}
+/* film grain over everything */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .16; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body[data-light="night"]::after { mix-blend-mode: screen; opacity: .07; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* nav */
+.nav {
+  position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px clamp(16px, 4vw, 48px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line); transition: background-color .9s var(--ease);
+}
+.logo { font-weight: 900; font-stretch: 70%; font-size: 22px; letter-spacing: .02em; text-decoration: none; text-transform: uppercase; }
+.nav ul { display: flex; gap: 4px; list-style: none; padding: 0; }
+.nav ul a {
+  display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 4px;
+  text-decoration: none; font-weight: 600; font-size: 15px; transition: background-color .2s;
+}
+.nav ul a:hover { background: var(--line); }
+.nav ul a[aria-current="page"] { background: var(--ink); color: var(--bg); }
+.bag-count { margin-left: 6px; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .nav { flex-wrap: wrap; row-gap: 0; padding-bottom: 4px; }
+  .nav ul { width: 100%; justify-content: space-between; }
+  .nav ul a { padding: 0 8px; font-size: 14px; }
+}
+
+/* type */
+.wrap { width: min(1200px, 100% - 2 * clamp(16px, 4vw, 48px)); margin-inline: auto; }
+.display {
+  font-weight: 900; font-stretch: 62%; text-transform: uppercase; line-height: .86; letter-spacing: -.01em;
+  font-size: clamp(64px, 14vw, 210px); text-wrap: balance;
+}
+h2 { font-weight: 900; font-stretch: 68%; text-transform: uppercase; line-height: .9; font-size: clamp(40px, 7vw, 96px); text-wrap: balance; }
+h3 { font-weight: 800; font-stretch: 85%; font-size: 22px; line-height: 1.15; }
+.kicker { font-weight: 700; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.lead { font-size: clamp(18px, 2vw, 22px); max-width: 34em; }
+.hand { font-family: var(--hand); font-weight: 400; }
+section { padding-block: clamp(64px, 10vw, 140px); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 4px;
+  background: var(--ink); color: var(--bg); border: 0; font-weight: 700; text-decoration: none;
+  transition: transform .2s var(--ease), background-color .2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(.98); }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+
+/* album cover (provisional: moodboard photo + type) */
+.cover { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 3px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); background: #3c6f7a; }
+.cover img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) contrast(.95) sepia(.18); }
+.cover .t {
+  position: absolute; inset: auto 0 0 0; padding: 7% 7% 6%; color: #f6efe2;
+  background: linear-gradient(transparent, rgba(10,20,25,.65));
+  font-weight: 900; font-stretch: 62%; text-transform: uppercase; line-height: .88; font-size: clamp(20px, 11cqi, 72px);
+}
+.cover { container-type: inline-size; }
+.cover .t small { display: block; font-family: var(--hand); font-weight: 400; text-transform: none; font-size: .42em; margin-bottom: .4em; letter-spacing: .02em; }
+
+/* cassette */
+.cassette { position: relative; width: min(520px, 100%); aspect-ratio: 1.58; border-radius: 14px; background: #1e2a30; padding: 6%; box-shadow: 0 40px 70px -35px rgba(0,0,0,.7), inset 0 0 0 2px rgba(255,255,255,.06); }
+.cassette .label { position: absolute; inset: 7% 6% 34% 6%; border-radius: 6px; background: linear-gradient(#e7dccb 0 28%, var(--afternoon-accent) 28% 34%, #e7dccb 34%); padding: 3% 4%; color: #1c1c1c; }
+.cassette { container-type: inline-size; }
+.cassette .label .hand { font-size: 5.4cqi; line-height: 1.1; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cassette .label .side { position: absolute; left: 4%; bottom: 10%; font-weight: 900; font-size: 9cqi; line-height: 1; }
+.cassette .window { position: absolute; left: 50%; top: 34%; width: 46%; height: 22%; translate: -50% 0; border-radius: 40px; background: #0b1013; display: flex; justify-content: space-between; align-items: center; padding: 0 4%; }
+.reel { width: 32%; aspect-ratio: 1; border-radius: 50%; background: repeating-conic-gradient(#e7dccb 0 20deg, #0b1013 20deg 60deg); border: 4px solid #e7dccb; }
+.playing .reel { animation: spin 1.6s linear infinite; }
+.cassette .screw { position: absolute; width: 4.5%; aspect-ratio: 1; border-radius: 50%; background: #8d979b; border: 0; padding: 0; }
+.cassette .screw::after { content: ''; position: absolute; inset: 45% 15%; background: #3a4246; }
+@keyframes spin { to { rotate: 360deg; } }
+
+/* video placeholder */
+.video-ph {
+  position: relative; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; display: grid; place-items: center; color: #f6efe2;
+  background: linear-gradient(120deg, rgba(242,169,69,.55), rgba(31,78,82,.75)), url(assets/img/band-walk.jpg) center / cover;
+}
+.video-ph .play { width: 76px; height: 54px; border-radius: 14px; background: rgba(30,30,30,.82); display: grid; place-items: center; transition: background-color .2s; }
+.video-ph:hover .play { background: #e3342f; }
+.video-ph .meta { position: absolute; left: 20px; bottom: 16px; right: 20px; display: flex; justify-content: space-between; gap: 12px; font-weight: 700; }
+
+/* footer */
+footer { padding: 48px 0 64px; border-top: 1px solid var(--line); font-size: 15px; color: var(--soft); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+
+/* reveal on scroll */
+.rv { opacity: 0; translate: 0 24px; transition: opacity .8s var(--ease), translate .8s var(--ease); }
+.rv.in { opacity: 1; translate: 0 0; }
+
+/* toast + modal */
+.toast { position: fixed; left: 50%; bottom: 24px; translate: -50% 140%; z-index: 120; background: var(--ink); color: var(--bg); padding: 14px 20px; border-radius: 6px; font-weight: 600; transition: translate .3s var(--ease); max-width: calc(100% - 32px); }
+.toast:empty { visibility: hidden; }
+.toast.show { translate: -50% 0; }
+dialog { border: 0; border-radius: 8px; padding: 0; max-width: min(460px, calc(100% - 32px)); background: var(--night-bg); color: var(--night-ink); }
+dialog::backdrop { background: rgba(5,10,15,.7); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  .rv { opacity: 1; translate: none; }
+}
