@@ -14,7 +14,7 @@ const TRACKS = [
     notes: 'Free time settling into 104 BPM, key of G. A cassette deck clicks PLAY, tape hiss, birds through an open window. One acoustic guitar tunes its low string and lets a single G chord ring out: the same chord "Slow Light" ends on.',
     lyrics: null },
   { n: 2, title: 'Borrowed Key', type: 'Song', len: '2:49', light: 'afternoon',
-    suno: 'https://suno.com/song/2c6edf2d-df0e-45ca-b83a-7ac83445d4de',
+    suno: 'https://suno.com/song/fdc99bb8-ffef-4d7f-b779-812b6b5cdcbf',
     notes: '~112 BPM, key of D. Bright jangly 12-string over strummed acoustic, tambourine on the off-beats.',
     lyrics: `[Verse 1]
 Your brother's car and a borrowed key,
@@ -109,7 +109,7 @@ ${SLOW_LIGHT_CHORUS}
 [Outro]
 Mm, mm-mm, mm-mm-mm, slow light...` },
   { n: 4, title: 'Empty Pool', type: 'Song', len: '2:58', light: 'golden',
-    suno: 'https://suno.com/song/54f43f12-ec8f-473e-8d03-5f53372cb340',
+    suno: 'https://suno.com/song/e3e35f73-c98d-4212-a952-4fdf3f7008c6',
     notes: '~98 BPM, key of E minor. Slow strum, reverb-soaked single notes, a bridge with just bass and voice.',
     lyrics: `[Verse 1]
 Leaves in the deep end, the summer's packed up,
@@ -156,11 +156,11 @@ Pretend the water's where it's always been.
 [Outro]
 Hold your breath...` },
   { n: 5, title: 'Radio Static (Interlude)', type: 'Instrumental', len: '2:33', light: 'golden',
-    suno: 'https://suno.com/song/63664ba7-8139-4a08-91b1-8a8847a38d91',
+    suno: 'https://suno.com/song/54f43f12-ec8f-473e-8d03-5f53372cb340',
     notes: 'A car radio scanning stations: static, crackle, half-second voices. It lands on a warped cassette playing the "Slow Light" chorus on a clean electric guitar, slightly off-speed, then fades back into static.',
     lyrics: null },
   { n: 6, title: 'Paint on the Wall', type: 'Song', len: '2:38', light: 'golden',
-    suno: 'https://suno.com/song/6c27af0d-20d1-45a2-a228-9b2c8532c52a',
+    suno: 'https://suno.com/song/2c6edf2d-df0e-45ca-b83a-7ac83445d4de',
     notes: '~116 BPM, key of A. The fuzzy electric comes to the front, sticks instead of brushes, the chorus almost shouted.',
     lyrics: `[Verse 1]
 Back of the school where the bricks turn red,
@@ -248,7 +248,7 @@ ELIJAH: Fast.
 ALL: (laughing) Going nowhere fast.
 [Screen door creaks, tape clicks]` },
   { n: 9, title: 'Screen Door', type: 'Song', len: '2:32', light: 'night',
-    suno: 'https://suno.com/song/e3e35f73-c98d-4212-a952-4fdf3f7008c6',
+    suno: 'https://suno.com/song/63664ba7-8139-4a08-91b1-8a8847a38d91',
     notes: '~88 BPM, key of C. Fingerpicked acoustic alone, then brushed drums and soft bass. Almost whispered vocal, three-part harmony at the end.',
     lyrics: `[Verse 1]
 You laugh like a screen door in the wind,
@@ -284,7 +284,7 @@ Leave it open a little more,
 I'll be on the step when you come through,
 I was always waiting on you.` },
   { n: 10, title: 'Nowhere Fast', type: 'Song', len: '2:27', light: 'night',
-    suno: 'https://suno.com/song/fdc99bb8-ffef-4d7f-b779-812b6b5cdcbf',
+    suno: 'https://suno.com/song/6c27af0d-20d1-45a2-a228-9b2c8532c52a',
     notes: '~100 BPM, key of G, the same key as "Slow Light", so the album ends where it started. Instruments drop out one by one and the cassette clicks off.',
     lyrics: `[Verse 1]
 Last of the tape and the batteries low,

@@ -265,7 +265,7 @@ function drive(dt) {
   for (const c of cars) {
     const dx = car.x - c.x, dz = car.z - c.z, lim = c.axis === 0 ? [2.1, 3.3] : [3.3, 2.1];
     if (Math.abs(dx) < lim[0] && Math.abs(dz) < lim[1]) {
-      hit = true;
+      car.v *= 0.92; // traffic nudges you aside instead of throwing you backwards
       const d = Math.hypot(dx, dz) || 1;
       const px = car.x + (dx / d) * 0.6, pz = car.z + (dz / d) * 0.6;
       if (!blocked(px, pz)) { car.x = px; car.z = pz; }
@@ -439,12 +439,13 @@ function begin() {
 $('go').addEventListener('click', begin);
 
 /* ---------------- loop ---------------- */
-let last = performance.now(), raf = 0;
+let last = performance.now(), raf = 0, idleH = 0;
 function frame(t) {
   raf = requestAnimationFrame(frame);
   const dt = Math.min(0.05, (t - last) / 1000);
   last = t;
-  if (S.started) drive(dt); else { camera.position.set(car.x, 1.25, car.z); camera.rotation.set(-0.035, car.h, 0); car.h += dt * 0.04; }
+  // idle: only the camera pans, the car keeps facing down the road
+  if (S.started) drive(dt); else { idleH += dt * 0.04; camera.position.set(car.x, 1.25, car.z); camera.rotation.set(-0.035, car.h + Math.sin(idleH) * 0.6, 0); }
   moveTraffic(dt);
   stepLight(dt);
   if (S.playing && S.sim) { S.simT += dt; if (S.simT >= dur()) loadTrack(S.i + 1); }
@@ -452,13 +453,10 @@ function frame(t) {
   updateHud();
   renderer.render(scene, camera);
 }
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
-  else if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
-});
+// rAF already pauses itself in hidden tabs, so the loop always starts
 
 setMuted(S.muted);
 loadTrack(S.i);
 lt = 1; Object.assign(cur, cloneState(STATES[track().light])); // first paint: no fade
 if (AUTOSTART) begin(); else ui.game.setAttribute('inert', '');
-if (!document.hidden) raf = requestAnimationFrame(frame);
+raf = requestAnimationFrame(frame);
