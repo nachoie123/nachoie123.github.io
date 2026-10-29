@@ -70,6 +70,7 @@
         <button class="screw screw-d" aria-hidden="true" tabindex="-1"></button>
       </div>
       <p class="deck-caption" id="deckCaption">01 · Tape Hiss (Intro)</p>
+      <iframe class="suno" id="introPlayer" hidden title="Tape Hiss (Intro) player (Suno)" allow="autoplay; encrypted-media"></iframe>
     </div>
   </section>
 
@@ -142,14 +143,12 @@
     </div>`).join('');
   document.getElementById('chorus').textContent = SLOW_LIGHT_CHORUS;
 
-  // the cassette plays the intro track
-  const intro = new Audio(audioSrc(TRACKS[0]));
-  const tape = document.getElementById('tape'), btn = document.getElementById('play'), cap = document.getElementById('deckCaption');
+  // the cassette opens the intro in Suno's player
+  const tape = document.getElementById('tape'), btn = document.getElementById('play'), player = document.getElementById('introPlayer');
   btn.onclick = () => {
-    if (intro.paused) {
-      intro.play().then(() => { tape.classList.add('playing'); btn.textContent = '❚❚ Pause'; btn.setAttribute('aria-pressed', 'true'); })
-        .catch(() => { tape.classList.add('playing'); cap.textContent = 'Audio coming soon'; setTimeout(() => tape.classList.remove('playing'), 2500); });
-    } else { intro.pause(); tape.classList.remove('playing'); btn.textContent = '▶ Press play'; btn.setAttribute('aria-pressed', 'false'); }
+    if (!player.src) player.src = embedSrc(TRACKS[0]);
+    player.hidden = false; tape.classList.add('playing');
+    btn.textContent = '▶ Press play in the player'; btn.setAttribute('aria-pressed', 'true');
   };
 
   // easter egg: unscrew the top-right screw (3 clicks)

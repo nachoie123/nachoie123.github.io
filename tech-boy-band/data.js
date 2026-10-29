@@ -327,5 +327,7 @@ const LIGHTS = {
   night: { label: 'Night', range: 'Tracks 8–10' },
 };
 
+// Suno's official player for each track (used while there are no mp3 files)
+const embedSrc = t => t.suno.replace('/song/', '/embed/');
 const audioSrc = t => `assets/audio/${String(t.n).padStart(2, '0')}.mp3`;
 const toSeconds = len => { const [m, s] = len.split(':'); return +m * 60 + +s; };

@@ -328,6 +328,7 @@ function loadTrack(i) {
   a.addEventListener('error', () => goSim(a));
   a.addEventListener('ended', () => { if (a === S.audio) loadTrack(S.i + 1); });
   a.src = audioSrc(t);
+  if (ui.soon.dataset.n != t.n) { ui.soon.dataset.n = t.n; ui.soon.src = embedSrc(t); }
   renderTrack(t);
   setLight(t.light);
   if (S.playing) {
@@ -409,7 +410,10 @@ addEventListener('keydown', (e) => {
   else if (e.code === 'KeyE') loadTrack(S.i + 1);
 });
 addEventListener('keyup', (e) => { const k = KEYMAP[e.code]; if (k) keys[k] = false; });
-addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+addEventListener('blur', () => {
+  for (const k in keys) keys[k] = false;
+  setTimeout(() => { if (document.activeElement === ui.soon) ui.game.focus(); }, 0);
+});
 
 $('prev').addEventListener('click', () => loadTrack(S.i - 1));
 $('next').addEventListener('click', () => loadTrack(S.i + 1));

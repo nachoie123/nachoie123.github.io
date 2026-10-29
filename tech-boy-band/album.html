@@ -47,10 +47,7 @@
 <main class="wrap album">
   <aside class="side">
     <div class="cover"><img src="assets/img/mood-pool.jpg" alt="Album cover: someone floating in a backyard pool, faded film colours"><p class="t"><small>Screen Door</small>Going Nowhere Fast</p></div>
-    <div class="now" aria-live="polite">
-      <button id="pp" aria-label="Play">▶</button>
-      <div class="info"><strong id="nowTitle">01 · Tape Hiss (Intro)</strong><span class="note" id="nowNote">10 tracks · ~25 min</span><div class="bar"><i id="bar"></i></div></div>
-    </div>
+    <iframe class="suno" id="player" title="Song player (Suno)" allow="autoplay; encrypted-media"></iframe>
     <p class="note">Recorded on one cassette, one afternoon. Side A runs from afternoon to golden hour, side B into the night.</p>
   </aside>
   <div id="list"></div>
@@ -76,39 +73,24 @@
       </div></div></div>
     </div>`).join('')}`).join('');
 
-  const audio = new Audio();
-  let cur = TRACKS[0], fake = null;
-  const pp = document.getElementById('pp'), bar = document.getElementById('bar');
-  const paint = playing => { pp.textContent = playing ? '❚❚' : '▶'; pp.setAttribute('aria-label', playing ? 'Pause' : 'Play'); };
-
-  function open(t, play) {
+  const player = document.getElementById('player');
+  function open(t) {
     document.querySelectorAll('.track').forEach(el => {
       const on = +el.dataset.n === t.n;
-      el.classList.toggle('open', on);
-      el.classList.toggle('on', on);
-      el.querySelector('button').setAttribute('aria-expanded', el.classList.contains('open'));
+      el.classList.toggle('open', on); el.classList.toggle('on', on);
+      el.querySelector('button').setAttribute('aria-expanded', on);
     });
     document.body.dataset.light = t.light;
-    if (cur !== t || audio.src === '') { cur = t; audio.src = audioSrc(t); bar.style.width = 0; }
-    document.getElementById('nowTitle').textContent = `${String(t.n).padStart(2, '0')} · ${t.title}`;
-    document.getElementById('nowNote').textContent = `${t.type} · ${t.len}`;
-    if (play) start();
+    const src = embedSrc(t);
+    if (player.src !== src) { player.src = src; player.title = `${t.title} player (Suno)`; }
   }
-  function start() {
-    audio.play().then(() => paint(true)).catch(() => {
-      document.getElementById('nowNote').textContent = 'Audio coming soon';
-      paint(false);
-    });
-  }
-  audio.ontimeupdate = () => audio.duration && (bar.style.width = `${audio.currentTime / audio.duration * 100}%`);
-  audio.onended = () => open(TRACKS[cur.n % TRACKS.length], true);
-  pp.onclick = () => audio.paused ? (audio.src ? start() : open(cur, true)) : (audio.pause(), paint(false));
+  open(TRACKS[0]); document.getElementById('t1').classList.remove('open');
   list.addEventListener('click', e => {
     const tr = e.target.closest('.track > button');
-    if (tr) open(TRACKS[tr.parentElement.dataset.n - 1], true);
+    if (tr) open(TRACKS[tr.parentElement.dataset.n - 1]);
   });
   const deep = location.hash.match(/^#t(\d+)$/);
-  if (deep) { open(TRACKS[deep[1] - 1], false); document.getElementById(`t${deep[1]}`).scrollIntoView({ block: 'start' }); }
+  if (deep) { open(TRACKS[deep[1] - 1]); document.getElementById(`t${deep[1]}`).scrollIntoView({ block: 'start' }); }
 </script>
 </body>
 </html>
