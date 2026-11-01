@@ -13,10 +13,12 @@
 
 <h2>Tu armario se queda en tu iPhone</h2>
 <p>Las fotos de tu ropa, los nombres, precios, outfits y el registro de lo que te pones se guardan en tu iPhone. No hay cuenta, ni servidor propio, ni analítica, ni anuncios, ni rastreo. El fondo de las fotos se quita en el propio iPhone.</p>
-<p>Hay funciones que sí envían una foto fuera del iPhone, y están explicadas abajo: «Planchar», reconocer prendas, «Buscar en tienda» y «¿De dónde es?». La primera vez que una de ellas va a enviar una foto, la app te dice qué envía, a quién y para qué, y te pide permiso («Permitir» o «Ahora no»). Tu respuesta se recuerda y la cambias cuando quieras en Perfil → Privacidad. Si dices que no, la foto no sale.</p>
+<p>Hay tres funciones que sí envían una foto fuera del iPhone, y están explicadas abajo: «Reconocer prendas», «Planchar» y «Buscar por foto» (que usan «Buscar en tienda» y «¿De dónde es?»). La primera vez que una de ellas va a enviar una foto, la app te dice qué envía, a quién y para qué, y te pide permiso («Permitir» o «Ahora no»). Tu respuesta se recuerda y la cambias cuando quieras en Perfil → Privacidad. Si dices que no, la foto no sale.</p>
 
-<h2>«Planchar» y reconocer prendas</h2>
-<p>«Planchar» convierte la foto de una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco). Para ello la foto se envía a ElevenLabs, que la procesa con un modelo de Google Gemini, y la imagen resultante se guarda en tu iPhone. Reconocer prendas envía el recorte de la prenda, ya sin fondo, a Google Gemini para saber qué es, su color y ponerle un nombre corto. Solo se envía la foto: ni tu nombre, ni tu ubicación, ni el resto de tu armario. Pressed no guarda copia en ningún servidor. Lo que esos servicios hagan con la foto se rige por sus políticas (<a href="https://elevenlabs.io/privacy-policy">ElevenLabs</a>, <a href="https://policies.google.com/privacy">Google</a>). Estas funciones solo funcionan si están disponibles en tu versión de la app; si no lo están, no se envía nada.</p>
+<h2>«Reconocer prendas» y «Planchar»</h2>
+<p>«Reconocer prendas» envía el recorte de la prenda, ya sin fondo, a Google Gemini para saber qué es, su color y ponerle un nombre corto. Si importas una foto del carrete, se envía esa foto en tamaño reducido para saber qué prendas salen en ella.</p>
+<p>«Planchar» convierte una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco). Para ello se envía el recorte de la prenda, sin fondo y en tamaño reducido, a ElevenLabs, que lo procesa con un modelo de Google Gemini; si no se pudo recortar, se envía la foto que hiciste, reducida. La imagen resultante se guarda en tu iPhone.</p>
+<p>Solo se envía la imagen, sin sus datos ocultos (lugar, fecha ni modelo del iPhone): ni tu nombre, ni tu ubicación, ni el resto de tu armario. Pressed no guarda copia en ningún servidor. Lo que esos servicios hagan con la foto se rige por sus políticas (<a href="https://elevenlabs.io/privacy-policy">ElevenLabs</a>, <a href="https://policies.google.com/privacy">Google</a>). Estas funciones solo funcionan si están disponibles en tu versión de la app; si no lo están, no se envía nada.</p>
 
 <h2>«Buscar en tienda»</h2>
 <p>Solo cuando tú pulsas «Buscar en tienda» y has dado permiso, la foto de esa prenda se envía a Google Lens para encontrar el producto, o se busca su nombre en Google. Después navegas por las tiendas dentro de la app, como en Safari. Cuando eliges «Usar esta página», la app lee de esa página la foto, el nombre y el precio y los guarda en tu iPhone. Lo que Google y las tiendas hagan con esas visitas se rige por sus propias políticas de privacidad (<a href="https://policies.google.com/privacy">Google</a>).</p>
@@ -28,17 +30,14 @@
 <h2>Tiempo y ubicación</h2>
 <p>Para proponerte un outfit según el tiempo, Pressed pide tu ubicación mientras la usas y consulta el tiempo a Apple Weather (WeatherKit). Pressed no guarda tu ubicación ni la manda a nadie más. Si no das permiso, el outfit del día sale sin tiempo y la app lo dice («Sin tiempo»), sin inventarse uno.</p>
 
-<h2>Calendario</h2>
-<p>Si das permiso, Pressed mira los títulos de tus eventos de hoy para saber si tienes algo arreglado (una entrevista, una boda). Se lee en el iPhone y no sale de él.</p>
-
-<h2>Cámara y notificaciones</h2>
-<p>La cámara se usa solo para hacer fotos a tu ropa. Los avisos del día son notificaciones locales: los programa el propio iPhone.</p>
+<h2>Cámara</h2>
+<p>La cámara se usa solo para hacer fotos a tu ropa. Pressed no lee tu calendario ni te manda notificaciones.</p>
 
 <h2>Widget</h2>
-<p>El widget enseña el outfit del día con miniaturas que la app deja en el propio iPhone. Si pulsas «Me lo pongo» en el widget, se apunta en tu iPhone que hoy llevas ese outfit. No sale nada del iPhone.</p>
+<p>El widget enseña el outfit del día con miniaturas que la app deja en el propio iPhone; al usar la app deja preparado también el de mañana, para que por la mañana ya lo tengas. Si pulsas «Me lo pongo» en el widget, se apunta en tu iPhone que hoy llevas ese outfit, y «Deshacer» lo quita. No sale nada del iPhone.</p>
 
 <h2>Borrar tus datos</h2>
-<p>Borra una prenda desde su ficha con la papelera. En Perfil → «Borrar todos los datos» se borran a la vez las prendas, los outfits, lo que te has puesto, tu perfil y los permisos que diste. También puedes borrar la app y se borra todo. En Perfil → «Tus datos» puedes exportar una copia (CSV o JSON) para leerla en Numbers o Excel.</p>
+<p>Borra una prenda desde su ficha con la papelera. En Perfil → «Borrar todos los datos» se borran a la vez las prendas, los outfits, lo que te has puesto, tu perfil, los permisos que diste, los enlaces compartidos y las cookies e historial de las webs que abriste dentro de la app. También puedes borrar la app y se borra todo. En Perfil → «Tus datos» puedes exportar una copia (CSV o JSON) para leerla en Numbers o Excel; no es una copia de seguridad (no lleva fotos): Pressed entero va en la copia de iCloud de tu iPhone.</p>
 
 <h2>Contacto</h2>
 <p>Ignacio San Benito · <a href="mailto:nsanbenitop@gmail.com">nsanbenitop@gmail.com</a> · <a href="https://nachosanbenito.com/pressed/">nachosanbenito.com/pressed</a></p>
