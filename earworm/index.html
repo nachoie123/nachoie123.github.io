@@ -1,10 +1,12 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Earworm · Soporte</title><link rel="stylesheet" href="estilo.css"></head><body><main>
-<h1>Earworm</h1><p>Comparte un vídeo de TikTok, YouTube, SoundCloud o tu galería y Earworm te dice qué canción suena y te da una tarjeta para compartirla. Si conectas Spotify (opcional), la añade a tus «me gusta».</p>
+<h1>Earworm</h1>
+<figure class="promo"><video src="promo.mp4" poster="promo-poster.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Vídeo de 23 segundos: Earworm reconoce la canción de un vídeo y crea una tarjeta"></video><button class="play" type="button" aria-label="Reproducir el vídeo de 23 segundos"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><small>0:23</small></button></figure>
+<p>Comparte un vídeo de TikTok, YouTube, SoundCloud o tu galería y Earworm te dice qué canción suena y te da una tarjeta para compartirla. Si conectas Spotify (opcional), la añade a tus «me gusta».</p>
 <h2>Soporte</h2><p>¿Algo no funciona? Escribe a <a href="mailto:nsanbenitop@gmail.com">nsanbenitop@gmail.com</a> con el enlace que compartiste y lo que salió en pantalla. Respondo en menos de 48 horas.</p>
 <h2>Preguntas rápidas</h2><ul>
 <li><strong>¿Necesito Spotify?</strong> No, es opcional: Earworm funciona sin cuenta. Si lo conectas, además marca la canción como «me gusta».</li>
 <li><strong>Borrar una canción:</strong> mantén pulsada la canción en Earworm y toca «Borrar canción».</li>
 <li><strong>No reconoce la canción:</strong> algunos vídeos usan audio original sin nombre; prueba con otro enlace del mismo tema.</li></ul>
 <p><a href="privacidad.html">Política de privacidad</a></p>
-<footer>Ignacio San Benito · IE University · <a href="https://nachosanbenito.com">nachosanbenito.com</a></footer></main></body></html>
+<footer>Ignacio San Benito · IE University · <a href="https://nachosanbenito.com">nachosanbenito.com</a></footer></main><script>document.documentElement.classList.add("js");(function(){var v=document.querySelector(".promo video"),b=document.querySelector(".promo .play");if(!v||!b)return;v.controls=false;b.addEventListener("click",function(){v.play().catch(function(){})});v.addEventListener("play",function(){v.controls=true;b.remove()},{once:true})})()</script></body></html>
