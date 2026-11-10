@@ -9,6 +9,11 @@
 <body>
 <main>
 <h1>Pressed – Armario y outfits</h1>
+<figure class="promo">
+<video src="promo.mp4" poster="promo-poster.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Vídeo de Pressed, 20 segundos, con música"></video>
+<button class="play" type="button" aria-label="Reproducir el vídeo de 20 segundos"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><small>0:20</small></button>
+</figure>
+
 <p class="cuando">App de iPhone para tener tu ropa a mano y montar outfits.</p>
 
 <h2>Qué hace</h2>
@@ -22,5 +27,8 @@
 
 <p class="cuando" style="margin-top:48px">Ignacio San Benito · IE University · <a href="https://nachosanbenito.com">nachosanbenito.com</a></p>
 </main>
+<script>
+(function(){var v=document.querySelector(".promo video"),b=document.querySelector(".promo .play");if(!v||!b)return;document.documentElement.classList.add("js");v.controls=false;b.addEventListener("click",function(){v.play().catch(function(){})});v.addEventListener("play",function(){v.controls=true;b.remove()},{once:true})})();
+</script>
 </body>
 </html>

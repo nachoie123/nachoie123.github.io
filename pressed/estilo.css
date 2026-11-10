@@ -6,3 +6,13 @@ h1{font-size:28px;margin:0 0 6px}
 p.cuando{color:var(--suave);margin:0 0 32px}
 h2{font-size:19px;margin:32px 0 8px}
 a{color:var(--acento)}
+.promo{position:relative;margin:18px 0 24px}
+.promo video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;background:#e9ebef}
+.promo .play{position:absolute;inset:0;display:none;place-items:center;padding:0;border:0;border-radius:12px;background:linear-gradient(rgb(0 0 0/0) 60%,rgb(0 0 0/.35));color:#fff;cursor:pointer}
+.js .promo .play{display:grid}
+.promo .play i{display:grid;place-items:center;width:68px;height:48px;border-radius:12px;background:rgb(23 23 23/.85);box-shadow:0 6px 24px rgb(0 0 0/.35);transition:background-color .15s,transform .2s}
+.promo .play i svg{width:22px;height:22px;margin-left:2px}
+.promo .play small{position:absolute;right:10px;bottom:10px;padding:3px 7px;border-radius:6px;background:rgb(0 0 0/.78);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+.promo .play:hover i,.promo .play:focus-visible i{background:#f03;transform:scale(1.06)}
+.promo .play:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.promo .play i{transition:none}}
