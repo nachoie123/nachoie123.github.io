@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ReadTool</title>
+<meta name="description" content="A Mac menu bar app that reads the screen out loud. Press ⌥R and a yellow box follows every word. It skips menus and buttons, learns what you don't want to hear, and can explain class notes.">
+<meta property="og:title" content="ReadTool, my Mac reads the screen to me">
+<meta property="og:description" content="⌥R reads the window out loud while a yellow box follows each word. It skips the interface, learns what to skip, and explains class notes.">
+<meta property="og:image" content="https://nachosanbenito.com/readtool/poster.jpg">
+<meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e16" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="icon.png">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet">
+<style>
+  /* Palette from the app icon: navy lines on a cool white sheet, one yellow box */
+  :root{
+    --bg:#f4f6f9;--surface:#fff;--ink:#161a2b;--dim:#4b5370;--faint:#646c88;--line:rgba(22,26,43,.12);
+    --hl:#ffd23f;--hl-ink:#161a2b;--key:#fff;--keyb:rgba(22,26,43,.18);
+    --ease:cubic-bezier(.16,1,.3,1);--gut:40px;--r:12px;--max:1200px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0c0e16;--surface:#141724;--ink:#e9ecf5;--dim:#a6adc4;--faint:#868ea8;--line:rgba(200,210,255,.12);--key:#1b1f2f;--keyb:rgba(200,210,255,.2)}
+  }
+  *{box-sizing:border-box}
+  html{background:var(--bg);scroll-padding-top:80px}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Geist,-apple-system,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  a{color:inherit}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
+  h1,h2,h3{font-weight:600;letter-spacing:-.035em;line-height:1.04;text-wrap:balance;margin:0}
+  p,dd,figcaption,li{text-wrap:pretty}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+
+  /* top bar */
+  .top{position:fixed;inset:0 0 auto;z-index:10;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);
+    background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid var(--line)}
+  .top a{text-decoration:none;font-size:15px;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;gap:8px;color:var(--dim);transition:color .2s}
+  .top a:hover{color:var(--ink)}
+  .brand{font-weight:600;color:var(--ink)!important;letter-spacing:-.02em}
+  .brand img{width:26px;height:26px;border-radius:7px}
+
+  /* the yellow box: the same marker the app draws */
+  .w,.mark{border-radius:.14em;padding:0 .06em;margin:0 -.06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .w.on,.mark{background:linear-gradient(transparent 10%,var(--hl) 10% 94%,transparent 94%);color:var(--hl-ink)}
+  .sheet .mark{background:var(--hl)}
+
+  /* hero */
+  .hero{padding-top:128px;padding-bottom:24px}
+  .hero .grid{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(46px,5.4vw,76px);letter-spacing:-.045em;line-height:1.02}
+  .hero .lead{margin:24px 0 26px}
+  .lead{color:var(--dim);font-size:19px;max-width:44ch;margin:16px 0 0}
+  .cue{font-size:15px;font-weight:500;text-decoration:none;display:inline-flex;gap:8px;align-items:center;min-height:44px;border-bottom:1px solid var(--line);transition:border-color .2s}
+  .cue:hover{border-color:var(--ink)}
+  .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:1.9em;height:1.65em;padding:0 .4em;border-radius:.32em;background:var(--key);border:1px solid var(--keyb);box-shadow:0 1px 0 var(--keyb);font:500 .86em/1 Geist,-apple-system,sans-serif;letter-spacing:0;vertical-align:.08em;white-space:nowrap}
+
+  /* the film: a play button over the poster, like YouTube */
+  .clip{margin:0}
+  .clip figcaption{font-size:14px;color:var(--faint);margin-top:12px}
+  .clip figcaption b{color:var(--ink);font-weight:500}
+  .player{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#0c0e16;box-shadow:0 30px 60px -30px rgb(22 26 43 / .35)}
+  @media (prefers-color-scheme:dark){.player{box-shadow:none}}
+  .player video{display:block;width:100%;height:auto;aspect-ratio:16/10}
+  .play{position:absolute;inset:0;display:grid;place-items:center;padding:0;border:0;background:linear-gradient(rgb(12 14 22 / 0) 45%,rgb(12 14 22 / .82));color:#fff;font-family:inherit;cursor:pointer}
+  .play i{display:grid;place-items:center;width:84px;height:58px;border-radius:16px;background:rgb(23 23 23 / .82);box-shadow:0 6px 24px rgb(0 0 0 / .35)}
+  .play i svg{width:26px;height:26px;margin-left:2px}
+  .play span{position:absolute;left:16px;bottom:16px;padding:4px 10px;border-radius:6px;background:rgb(0 0 0 / .78);font-size:14px;font-weight:500;line-height:1.3}
+  .play small{position:absolute;right:16px;bottom:16px;padding:3px 7px;border-radius:6px;background:rgb(0 0 0 / .78);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+  .play:hover i,.play:focus-visible i{background:#ff0033}
+  html:not(.js) .play{display:none}
+  @media (prefers-reduced-motion:no-preference){.play i{transition:transform .3s var(--ease),background-color .15s}.play:hover i{transform:scale(1.06)}}
+
+  /* feature rows: words on the left, proof on the right */
+  section{position:relative}
+  .row{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center;padding:96px 0;border-top:1px solid var(--line)}
+  #read{border-top:0}
+  .row h2{font-size:clamp(36px,3.8vw,52px)}
+  .row .lead{font-size:18px}
+  .note{color:var(--faint);font-size:15px;margin:18px 0 0;max-width:46ch}
+
+  /* a sheet of text, read like the app reads it */
+  .sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:34px 38px;font:400 19px/1.75 "Source Serif 4",Georgia,serif;color:var(--ink)}
+  .sheet p{margin:0}
+  .sheet .fade{color:var(--faint)}
+  .sheet .hat{font-style:italic;font-size:16px;color:var(--faint);padding:0 0 14px 22px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .sheet .gone{text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.55}
+  .sheet .ptr{display:inline-block;width:16px;height:22px;vertical-align:-6px;margin:0 -16px 0 0;position:relative;left:-8px;top:10px}
+  .sheet .ptr svg{display:block;width:100%;height:100%}
+  .tag{font:500 13px/1.3 Geist,-apple-system,sans-serif;color:var(--faint);margin:0 0 12px;display:flex;gap:10px;align-items:center}
+
+  /* skips the clutter: a page drawn in blocks */
+  .page{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:1fr 3fr 1.3fr;grid-template-rows:auto auto 1fr;gap:12px;aspect-ratio:16/10}
+  .page .ui{border-radius:6px;background:repeating-linear-gradient(135deg,var(--line) 0 6px,transparent 6px 12px);border:1px dashed var(--keyb)}
+  .page .bar{grid-column:1/-1;height:22px}
+  .page .menu{grid-column:1/-1;height:16px;width:60%}
+  .page .side{grid-row:3}
+  .page .art{grid-row:3;display:flex;flex-direction:column;gap:9px;padding:4px 2px}
+  .page .art i{display:block;height:8px;border-radius:4px;background:var(--ink);opacity:.85}
+  .page .art i:nth-child(3n){width:82%}.page .art i:nth-child(4n+1){width:94%}
+  .page .art i.on{background:var(--hl);opacity:1}
+  .page .box{grid-row:3}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;font-size:14px;color:var(--faint);margin-top:12px}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .legend i{width:18px;height:10px;border-radius:3px;display:inline-block}
+  .figs{display:flex;gap:36px;margin:30px 0 0;padding:0;list-style:none}
+  .figs b{display:block;font-size:clamp(40px,4.2vw,56px);font-weight:500;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+  .figs span{display:block;font-size:14px;color:var(--dim);margin-top:6px}
+
+  /* explained mode: note, then what it says */
+  .pair{display:grid;gap:14px}
+  .pair .sheet{padding:26px 30px}
+  .pair .src{font:400 17px/1.6 Geist,-apple-system,sans-serif}
+  .pair .en{font:400 15px/1.55 Geist,-apple-system,sans-serif;color:var(--faint);margin-top:12px}
+
+  /* keys */
+  .keys{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin:0;padding:0}
+  .keys div{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:baseline;padding:15px 0;border-top:1px solid var(--line)}
+  .keys dt{display:flex;gap:6px;flex-wrap:wrap}
+  .keys dd{margin:0;color:var(--dim);font-size:16px}
+
+  /* how it works */
+  .how{padding:96px 0;border-top:1px solid var(--line)}
+  .how header{max-width:640px}
+  .how h2{font-size:clamp(36px,3.8vw,52px)}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin:48px 0 0;padding:0}
+  .three div{border-top:2px solid var(--ink);padding-top:16px}
+  .three dt{font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .three dd{margin:8px 0 0;color:var(--dim);font-size:16px}
+  .more{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin:44px 0 0;padding:0}
+  .more div{border-top:1px solid var(--line);padding-top:14px}
+  .more dt{font-weight:500}.more dd{margin:4px 0 0;color:var(--dim);font-size:15px}
+
+  /* end */
+  .end{padding:120px 0 64px;border-top:1px solid var(--line);text-align:center}
+  .end h2{font-size:clamp(36px,4.2vw,56px);margin:0 auto}.end h2 span{display:block}
+  .end .lead{margin:18px auto 32px;max-width:52ch}
+  .actions{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;align-items:center}
+  .btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-weight:600;text-decoration:none;transition:transform .16s var(--ease),opacity .2s}
+  .btn:hover{opacity:.88}.btn:active{transform:scale(.97)}
+  footer{margin-top:72px;font-size:14px;color:var(--faint)}
+
+  /* reveal on arrival */
+  .js .rv{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .js .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}}
+
+  @media (max-width:899px){
+    :root{--gut:20px}
+    body{font-size:16px}
+    .top{height:56px}
+    .top .brand{display:none}
+    .hero{padding-top:96px;padding-bottom:40px}
+    .hero .grid,.row{grid-template-columns:1fr;gap:28px}
+    .hero .clip{order:-1}
+    .hero h1{font-size:clamp(40px,11vw,56px)}
+    .lead,.row .lead{font-size:17px}
+    .row,.how{padding:64px 0}
+    .sheet{padding:22px 20px;font-size:17px}
+    .play i{width:68px;height:48px;border-radius:12px}.play i svg{width:22px;height:22px}.play span{left:10px;bottom:10px;font-size:13px}.play small{right:10px;bottom:10px}
+    .keys{grid-template-columns:1fr}
+    .three,.more{grid-template-columns:1fr;gap:24px}
+    .page{padding:12px;gap:8px}.page .art{gap:6px}.page .art i{height:6px}
+    .end{padding:88px 0 48px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="https://nachosanbenito.com/#work"><span aria-hidden="true">←</span>&nbsp;nachosanbenito.com</a>
+  <a class="brand" href="#top"><img src="icon.png" alt="" width="26" height="26">ReadTool</a>
+  <a href="https://nachosanbenito.com/#contact">Get in touch</a>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="grid">
+      <div>
+        <h1 id="h1" aria-label="Your Mac reads it to you, word by word."><span class="w">Your</span> <span class="w">Mac</span> <span class="w">reads</span> <span class="w">it</span> <span class="w">to</span> <span class="w">you,</span> <span class="w">word</span> <span class="w">by</span> <span class="w">word.</span></h1>
+        <p class="lead">A menu bar app. Press <span class="kbd">⌥R</span> and it reads the window in front of you out loud, while a yellow box follows each word.</p>
+        <a class="cue" href="#keys">All the shortcuts <span aria-hidden="true">↓</span></a>
+      </div>
+      <figure class="clip" id="film">
+        <div class="player">
+          <video src="demo.mp4" poster="poster.jpg" width="1600" height="1000" controls playsinline preload="none" aria-label="ReadTool demo, 33 seconds, with sound"></video>
+          <button class="play" type="button" aria-label="Play the 33 second demo"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch it read · sound on</span><small>0:33</small></button>
+        </div>
+        <figcaption><b>Real screen recording</b> with the app's real voice. ⌥R on Wikipedia, then ⌥+click on a sentence, then ⌫ on a note. Pauses trimmed; the pointer is drawn in.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="row" id="read">
+      <div class="rv">
+        <h2>⌥R and it reads.</h2>
+        <p class="lead">One shortcut, in any app. It takes the window as you see it, finds the words and reads them in order. The box moves with the voice, so your eyes never lose the line.</p>
+        <p class="note">Space pauses. Esc stops. ↑ and ↓ change the speed.</p>
+      </div>
+      <div class="sheet rv" aria-hidden="true">
+        <p>Most octopuses live alone and hide in dens between rocks. They can change the colour and <span class="mark">texture</span> of their skin in a fraction of a second, and they use it to hunt, to hide and to warn.</p>
+      </div>
+    </section>
+
+    <section class="row" id="anywhere">
+      <div class="rv">
+        <h2>Start anywhere.</h2>
+        <p class="lead">Hold <span class="kbd">⌥</span> and click a sentence. It starts reading from the beginning of that sentence, not from the top of the page.</p>
+        <p class="note">← jumps back a sentence, → skips ahead. Hold → to hear it at 2x.</p>
+      </div>
+      <div class="sheet rv" aria-hidden="true">
+        <p><span class="fade">An octopus has eight arms and three hearts. Its blood is blue. </span><span class="mark">Like</span> other cephalopods, it has two eyes and a beaked<span class="ptr"><svg viewBox="0 0 16 22"><path d="M1 1v17l4.2-4 3 6.8 3-1.3-3-6.6H14Z" fill="#161a2b" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg></span> mouth at the centre point of its arms.</p>
+      </div>
+    </section>
+
+    <section class="row" id="clutter">
+      <div class="rv">
+        <h2>It skips the clutter.</h2>
+        <p class="lead">Menus, tabs, buttons and side panels are not read. The first time it meets an app or a website, Claude looks at the screen once and writes a reading plan for it: what is interface and what is content. Next time the plan is already there.</p>
+        <ul class="figs">
+          <li><b>80</b><span>lines on a Wikipedia page</span></li>
+          <li><b>30</b><span>lines it reads: the article</span></li>
+        </ul>
+      </div>
+      <figure class="clip rv">
+        <div class="page" aria-hidden="true">
+          <div class="ui bar"></div><div class="ui menu"></div>
+          <div class="ui side"></div>
+          <div class="art"><i class="on" style="width:34%"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="ui box"></div>
+        </div>
+        <div class="legend"><span><i style="background:var(--ink)"></i>Read</span><span><i style="background:repeating-linear-gradient(135deg,var(--keyb) 0 3px,transparent 3px 6px);border:1px dashed var(--keyb)"></i>Skipped</span></div>
+        <figcaption>Measured on the Wikipedia article "Octopus" in Chrome. One plan per kind of screen, saved on the Mac.</figcaption>
+      </figure>
+    </section>
+
+    <section class="row" id="skip">
+      <div class="rv">
+        <h2>Tell it what to skip.</h2>
+        <p class="lead">Hearing something useless? Press <span class="kbd">⌫</span> while it reads. That line goes, and so does everything like it: delete one "For other uses" note on Wikipedia and every note of that kind is skipped from then on.</p>
+        <p class="note">Changed your mind? <span class="kbd">⌥⌫</span> undoes the last one.</p>
+      </div>
+      <div class="sheet rv" aria-hidden="true">
+        <p class="hat gone">This article is about the order of cephalopod. For other uses, see Octopus (disambiguation).</p>
+        <p><span class="mark">An</span> octopus is a soft-bodied, eight-limbed mollusc of the order Octopoda.</p>
+      </div>
+    </section>
+
+    <section class="row" id="explained">
+      <div class="rv">
+        <h2>Explained mode.</h2>
+        <p class="lead">Class notes are short and full of arrows. When it sees notes, it stops reading them word for word and explains them like a teacher would, in a story that follows on from the last point. The box still moves over your own words.</p>
+        <p class="note"><span class="kbd">⌥E</span> explains just the passage you are on. <span class="kbd">⌥Q</span> lets you ask a question out loud. Explained mode speaks Spanish for now.</p>
+      </div>
+      <div class="pair rv">
+        <div class="sheet">
+          <p class="tag">The note</p>
+          <p class="src">IPC sube → poder adquisitivo baja: mismo sueldo, compra menos.</p>
+        </div>
+        <div class="sheet">
+          <p class="tag">What ReadTool said</p>
+          <p>“El índice de precios al consumo, que mide lo que cuesta una cesta de compra típica, sube. Y eso lleva a que el poder adquisitivo, es decir, lo que puedes comprar con tu dinero, baje. Mismo sueldo, compra menos.”</p>
+          <p class="en">Prices go up, so what your salary can buy goes down. The note is example data; the sentence is the app's real output.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="row" id="keys">
+      <div class="rv">
+        <h2>All from the keyboard.</h2>
+        <p class="lead">Only ⌥R works everywhere. The other keys belong to ReadTool only while it is reading and its app is in front, so a space in Chrome is still a space.</p>
+      </div>
+      <dl class="keys rv">
+        <div><dt><span class="kbd">⌥R</span></dt><dd>Read the window</dd></div>
+        <div><dt><span class="kbd">⌥</span><span class="kbd">click</span></dt><dd>Read from this sentence</dd></div>
+        <div><dt><span class="kbd">Space</span></dt><dd>Pause and resume</dd></div>
+        <div><dt><span class="kbd">Esc</span></dt><dd>Stop</dd></div>
+        <div><dt><span class="kbd">←</span><span class="kbd">→</span></dt><dd>Sentence back or ahead; hold for rewind or 2x</dd></div>
+        <div><dt><span class="kbd">↑</span><span class="kbd">↓</span></dt><dd>Faster or slower</dd></div>
+        <div><dt><span class="kbd">⌫</span></dt><dd>Not this, and nothing like it</dd></div>
+        <div><dt><span class="kbd">⌥⌫</span></dt><dd>Undo the last ⌫</dd></div>
+        <div><dt><span class="kbd">⌥E</span></dt><dd>Explain this passage</dd></div>
+        <div><dt><span class="kbd">⌥Q</span></dt><dd>Ask a question out loud</dd></div>
+      </dl>
+    </section>
+
+    <section class="how" id="how">
+      <header class="rv">
+        <h2>How it works.</h2>
+        <p class="lead">Native Swift, no browser extension. Three parts, each doing one job.</p>
+      </header>
+      <dl class="three rv">
+        <div><dt>Eyes</dt><dd>It takes a picture of the window exactly as it is on screen and finds each word with Apple's on-device text recognition. macOS Accessibility tells it which parts are buttons and menus.</dd></div>
+        <div><dt>Brain</dt><dd>Claude Sonnet writes the reading plan for each app and site, and turns a ⌫ into a rule. Claude Haiku explains notes in about ten seconds, with Sonnet as the backup.</dd></div>
+        <div><dt>Voice</dt><dd>ElevenLabs speaks the text and sends back when each letter is said. That timing is what moves the yellow box from word to word.</dd></div>
+      </dl>
+      <dl class="more rv">
+        <div><dt>A small island</dt><dd>Shows what it is doing: reading, thinking, paused. Pause, speed and Explained live there too.</dd></div>
+        <div><dt>External monitors</dt><dd>The box and the island follow the window to whichever screen it is on, ultrawide included.</dd></div>
+        <div><dt>Plays nice with WhisperTool</dt><dd>When you start dictating with my other app, ReadTool goes quiet.</dd></div>
+      </dl>
+    </section>
+
+    <section class="end" id="end">
+      <div class="rv">
+        <h2><span>A personal tool.</span> <span>It runs on my Mac today.</span></h2>
+        <p class="lead">It is not packaged for download yet: no installer, no public repository. It also depends on paid voice and AI services. If you want to see how it is built, ask.</p>
+        <div class="actions">
+          <a class="btn" href="https://nachosanbenito.com/#contact">Get in touch</a>
+          <a class="cue" href="#top">Watch the 33 s demo <span aria-hidden="true">↑</span></a>
+        </div>
+        <footer><a href="https://nachosanbenito.com">Ignacio San Benito</a> · IE University</footer>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* the headline is read word by word, like the app does */
+  const words = [...document.querySelectorAll('#h1 .w')];
+  let i = -1, timer = 0, seen = true;
+  function step(){
+    words.forEach(w => w.classList.remove('on'));
+    i = (i + 1) % (words.length + 3);                 // three empty beats at the end, then it starts again
+    if (i < words.length) words[i].classList.add('on');
+    timer = setTimeout(step, i === words.length - 1 ? 900 : 380);
+  }
+  function run(){
+    clearTimeout(timer);
+    if (still.matches){ words.forEach(w => w.classList.remove('on')); words[2].classList.add('on'); return }  // one still box on "reads"
+    if (seen && !document.hidden) timer = setTimeout(step, 600);
+  }
+  new IntersectionObserver(([e]) => { seen = e.isIntersecting; run() }).observe(document.getElementById('h1'));
+  document.addEventListener('visibilitychange', run);
+  still.addEventListener('change', run);
+
+  /* reveal once */
+  const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); rv.unobserve(e.target) } }), {rootMargin: '0px 0px -10% 0px'});
+  document.querySelectorAll('.rv').forEach(el => rv.observe(el));
+
+  /* the demo never autoplays; the button starts it with sound, then the native controls take over */
+  const film = document.querySelector('#film video'), pb = document.querySelector('#film .play');
+  film.controls = false;
+  pb.addEventListener('click', () => film.play().catch(() => {}));
+  film.addEventListener('play', () => { film.controls = true; pb.remove() }, {once: true});
+})();
+</script>
+</body>
+</html>
