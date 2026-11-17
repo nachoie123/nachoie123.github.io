@@ -229,7 +229,7 @@
       <div class="rv">
         <h2>The version that is <b>actually in the video.</b></h2>
         <p class="lead">A TikTok rarely plays the song as released. It is sped up, slowed down, or a DJ's own remix. Earworm listens to three slices of the audio with Apple's ShazamKit and notices when the pitch has been shifted.</p>
-        <p class="note">When Shazam is unsure, it reads the name of the TikTok sound and the comments, and trusts a title only when at least two people give the same one. If the remix was never released, it says so and keeps the original.</p>
+        <p class="note">When Shazam is unsure, it reads the name of the TikTok sound and the comments, and trusts a title only when at least two people give the same one. If the remix was never released, or it cannot tell whether a beat was added on top, it says so and keeps the original.</p>
         <ul class="figs">
           <li><b>3</b><span>slices of the audio</span></li>
           <li><b>11.5 s</b><span>each one</span></li>
@@ -239,7 +239,7 @@
       <figure class="listen rv">
         <div class="wave" id="wave" aria-hidden="true"></div>
         <div class="marks" aria-hidden="true"><span>Start</span><span>Middle</span><span>End</span></div>
-        <figcaption>One clip, three listens. A song that changes halfway through is caught as a mix, and each track is saved on its own.</figcaption>
+        <figcaption>One clip, three listens. A song that changes halfway through is caught as a mix. If nobody uploaded that mix in full, nothing is saved: you pick the track.</figcaption>
       </figure>
     </section>
 
