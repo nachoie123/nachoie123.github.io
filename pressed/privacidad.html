@@ -17,7 +17,7 @@
 
 <h2>«Reconocer prendas» y «Planchar»</h2>
 <p>«Reconocer prendas» envía el recorte de la prenda, ya sin fondo, a Google Gemini para saber qué es, su color y ponerle un nombre corto. Si importas una foto del carrete, se envía esa foto en tamaño reducido para saber qué prendas salen en ella.</p>
-<p>«Planchar» convierte una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco). Para ello se envía el recorte de la prenda, sin fondo y en tamaño reducido, a Cloudflare, que lo procesa con el modelo FLUX.2 de Black Forest Labs; si no se pudo recortar, se envía la foto que hiciste, reducida. La imagen resultante se guarda en tu iPhone.</p>
+<p>«Planchar» convierte una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco). Para ello se envía el recorte de la prenda, sin fondo y en tamaño reducido, a Google Gemini, a través de Cloudflare; si Gemini no está disponible, a Cloudflare, que lo procesa con el modelo FLUX.2 de Black Forest Labs. Si no se pudo recortar, se envía la foto que hiciste, reducida. La imagen resultante se guarda en tu iPhone.</p>
 <p>Solo se envía la imagen, sin sus datos ocultos (lugar, fecha ni modelo del iPhone): ni tu nombre, ni tu ubicación, ni el resto de tu armario. Pressed no guarda copia en ningún servidor. Lo que esos servicios hagan con la foto se rige por sus políticas (<a href="https://policies.google.com/privacy">Google</a>, <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>). Estas funciones solo funcionan si están disponibles en tu versión de la app; si no lo están, no se envía nada.</p>
 
 <h2>«Buscar en tienda»</h2>
