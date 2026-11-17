@@ -1,0 +1,6 @@
+{
+ "version": "1.1",
+ "pkg": "https://github.com/nachoie123/mesta/releases/download/v1.1/Mesta.pkg",
+ "sha256": "067cd5d5e4f17f71968ccda4e7ea7a9f45635e3761d3cc5b39c280c127010225",
+ "notes": "Ahora te avisa cuando hay una versión nueva."
+}
