@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mesta</title>
-<meta name="description" content="An assistant with a dry sense of humour that lives next to the notch on my Mac. Talk to it with ⌘M or say “Hey Mesta”: it talks back in a local voice, plans the day, triages the inbox and uses the Mac for me. Private project.">
+<meta name="description" content="An assistant with a dry sense of humour that lives next to the notch on my Mac. Talk to it with ⌘M or say “Hey Mesta”: it talks back in a local voice, explains things on a live whiteboard it draws as it speaks, plans the day, triages the inbox and uses the Mac for me. Private project.">
 <meta property="og:title" content="Mesta, an assistant that lives on my Mac">
-<meta property="og:description" content="Plans my day, triages the inbox, and uses my Mac for me. Claude as the brain, a local voice, an island beside the notch and hands that act outside the app.">
+<meta property="og:description" content="Explains things on a live whiteboard it draws while it talks, plans my day, triages the inbox and uses my Mac for me. Claude as the brain, a local voice, an island beside the notch and hands that act outside the app.">
 <meta property="og:image" content="https://nachosanbenito.com/mesta/poster.jpg">
 <meta name="theme-color" content="#05060d">
 <meta name="color-scheme" content="dark">
@@ -109,6 +109,8 @@
   .handsScene{padding-top:96px}
   .handsScene header{max-width:600px;margin-left:50%}
   .handsScene h2{font-size:clamp(44px,5vw,68px)}
+  .wbScene header{max-width:600px;margin-left:50%}
+  .wbScene h2{font-size:clamp(44px,5vw,68px)}
   .grid3{display:grid;grid-template-columns:1.62fr 1fr;grid-template-rows:auto auto;gap:28px 28px;margin-top:32px}
   .grid3 .big{grid-row:1/3}
   .grid3 .clip q{quotes:"\201C" "\201D";color:var(--ink);font-weight:500}
@@ -152,7 +154,7 @@
     .lead{font-size:17px}
     .facts div{grid-template-columns:1fr;gap:2px}
     .tools{grid-template-columns:1fr}
-    .handsScene header{margin-left:0}
+    .handsScene header,.wbScene header{margin-left:0}
     .grid3{grid-template-columns:1fr;gap:28px}.grid3 .big{grid-row:auto}
     .more{grid-template-columns:1fr;gap:0}.more div{padding:14px 0}
   }
@@ -176,11 +178,11 @@
 
   <section class="scene split" data-state="listening" id="film">
     <div class="col rv">
-      <h2>The whole tour in 104 seconds.</h2>
+      <h2>The whole tour in 113 seconds.</h2>
       <p class="lead">Start here: the island, the voice, hands-free, dictation and teacher mode, in one short film. It has sound.</p>
       <figure class="clip promo">
-<video src="mesta-promo.mp4" poster="media/promo.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Mesta promo film, 104 seconds, with sound"></video>
-<button class="play" type="button" aria-label="Play the 104 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch the film · sound on</span><small>1:44</small></button>
+<video src="mesta-promo.mp4" poster="media/promo.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Mesta promo film, 113 seconds, with sound"></video>
+<button class="play" type="button" aria-label="Play the 113 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch the film · sound on</span><small>1:53</small></button>
         <figcaption><b>The promo film.</b> Recorded on my Mac, with Mesta's real voice. Controls let you pause or go full screen.</figcaption>
       </figure>
     </div>
@@ -234,6 +236,27 @@
     </div>
   </section>
 
+  <section class="scene wbScene" data-state="speaking" id="whiteboard">
+    <header class="rv">
+      <h2>Ask it to explain, and it draws.</h2>
+      <p class="lead">When I ask Mesta to explain something, a card opens over the whole screen and it draws while it talks: diagrams, charts that build themselves, 3D parts that move, photos, and circles and arrows on whatever is really on my screen. Each stroke lands when the voice reaches it.</p>
+    </header>
+    <div class="grid3">
+      <figure class="clip big rv">
+        <video data-src="media/pizarra-chart.mp4" poster="media/pizarra-chart.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Mesta draws a supply and demand chart while it explains it"></video>
+        <figcaption><q>Explain supply and demand.</q> The chart draws itself as it talks.</figcaption>
+      </figure>
+      <figure class="clip rv">
+        <video data-src="media/pizarra-3d.mp4" poster="media/pizarra-3d.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Mesta shows a crankshaft and piston turning in 3D"></video>
+        <figcaption><q>How does an engine work?</q> A crankshaft and a piston, turning.</figcaption>
+      </figure>
+      <figure class="clip rv">
+        <video data-src="media/pizarra-obra.mp4" poster="media/pizarra-obra.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Mesta circles the people in Las Meninas and says who they are"></video>
+        <figcaption><q>Who is in this painting?</q> It circles the people in Las Meninas and names them.</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="scene handsScene" data-state="hands" id="hands">
     <header class="rv">
       <h2>Then its hands use my Mac.</h2>
@@ -254,7 +277,7 @@
       </figure>
     </div>
     <dl class="more rv">
-      <div><dt>Explain it to me</dt><dd>Teacher mode: the pointer glides to each step, types at the pace of the voice and leaves a checklist.</dd></div>
+      <div><dt>Explain it to me</dt><dd>Teacher mode: it draws the answer on the live whiteboard (see above) and, when the job is on screen, the pointer glides to each step and leaves a checklist.</dd></div>
       <div><dt>Learns recipes</dt><dd>When a plan works, it saves it and repeats it next time without calling a model.</dd></div>
       <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Before acting it says what it will do and counts down on the island, so you can stop it.</dd></div>
     </dl>
@@ -270,7 +293,7 @@
       </ul>
       <div class="actions">
         <a class="btn" href="https://github.com/nachoie123/mesta/releases/download/v1.1/Mesta.zip">Download for Mac</a>
-        <a class="cue" href="#film">Watch the 104 s film <span aria-hidden="true">↑</span></a>
+        <a class="cue" href="#film">Watch the 113 s film <span aria-hidden="true">↑</span></a>
         <a class="cue" href="https://nachosanbenito.com/#contact">Get in touch</a>
       </div>
       <p class="fine">Mesta 1.1 · 279 MB · installer, video and guide</p>
@@ -390,6 +413,7 @@
 
   const back = [], front = [];
   function draw(now, snap){
+    if (!W || !H) return;                         // hidden or zero-size window: wait for a real size
     const dt = Math.min(.05, (now - last) / 1000); last = now;
     const t = (now - t0) / 1000;
     const k = snap ? 1 : 1 - Math.exp(-dt * 4);
