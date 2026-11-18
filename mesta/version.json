@@ -1,6 +1,6 @@
 {
- "version": "1.1",
- "pkg": "https://github.com/nachoie123/mesta/releases/download/v1.1/Mesta.pkg",
- "sha256": "067cd5d5e4f17f71968ccda4e7ea7a9f45635e3761d3cc5b39c280c127010225",
- "notes": "Ahora te avisa cuando hay una versión nueva."
+ "version": "1.2",
+ "pkg": "https://github.com/nachoie123/mesta/releases/download/v1.2/Mesta.pkg",
+ "sha256": "2a5634b109507afb88a4816b632b58c8651b34d4bdd2fc2ce0095b9b44e65995",
+ "notes": "Se conecta al Claude Code que trae la app de Claude; «Oye Mesta» o ⌘M en cada petición; la pizarra explica en inglés; la bienvenida cabe en pantallas pequeñas."
 }
