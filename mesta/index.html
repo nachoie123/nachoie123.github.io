@@ -59,6 +59,7 @@
   .hero{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding-bottom:100px}
   .hero h1{font-size:clamp(96px,13vw,190px);line-height:.85;letter-spacing:-.06em;margin-left:-.04em}
   .hero p{max-width:32ch;color:var(--dim);font-size:16px;margin:22px 0 14px}
+  .heroActions{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
   .cue{font-size:15px;font-weight:500;text-decoration:none;display:inline-flex;gap:8px;align-items:center;min-height:44px;border-bottom:1px solid var(--line);transition:border-color .3s}
   .cue:hover{border-color:var(--ink)}
 
@@ -173,7 +174,10 @@
   <section class="scene hero" data-state="listening" id="top">
     <h1>Mesta</h1>
     <p>An assistant that lives on my Mac. It listens, decides who should do each job, and uses the Mac for me.</p>
-    <a class="cue" href="#hands">See its hands work <span aria-hidden="true">↓</span></a>
+    <div class="heroActions">
+      <a class="btn" href="https://github.com/nachoie123/mesta/releases/download/v1.3/Mesta.pkg">Download for Mac</a>
+      <a class="cue" href="#hands">See its hands work <span aria-hidden="true">↓</span></a>
+    </div>
   </section>
 
   <section class="scene split" data-state="listening" id="film">
@@ -199,7 +203,7 @@
       <dl class="facts">
         <div><dt>Island beside the notch</dt><dd>Shows what it is doing. Drag it along the edge of the screen; hover it for the full card.</dd></div>
         <div><dt>Dictation</dt><dd>Say “write the following” and it types what you say into any app.</dd></div>
-        <div><dt>Receipts</dt><dd>Every order leaves a short receipt in Obsidian.</dd></div>
+        <div><dt>Your Obsidian, found</dt><dd>If you use Obsidian, Mesta finds your notes by itself and uses them as memory. Nothing to set up.</dd></div>
         <div><dt>Type instead</dt><dd>Press ⌘M with the pointer over the island and a bar opens. Write, paste a chat or drop a photo; the answer comes back as text.</dd></div>
       </dl>
     </div>
@@ -221,18 +225,19 @@
         <video data-src="media/skills.mp4" poster="media/skills.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: the skills catalog in the Mesta HUD"></video>
         <figcaption><b>43 buttons in 9 groups.</b> Each one is a skill: a written method Mesta runs through Claude Code.</figcaption>
       </figure>
+      <p class="note">These buttons are my own setup, wired to my notes and accounts. The download is the assistant itself: voice, hands, whiteboard and your Obsidian as memory.</p>
     </div>
   </section>
 
   <section class="scene split" data-state="speaking" id="speak">
     <div class="col rv">
       <h2>It answers out loud.</h2>
-      <p class="lead">Replies come back in a local voice (Kokoro: it runs on the Mac, nothing goes to a voice service) that starts talking while the rest of the answer is still being written. One click plans the day: classes, deadlines, events and three priorities, written into today's Obsidian note.</p>
+      <p class="lead">Replies come back in a local voice (Kokoro: it runs on the Mac, nothing goes to a voice service) that starts talking while the rest of the answer is still being written. On my Mac, one click also plans the day: classes, deadlines, events and three priorities, written into today's Obsidian note.</p>
       <figure class="clip">
         <video data-src="media/day.mp4" poster="media/day.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: Plan my day in the Mesta HUD"></video>
         <figcaption><b>Real recording.</b> Plan my day, pressed in the HUD. Schedule and priorities on screen are example data.</figcaption>
       </figure>
-      <p class="note">Also one click: close the day, score the week from 1 to 10, sort the inbox into urgent, reply and ignore with drafts (it never sends), find internships that fit, and check a CV against a posting.</p>
+      <p class="note">Also one click on my setup: close the day, score the week from 1 to 10, sort the inbox into urgent, reply and ignore with drafts (it never sends), find internships that fit, and check a CV against a posting.</p>
     </div>
   </section>
 
@@ -287,16 +292,16 @@
   <section class="scene end" data-state="idle" id="end">
     <div class="rv">
       <h2>Try it on your Mac.</h2>
-      <p class="lead">Download the Mesta folder: the installer, a short video and the written guide. Unzip it, double-click Mesta.pkg and press Install. Signed and notarized by Apple. Needs a Mac with Apple silicon, macOS 14 or later, and a brain: your Claude or ChatGPT plan, or a free Google key.</p>
+      <p class="lead">Double-click Mesta.pkg and press Install: Mesta opens by itself and walks you through the rest in a few clicks. Signed and notarized by Apple. Needs a Mac with Apple silicon, macOS 14 or later, and a brain: your Claude or ChatGPT plan, or a free Google key.</p>
       <ul class="figs">
         <li><b>⌘M</b> to talk</li><li><b>Local</b> voice</li><li><b>1.3 %</b> CPU when idle</li>
       </ul>
       <div class="actions">
-        <a class="btn" href="https://github.com/nachoie123/mesta/releases/download/v1.2/Mesta.zip">Download for Mac</a>
+        <a class="btn" href="https://github.com/nachoie123/mesta/releases/download/v1.3/Mesta.pkg">Download for Mac</a>
         <a class="cue" href="#film">Watch the 113 s film <span aria-hidden="true">↑</span></a>
         <a class="cue" href="https://nachosanbenito.com/#contact">Get in touch</a>
       </div>
-      <p class="fine">Mesta 1.2 · 278 MB · installer, video and guide</p>
+      <p class="fine">Mesta 1.3 · 265 MB · one installer</p>
       <footer><a href="https://nachosanbenito.com">Ignacio San Benito</a> · IE University</footer>
     </div>
   </section>
