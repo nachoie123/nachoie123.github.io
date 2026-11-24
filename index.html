@@ -162,12 +162,15 @@ html.lenis,html.lenis body{height:auto}
 }
 
 /* ===================== SEGUNDA PARTE: About me (olhalazarieva.com) ===================== */
-.about{--pad:3.5vw;position:relative;min-height:100vh;min-height:100svh;margin-top:var(--frame);padding:15vh var(--pad) 9vh 30%;background:var(--red);font:400 12px/1.6 var(--mono);text-transform:uppercase}
+/* escena fija: la pantalla se para en About mientras se destapan la foto y el texto; el ::after es lo que dura la parada */
+.scene{position:relative;margin-top:var(--frame);background:var(--red)}
+.scene::after{content:"";display:block;height:70vh}
+.about{--pad:3.5vw;position:sticky;top:0;min-height:100vh;min-height:100svh;padding:15vh var(--pad) 9vh 30%;background:var(--red);font:400 12px/1.6 var(--mono);text-transform:uppercase}
 .about .label{position:absolute;left:var(--pad);top:32px}
 /* foto a la izquierda en la línea del 30 %, texto a su lado; la foto manda el alto (cabe en 1280×720) */
 .about .col{display:grid;grid-template-columns:min(44vh,24vw) minmax(0,1fr);gap:0 3vw;align-items:start}
 .photo{position:relative;aspect-ratio:2/3;background:var(--ink);overflow:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--expo-out)}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(1) contrast(1.05);transform:scale(1.2);transition:transform .5s var(--expo-out)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(1) contrast(1.05);transform:scale(1.2);scale:calc(1 + var(--k,0)*.1);transition:transform .5s var(--expo-out)}
 .in .photo{clip-path:inset(0);transition-duration:1.3s}
 .in .photo img{transform:none;transition-duration:1.8s}
 .about .txt{max-width:34em}
@@ -190,9 +193,10 @@ html.lenis,html.lenis body{height:auto}
 .in .ln>span{transform:none;transition:transform 1s var(--expo-out) calc(var(--d) * 70ms + 250ms)}
 .acts .ln,.cv-acts .ln{padding:4px;margin:-4px}   /* sitio para el anillo de foco */
 
-@media (max-width:987px) and (orientation:portrait){.about{min-height:0}}
+/* pantallas muy bajas (móvil tumbado): About no cabe entera, así que no se para */
+@media (max-height:600px){.about{position:relative}.scene::after{display:none}}
 @media (max-width:700px){
-  .about{min-height:0;padding:calc(32px + 7vh) 16px 56px}
+  .about{padding:calc(32px + 7vh) 16px 56px}
   .about .label{left:16px}
   /* móvil: foto pequeña a la izquierda con el saludo al lado; el resumen y los botones debajo, a lo ancho */
   .about .col{grid-template-columns:38% minmax(0,1fr);grid-template-areas:"p h" "s s" "a a";gap:0 16px}
@@ -259,6 +263,8 @@ html.lenis,html.lenis body{height:auto}
 }
 @media (prefers-reduced-motion:reduce){
   .ln>span,.photo,.photo img,.cv .rv{transition:none!important}
+  .scene::after{display:none}
+  .photo img{scale:none}
   .about .ln>span,.cv .ln>span,.cv .rv{transform:none;opacity:1}
   .photo{clip-path:none}
   .photo img{transform:none}
@@ -452,7 +458,7 @@ html.lenis,html.lenis body{height:auto}
 </main>
 
 <!-- ===== SEGUNDA PARTE ===== -->
-<section class="about" id="about" aria-label="About me">
+<section class="scene" id="about" aria-label="About me"><div class="about">
   <div class="label"><span class="ln"><span>About me</span></span></div>
   <div class="col">
     <!-- foto de Nacho (04/10/2026 la quiere: antes iba el bloque NSB) -->
@@ -464,7 +470,7 @@ html.lenis,html.lenis body{height:auto}
       <div class="acts"><span class="ln"><span><a class="btn" href="/cv/">Download CV ↗</a><a class="btn" href="https://www.linkedin.com/in/nacho-san-benito" target="_blank" rel="noopener">LinkedIn ↗</a><a class="more" href="#cv">Full CV ↓</a></span></span></div>
     </div>
   </div>
-</section>
+</div></section>
 
 <!-- ===== CV: lo mismo que el PDF y LinkedIn, en filas que se leen en 20 s (datos de cv-adapter/master-cv.json) ===== -->
 <section class="cv" id="cv" aria-labelledby="cv-title">
