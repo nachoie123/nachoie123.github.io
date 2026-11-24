@@ -1,6 +1,6 @@
 {
- "version": "1.4",
- "pkg": "https://github.com/nachoie123/mesta/releases/download/v1.4/Mesta.pkg",
- "sha256": "303aba79dade9445fa4c6e57f504a681502fad335e33ac903385c9202f965d37",
- "notes": "Check for Updates in the menu bar: see a new Mesta right away"
+ "version": "1.5",
+ "pkg": "https://github.com/nachoie123/mesta/releases/download/v1.5/Mesta.pkg",
+ "sha256": "08a4210c5f6ed28994df01e62ae164e024d7b75df359d15f66083b0b21d9a0b8",
+ "notes": "Mesta se actualiza sola cada semana y ahora puedes buscar versiones nuevas desde la barra de menú."
 }
