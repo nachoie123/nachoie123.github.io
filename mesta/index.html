@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mesta</title>
-<meta name="description" content="An assistant with a dry sense of humour that lives next to the notch on my Mac. Talk to it with ⌘M or say “Hey Mesta”: it talks back in a local voice, explains things on a live whiteboard it draws as it speaks, plans the day, triages the inbox and uses the Mac for me. Private project.">
+<meta name="description" content="An assistant with a dry sense of humour that lives next to the notch on my Mac. Talk to it with ⌘M or say “Hey Mesta”: it talks back in a local voice, explains things on a live whiteboard it draws as it speaks, plans the day, triages the inbox and uses the Mac for me. Free to download.">
 <meta property="og:title" content="Mesta, an assistant that lives on my Mac">
-<meta property="og:description" content="Explains things on a live whiteboard it draws while it talks, plans my day, triages the inbox and uses my Mac for me. Claude as the brain, a local voice, an island beside the notch and hands that act outside the app.">
+<meta property="og:description" content="Explains things on a live whiteboard it draws while it talks, plans my day, triages the inbox and uses my Mac for me. Claude, ChatGPT or Google as the brain, a local voice, an island beside the notch and hands that act outside the app.">
+<link rel="canonical" href="https://nachosanbenito.com/mesta/">
 <meta property="og:image" content="https://nachosanbenito.com/mesta/poster.jpg">
 <meta name="theme-color" content="#05060d">
 <meta name="color-scheme" content="dark">
@@ -187,7 +188,7 @@
       <figure class="clip promo">
 <video src="mesta-promo.mp4" poster="media/promo.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Mesta promo film, 113 seconds, with sound"></video>
 <button class="play" type="button" aria-label="Play the 113 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch the film · sound on</span><small>1:53</small></button>
-        <figcaption><b>The promo film.</b> Recorded on my Mac, with Mesta's real voice. Controls let you pause or go full screen.</figcaption>
+        <figcaption><b>The promo film.</b> Recorded on my Mac, with Mesta's real voice. Controls let you pause or go full screen. It predates the download: the hands-free mode and the skills are on my own Mac only, and the closing “private project” is out of date.</figcaption>
       </figure>
     </div>
   </section>
@@ -195,7 +196,7 @@
   <section class="scene split" data-state="listening" id="listen">
     <div class="col rv">
       <h2>Hold ⌘M and talk.</h2>
-      <p class="lead">Hold ⌘M like a walkie-talkie, or double-tap it for hands-free: then saying “Hey Mesta” is enough, and two minutes of silence turns it off. Speech is recognised on the Mac.</p>
+      <p class="lead">Hold ⌘M like a walkie-talkie, or say “Hey Mesta”: it takes one request, answers and closes the mic. The call is heard on the Mac; what you ask is transcribed by Apple’s speech recognition, which may use Apple’s servers.</p>
       <figure class="clip">
         <video data-src="media/ask.mp4" poster="media/ask.jpg" width="1280" height="720" muted loop playsinline preload="none" aria-label="Screen recording: a question asked in the Mesta HUD"></video>
         <figcaption><b>Real recording.</b> A question goes into the HUD and the sphere changes colour while it thinks and answers.</figcaption>
@@ -203,7 +204,7 @@
       <dl class="facts">
         <div><dt>Island beside the notch</dt><dd>Shows what it is doing. Drag it along the edge of the screen; hover it for the full card.</dd></div>
         <div><dt>Dictation</dt><dd>Say “write the following” and it types what you say into any app.</dd></div>
-        <div><dt>Your Obsidian, found</dt><dd>If you use Obsidian, Mesta finds your notes by itself and uses them as memory. Nothing to set up.</dd></div>
+        <div><dt>Your Obsidian, found</dt><dd>If you use Obsidian, Mesta finds your vault and asks. Press “Use it” and your notes become its memory.</dd></div>
         <div><dt>Type instead</dt><dd>Press ⌘M with the pointer over the island and a bar opens. Write, paste a chat or drop a photo; the answer comes back as text.</dd></div>
       </dl>
     </div>
@@ -212,7 +213,7 @@
   <section class="scene split" data-state="thinking" id="think">
     <div class="col rv">
       <h2>Then it decides who does the job.</h2>
-      <p class="lead">Everyday orders take a fast lane with no model at all. The rest go to Claude Sonnet, with Gemini as the backup if Claude is down.</p>
+      <p class="lead">Everyday orders take a fast lane with no model at all. The rest go to the brain you connect: Claude, ChatGPT or Google. With both Claude and a Google key, one covers for the other.</p>
         <dl class="tools">
         <div><dt>Roast my idea</dt><dd>Believer, sceptic, investor and judge give a verdict: build, fix first or kill.</dd></div>
         <div><dt>Grill me</dt><dd>One question at a time until the plan has no holes, then it writes the spec.</dd></div>
@@ -283,8 +284,8 @@
     </div>
     <dl class="more rv">
       <div><dt>Explain it to me</dt><dd>Teacher mode: it draws the answer on the live whiteboard (see above) and, when the job is on screen, the pointer glides to each step and leaves a checklist.</dd></div>
-      <div><dt>Learns recipes</dt><dd>When a plan works, it saves it and repeats it next time without calling a model.</dd></div>
-      <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Before acting it says what it will do and counts down on the island, so you can stop it.</dd></div>
+      <div><dt>Routines</dt><dd>Ask once, like “every Tuesday at five, check if I have invoices”, and it does it on its own at that time.</dd></div>
+      <div><dt>Scroll, volume, media keys</dt><dd>Play, pause, next and volume by voice. Before it buys or deletes something it says so and counts down on the island, so you can stop it. A message you ask it to send to someone by name goes straight out.</dd></div>
     </dl>
     <p class="code">Built on <a href="https://github.com/hussainn7/plip-oss">Plip</a> (MIT), an open-source Mac agent. Every clip on this page is a real screen recording; the hands clips show an earlier version.</p>
   </section>
@@ -301,7 +302,7 @@
         <a class="cue" href="#film">Watch the 113 s film <span aria-hidden="true">↑</span></a>
         <a class="cue" href="https://nachosanbenito.com/#contact">Get in touch</a>
       </div>
-      <p class="fine">Mesta 1.4 · 265 MB · one installer</p>
+      <p class="fine">Mesta 1.4 · 265 MB · one installer, plus about 500 MB for its voice and ear, downloaded once</p>
       <footer><a href="https://nachosanbenito.com">Ignacio San Benito</a> · IE University</footer>
     </div>
   </section>
