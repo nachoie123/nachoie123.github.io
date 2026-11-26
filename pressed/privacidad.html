@@ -9,15 +9,17 @@
 <body>
 <main>
 <h1>Política de privacidad de Pressed</h1>
-<p class="cuando">App de iPhone «Pressed – Armario y outfits». Última revisión: 24 de noviembre de 2026.</p>
+<p class="cuando">App de iPhone «Pressed – Armario y outfits». Última revisión: 26 de noviembre de 2026.</p>
 
 <h2>Tu armario se queda en tu iPhone</h2>
-<p>Las fotos de tu ropa, los nombres, precios, outfits y el registro de lo que te pones se guardan en tu iPhone. No hace falta cuenta y no hay analítica, ni anuncios, ni rastreo. El fondo de las fotos se quita en el propio iPhone. Lo único que llega a un servidor de Pressed es lo que tú decidas publicar en un perfil público, que es opcional y está explicado abajo.</p>
+<p>Las fotos de tu ropa, los nombres, precios, outfits y el registro de lo que te pones se guardan en tu iPhone. No hace falta cuenta y no hay analítica, ni anuncios, ni rastreo. El fondo de las fotos se quita en el propio iPhone. A un servidor de Pressed solo llega lo que tú decidas publicar en un perfil público (opcional, explicado abajo) y, si lo pides, la prenda que mandas a «Planchar», que no se guarda.</p>
 <p>Hay cuatro funciones que sí envían una foto fuera del iPhone, y están explicadas abajo: «Reconocer prendas», «Planchar», «Buscar por foto» (que usan «Buscar en tienda» y «¿De dónde es?») y «Crear estilos». La primera vez que una de ellas va a enviar una foto, la app te dice qué envía, a quién y para qué, y te pide permiso («Permitir» o «Ahora no»). Tu respuesta se recuerda y la cambias cuando quieras en Perfil → Privacidad. Si dices que no, la foto no sale.</p>
 
 <h2>«Reconocer prendas» y «Planchar»</h2>
 <p>«Reconocer prendas» envía el recorte de la prenda, ya sin fondo, a Google Gemini para saber qué es, su color y ponerle un nombre corto. Si importas una foto del carrete, se envía esa foto en tamaño reducido para saber qué prendas salen en ella.</p>
-<p>«Planchar» convierte una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco). Para ello se envía el recorte de la prenda, sin fondo y en tamaño reducido, a Google Gemini, a través de Cloudflare; si Gemini no está disponible, a Cloudflare, que lo procesa con el modelo FLUX.2 de Black Forest Labs. Si no se pudo recortar, se envía la foto que hiciste, reducida. La imagen resultante se guarda en tu iPhone.</p>
+<p>«Planchar» convierte una prenda en una foto de catálogo (la prenda estirada sobre fondo blanco), solo cuando tú lo pides. Se envía el recorte de la prenda, sin fondo y en tamaño reducido, al servidor de planchar de Pressed (en Cloudflare), que se lo pasa a Google Gemini para hacer la imagen y te la devuelve. Si no se pudo recortar, se envía la foto que hiciste, reducida. La imagen resultante se guarda en tu iPhone.</p>
+<p>Las primeras 10 prendas son gratis. Para contarlas, el servidor guarda un número al azar que la app crea en tu iPhone (no es tu nombre ni tu correo) y cuántas prendas llevas. Para que nadie gaste el cupo desde fuera de la app, tu iPhone firma cada petición con App Attest, el sistema de Apple que demuestra que es la app de verdad; el servidor guarda la clave pública de esa firma. Para frenar abusos se cuentan las peticiones por red con una huella de tu conexión que cambia cada día y no permite saber tu dirección. Ni la foto ni la imagen planchada se guardan ni se registran en el servidor.</p>
+<p>Cuando se acaban las gratis, si has conectado tu IA en Perfil (OpenRouter, Gemini, ChatGPT o Grok), la prenda se envía directamente a esa IA, con tu cuenta. Claude no hace imágenes, así que con Claude no se plancha.</p>
 <p>Solo se envía la imagen, sin sus datos ocultos (lugar, fecha ni modelo del iPhone): ni tu nombre, ni tu ubicación, ni el resto de tu armario. Pressed no guarda copia en ningún servidor. Lo que esos servicios hagan con la foto se rige por sus políticas (<a href="https://policies.google.com/privacy">Google</a>, <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>). Estas funciones solo funcionan si están disponibles en tu versión de la app; si no lo están, no se envía nada.</p>
 
 <h2>Tu IA y «Crear estilos»</h2>
