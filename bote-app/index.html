@@ -542,7 +542,7 @@ function pushChips(dt, w){
 }
 
 function frame(now){
-  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  const dt = clamp((now - last) / 1000, 0, .05); last = now;   // rAF time can sit before wake()'s performance.now(): a negative dt pushed the story below step 0
   const goal = storyAt(scrollY);
   s = still.matches ? Math.round(goal) : (Math.abs(goal - s) < 1e-4 ? goal : s + (goal - s) * (1 - Math.exp(-dt * 7)));
   if (!still.matches) intro = Math.min(1, intro + dt / 1.8);
