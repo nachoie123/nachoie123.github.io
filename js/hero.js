@@ -94,15 +94,17 @@ function drawLines() {
   });
 }
 
-addEventListener('pointermove', e => {
+// Con el dedo no hay cursor que seguir: cada toque salta a su sitio (si no, el punto suavizado cruzaba la pantalla
+// arrastrando las ondas en un latigazo) y el punto negro solo se ve con ratón (en el móvil se quedaba clavado).
+const point = (e, jump) => {
   if (!box.width) return;
   mouse.x = e.clientX - box.left;
   mouse.y = e.clientY - box.top + scrollY;
-  if (!mouse.set) {
-    Object.assign(mouse, { sx: mouse.x, sy: mouse.y, lx: mouse.x, ly: mouse.y, set: true });
-    dot.classList.add('on');
-  }
-}, { passive: true });
+  if (jump || !mouse.set) Object.assign(mouse, { sx: mouse.x, sy: mouse.y, lx: mouse.x, ly: mouse.y, set: true });
+  if (e.pointerType === 'mouse') dot.classList.add('on');
+};
+addEventListener('pointerdown', e => point(e, e.pointerType !== 'mouse'), { passive: true });
+addEventListener('pointermove', e => point(e, false), { passive: true });
 
 // --- Título: partir en letras ---
 const chars = [];

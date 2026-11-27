@@ -112,7 +112,14 @@ const el = document.querySelector('.work');
 const work = Work(el);
 work.resize();
 document.fonts.load('1em Anton').then(work.resize);   // las filas de letras se miden con Anton
-addEventListener('resize', work.resize);
+// en el móvil la barra del navegador sale y se esconde al hacer scroll y eso cuenta como "resize": rehacer letras y lienzo
+// a mitad de WORK daba un tirón. Solo se rehace si cambia el ancho (girar el móvil) o el alto de verdad
+let lastW = innerWidth, lastH = innerHeight;
+const touchOnly = matchMedia('(pointer: coarse)').matches;
+addEventListener('resize', () => {
+  if (touchOnly && innerWidth === lastW && Math.abs(innerHeight - lastH) < 160) return;
+  lastW = innerWidth; lastH = innerHeight; work.resize();
+});
 addEventListener('themechange', work.resize);         // el lienzo pinta con --red: hay que repintarlo
 whileVisible(el, work.tick);
 

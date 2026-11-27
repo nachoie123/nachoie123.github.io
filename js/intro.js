@@ -29,7 +29,11 @@ async function start() {
   scene.background = new THREE.Color(PAPER);
   const camera = new THREE.PerspectiveCamera(50, 1, .1, 100);
   camera.position.set(0, 0, 6);
-  const resize = () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); };
+  // en vertical (móvil) la cámara se aleja para que los anillos quepan a lo ancho: a 6 se salían por los lados
+  const resize = () => {
+    renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight;
+    camera.position.setLength(6 * Math.max(1, .8 / camera.aspect)); camera.updateProjectionMatrix();
+  };
   resize();
   addEventListener('resize', resize);
 

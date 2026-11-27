@@ -196,7 +196,8 @@ html.lenis,html.lenis body{height:auto}
 /* pantallas muy bajas (móvil tumbado): About no cabe entera, así que no se para */
 @media (max-height:600px){.about{position:relative}.scene::after{display:none}}
 @media (max-width:700px){
-  .about{padding:calc(32px + 7vh) 16px 56px}
+  /* centrado en la pantalla parada: arriba dejaba media pantalla en blanco debajo */
+  .about{display:flex;flex-direction:column;justify-content:center;padding:calc(32px + 4vh) 16px 40px}
   .about .label{left:16px}
   /* móvil: foto pequeña a la izquierda con el saludo al lado; el resumen y los botones debajo, a lo ancho */
   .about .col{grid-template-columns:38% minmax(0,1fr);grid-template-areas:"p h" "s s" "a a";gap:0 16px}
