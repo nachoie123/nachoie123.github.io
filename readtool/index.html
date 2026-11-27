@@ -7,7 +7,7 @@
 <meta name="description" content="A Mac menu bar app that reads the screen out loud. Press ⌥R and a yellow box follows every word. It skips menus and buttons, learns what you don't want to hear, and can explain class notes.">
 <meta property="og:title" content="ReadTool, my Mac reads the screen to me">
 <meta property="og:description" content="⌥R reads the window out loud while a yellow box follows each word. It skips the interface, learns what to skip, and explains class notes.">
-<meta property="og:image" content="https://nachosanbenito.com/readtool/poster.jpg">
+<meta property="og:image" content="https://nachosanbenito.com/readtool/poster-film.jpg">
 <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0c0e16" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -65,7 +65,7 @@
   .clip figcaption b{color:var(--ink);font-weight:500}
   .player{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#0c0e16;box-shadow:0 30px 60px -30px rgb(22 26 43 / .35)}
   @media (prefers-color-scheme:dark){.player{box-shadow:none}}
-  .player video{display:block;width:100%;height:auto;aspect-ratio:16/10}
+  .player video{display:block;width:100%;height:auto;aspect-ratio:16/9}
   .play{position:absolute;inset:0;display:grid;place-items:center;padding:0;border:0;background:linear-gradient(rgb(12 14 22 / 0) 45%,rgb(12 14 22 / .82));color:#fff;font-family:inherit;cursor:pointer}
   .play i{display:grid;place-items:center;width:84px;height:58px;border-radius:16px;background:rgb(23 23 23 / .82);box-shadow:0 6px 24px rgb(0 0 0 / .35)}
   .play i svg{width:26px;height:26px;margin-left:2px}
@@ -187,10 +187,10 @@
       </div>
       <figure class="clip" id="film">
         <div class="player">
-          <video src="demo.mp4" poster="poster.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="ReadTool film, 48 seconds, with sound"></video>
-          <button class="play" type="button" aria-label="Play the 48 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch it read · sound on</span><small>0:48</small></button>
+          <video src="readtool-film.mp4" poster="poster-film.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="ReadTool film, 52 seconds, with sound"></video>
+          <button class="play" type="button" aria-label="Play the 52 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Watch it read · sound on</span><small>0:52</small></button>
         </div>
-        <figcaption><b>Real screen recordings</b> of the app on my Mac, with a narrator on top. ⌥R on Wikipedia, ⌥+click on a sentence, Explained mode on class notes in Spanish, then ⌫ to skip a part. Pauses trimmed; the pointer is drawn in.</figcaption>
+        <figcaption><b>Real screen recordings</b> of the app on my Mac, with its own voice: ⌥R on Wikipedia, ⌥+click on a sentence, ⌫ to skip a note, then Explained mode on example class notes in Spanish. A narrator speaks in between; pauses are trimmed and the pointer is drawn in. The opening line is 3D, made in Blender.</figcaption>
       </figure>
     </div>
   </section>
@@ -312,7 +312,7 @@
         <p class="lead">There is nothing to download yet: no installer, no public repository, no release date. It also depends on a paid AI subscription (Claude). If you want to see how it is built, ask.</p>
         <div class="actions">
           <a class="btn" href="https://nachosanbenito.com/#contact">Get in touch</a>
-          <a class="cue" href="#top">Watch the 48 s film <span aria-hidden="true">↑</span></a>
+          <a class="cue" href="#top">Watch the 52 s film <span aria-hidden="true">↑</span></a>
         </div>
         <footer><a href="https://nachosanbenito.com">Ignacio San Benito</a> · IE University</footer>
       </div>
