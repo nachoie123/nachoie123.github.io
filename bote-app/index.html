@@ -83,15 +83,15 @@
   .crosses i:nth-child(2){justify-self:center}.crosses i:nth-child(4){justify-self:center}.crosses i:last-child{justify-self:end}
 
   /* the film: PLAY ▶ REEL, but with the video itself between the words */
-  .film{min-height:100vh;padding:110px var(--gut) 80px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:40px}
+  .film{min-height:100vh;padding:110px var(--gut) 80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
   .film .w{font-size:clamp(48px,6.6vw,96px);line-height:.95;letter-spacing:-.04em}
-  .film .w.l{text-align:right}
-  .reel{position:relative;margin:0;width:min(340px,calc((100vh - 220px) * .5625))}
-  .reel video{width:100%;height:auto;aspect-ratio:9/16;display:block;border-radius:var(--r);background:#0b0f0d;object-fit:cover}
+  .film .w{text-align:center}
+  .reel{position:relative;margin:0;width:min(1100px,100%,calc((100vh - 420px) * 1.7778))}
+  .reel video{width:100%;height:auto;aspect-ratio:16/9;display:block;border-radius:var(--r);background:#0b0f0d;object-fit:cover}
   .reel figcaption{font-size:14px;color:var(--faint);margin-top:12px;line-height:1.4}
   .reel .x{position:absolute;font-size:16px;line-height:1;color:var(--ink)}
   .reel .x1{left:-22px;top:-22px}.reel .x2{right:-22px;top:-22px}.reel .x3{left:-22px;bottom:30px}.reel .x4{right:-22px;bottom:30px}
-  .play{position:absolute;left:0;top:0;width:100%;aspect-ratio:9/16;display:grid;place-items:center;padding:0;border:0;border-radius:var(--r);background:linear-gradient(rgb(11 15 13 / 0) 78%,rgb(11 15 13 / .45));color:#fff;font-family:inherit;cursor:pointer}
+  .play{position:absolute;left:0;top:0;width:100%;aspect-ratio:16/9;display:grid;place-items:center;padding:0;border:0;border-radius:var(--r);background:linear-gradient(rgb(11 15 13 / 0) 78%,rgb(11 15 13 / .45));color:#fff;font-family:inherit;cursor:pointer}
   /* YouTube-style play: rounded rectangle, dark until hover, red on hover */
   .play i{display:grid;place-items:center;width:84px;height:58px;border-radius:16px;background:rgb(15 15 15 / .92);box-shadow:0 6px 24px rgb(0 0 0 / .45)}
   .play i svg{width:26px;height:26px;margin-left:2px}
@@ -157,7 +157,7 @@
     .hero .crosses{display:none}
     .film{grid-template-columns:1fr;justify-items:center;align-content:start;gap:18px;padding:76px var(--gut) 72px}
     .film .w{font-size:clamp(40px,12vw,56px);text-align:center}.film .w.l{text-align:center}
-    .reel{width:min(280px,72vw)}
+    .reel{width:100%}
     .reel .x{display:none}
     .play i{width:68px;height:48px;border-radius:12px}.play i svg{width:22px;height:22px}.play span{left:12px;bottom:12px;font-size:14px}.play small{right:10px;bottom:10px}
     /* the stage takes the top half; the text arrives under it on a card */
@@ -206,14 +206,14 @@
   </section>
 
   <section class="film" id="film" data-k="away">
-    <div class="w l rv" aria-hidden="true">The whole<br>night</div>
+    <div class="w l rv" aria-hidden="true">The whole night</div>
     <figure class="reel rv">
-      <video src="bote-promo.mp4" poster="film-poster.jpg" width="1080" height="1920" controls playsinline preload="none" aria-label="Bote promo film, 62 seconds, with sound"></video>
-      <button class="play" type="button" aria-label="Play the 62 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Sound on</span><small>1:02</small></button>
+      <video src="bote-film.mp4" poster="film-poster.jpg" width="1920" height="1080" controls playsinline preload="none" aria-label="Bote film, 31 seconds, with sound"></video>
+      <button class="play" type="button" aria-label="Play the 31 second film"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg></i><span>Sound on</span><small>0:31</small></button>
       <span class="x x1" aria-hidden="true">+</span><span class="x x2" aria-hidden="true">+</span><span class="x x3" aria-hidden="true">+</span><span class="x x4" aria-hidden="true">+</span>
-      <figcaption>The promo film: the chip split, rebuys, the count and the settle-up, in the real app.</figcaption>
+      <figcaption>The film: the chip split, a rebuy, the count and the settle-up, recorded in the real app.</figcaption>
     </figure>
-    <div class="w rv" aria-hidden="true">in 62<br>seconds.</div>
+    <div class="w rv" aria-hidden="true">in 31 seconds.</div>
   </section>
 
   <section id="deal">
@@ -268,7 +268,7 @@
             <tr><td>Hugo</td><td>€100</td><td>€70.00</td><td class="down">−€30.00</td></tr>
           </tbody>
         </table>
-        <p class="note">The example game from the film. Stack height follows what each player counted.</p>
+        <p class="note">An example game. Stack height follows what each player counted.</p>
       </div>
     </div>
   </section>
